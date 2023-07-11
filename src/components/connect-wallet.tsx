@@ -1,0 +1,13 @@
+import { Button } from "@chakra-ui/react";
+import { useAuth } from "@micro-stacks/react";
+
+function ConnectWallet() {
+  const { openAuthRequest, isRequestPending } = useAuth();
+  return (
+    <Button disabled={isRequestPending} onClick={() => void openAuthRequest()}>
+      Connect Wallet
+    </Button>
+  );
+}
+
+export default ConnectWallet;
