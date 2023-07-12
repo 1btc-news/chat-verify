@@ -17,7 +17,7 @@ function Content() {
 
   return (
     <Box>
-      <Text fontSize="xl">{stxAddress}</Text>
+      <Text>{stxAddress}</Text>
       <SignOut />
     </Box>
   );

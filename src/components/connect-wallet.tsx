@@ -6,6 +6,7 @@ function ConnectWallet() {
   return (
     <Button
       variant="1btc-orange"
+      size="xl"
       disabled={isRequestPending}
       onClick={() => void openAuthRequest()}
     >

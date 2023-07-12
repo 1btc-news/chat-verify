@@ -37,6 +37,18 @@ const components = {
         },
       },
     },
+    sizes: {
+      xl: {
+        fontSize: "xl",
+        px: 8,
+        py: 4,
+      },
+      "2xl": {
+        fontSize: "2xl",
+        px: 10,
+        py: 5,
+      },
+    },
   },
 };
 
@@ -48,8 +60,8 @@ const fonts = {
 
 const styles = {
   global: {
-    body: {
-      fontSize: "24px",
+    "html, body": {
+      fontSize: "2xl",
     },
   },
 };
