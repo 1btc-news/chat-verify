@@ -7,12 +7,17 @@ function Content() {
   const { stxAddress } = useAccount();
 
   if (!stxAddress) {
-    return <ConnectWallet />;
+    return (
+      <Box>
+        <Text>Connect your wallet to verify.</Text>
+        <ConnectWallet />
+      </Box>
+    );
   }
 
   return (
     <Box>
-      <Text>{stxAddress}</Text>
+      <Text fontSize="xl">{stxAddress}</Text>
       <SignOut />
     </Box>
   );

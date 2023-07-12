@@ -4,7 +4,11 @@ import { useAuth } from "@micro-stacks/react";
 function ConnectWallet() {
   const { openAuthRequest, isRequestPending } = useAuth();
   return (
-    <Button disabled={isRequestPending} onClick={() => void openAuthRequest()}>
+    <Button
+      variant="1btc-orange"
+      disabled={isRequestPending}
+      onClick={() => void openAuthRequest()}
+    >
       Connect Wallet
     </Button>
   );

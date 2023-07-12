@@ -1,5 +1,6 @@
-import { ChakraProvider, Flex, theme } from "@chakra-ui/react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { ClientProvider } from "@micro-stacks/react";
+import theme from "./theme";
 import Header from "./components/page-header";
 import Content from "./components/page-content";
 import Footer from "./components/page-footer";
@@ -13,7 +14,7 @@ export const App = () => (
     >
       <Flex direction="column" minH="100vh" p={8}>
         <Header />
-        <Flex flex="1">
+        <Flex flex="1" alignItems="center" justifyContent="center">
           <Content />
         </Flex>
         <Footer />
