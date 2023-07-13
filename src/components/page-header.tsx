@@ -4,7 +4,7 @@ import OneBtcLogo from "./1btc-logo";
 function Header() {
   return (
     <Flex align="center">
-      <OneBtcLogo width="100px" height="100px" />
+      <OneBtcLogo width="75px" height="75px" />
       <Flex flex="1" ml={2} align="center">
         <Heading>1btc</Heading>
       </Flex>

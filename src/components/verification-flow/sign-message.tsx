@@ -53,7 +53,6 @@ function SignMessage() {
     return (
       <Button
         variant="1btc-orange"
-        size="xl"
         disabled={!storedUserData[storedStxAddress].signatureMsg}
         isLoading={isRequestPending}
         onClick={() => {

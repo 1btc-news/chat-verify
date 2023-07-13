@@ -9,7 +9,6 @@ function SignOut() {
   return (
     <Button
       variant="1btc-orange"
-      size="xl"
       onClick={async () => {
         try {
           await signOut();

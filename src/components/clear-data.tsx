@@ -9,7 +9,6 @@ function ClearData() {
   return (
     <Button
       variant="1btc-orange"
-      size="xl"
       onClick={() => {
         if (!storedStxAddress) return;
         // clear userData for key stxAddress, leaving other contents

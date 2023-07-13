@@ -10,7 +10,6 @@ function ConnectWallet() {
   return (
     <Button
       variant="1btc-orange"
-      size="xl"
       isLoading={isRequestPending}
       onClick={() =>
         void openAuthRequest({
