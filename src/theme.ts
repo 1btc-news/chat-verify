@@ -61,7 +61,7 @@ const fonts = {
 const styles = {
   global: {
     "html, body": {
-      fontSize: "2xl",
+      fontSize: "lg",
     },
   },
 };
