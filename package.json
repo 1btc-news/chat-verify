@@ -1,5 +1,5 @@
 {
-  "name": "verify",
+  "name": "1btc-verify",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -34,9 +34,10 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 safari versions",
+      "last 2 edge versions"
     ],
     "development": [
       "last 1 chrome version",
