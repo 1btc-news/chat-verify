@@ -11,6 +11,9 @@ export const App = () => (
       appName="1BTC"
       enableNetworkSwitching
       appIconUrl={`${window.origin}/logo512.png`}
+      onNoWalletFound={() => {
+        console.log("No wallet found");
+      }}
     >
       <Flex direction="column" minH="100vh" p={8}>
         <Header />
