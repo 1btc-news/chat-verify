@@ -11,6 +11,12 @@ import {
   StepNumber,
   StepSeparator,
   Text,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
 } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import {
@@ -84,27 +90,89 @@ function VerificationFlow() {
       {activeStep === 0 && (
         <Box my={8}>
           <Text>
-            First you must sign a message indicating this is your wallet, and
-            that you want to use it for access to the 1BTC Chat.
+            Confirm ownership of your wallet by signing a message from your
+            wallet.
           </Text>
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <Button>Learn More</Button>
+            </PopoverTrigger>
+            <PopoverContent width="100%" maxW="800px">
+              <PopoverHeader bg="orange.500" fontWeight="bold">
+                Sign a Message
+              </PopoverHeader>
+              <PopoverArrow bg="orange.500" />
+              <PopoverCloseButton />
+              <Text p={2}>
+                In this step, we request you to verify the ownership of your
+                Bitcoin wallet. This is achieved by signing a unique message
+                provided by us using your wallet. This process happens through a
+                pop-up window triggered by your wallet software, ensuring that
+                your private key never leaves your device. The data from your
+                signature is then used by our system to create a unique,
+                deterministic Bitcoin address associated with your account.
+              </Text>
+            </PopoverContent>
+          </Popover>
           <SignMessage />
         </Box>
       )}
       {activeStep === 1 && (
         <Box my={8}>
           <Text>
-            Second you must send a small amount of BTC to the address below,
-            which identifies the BTC balance is greater than the threshold.
+            Demonstrate your BTC ownership by sending a small (dust) transaction
+            to your unique address.
           </Text>
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <Button>Learn More</Button>
+            </PopoverTrigger>
+            <PopoverContent width="100%" maxW="800px">
+              <PopoverHeader bg="orange.500" fontWeight="bold">
+                Send Dust Transaction
+              </PopoverHeader>
+              <PopoverArrow bg="orange.500" />
+              <PopoverCloseButton />
+              <Text p={2}>
+                In order to prove that you hold wallet holds more than 1 BTC,
+                you're required to send a small amount of BTC (commonly 0.00006
+                BTC or 6,000 satoshis, referred to as "dust") to a unique,
+                deterministic address generated for you in the previous step.
+                Note, this dust transaction is non-refundable. The 1BTC API will
+                verify this transaction and ensure that the input amount from
+                the source wallet is greater than 1 BTC.
+              </Text>
+            </PopoverContent>
+          </Popover>
           <SendDust />
         </Box>
       )}
       {activeStep === 2 && (
         <Box my={8}>
-          <Text>Third, you are all set to access the 1BTC console app!</Text>
-          <Button variant="1btc-orange" size="xl">
-            Access Console
-          </Button>
+          <Text>
+            You made it! Celebrate by joining our exclusive 1BTC chat - just a
+            click away.
+          </Text>
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <Button>Learn More</Button>
+            </PopoverTrigger>
+            <PopoverContent width="100%" maxW="800px">
+              <PopoverHeader bg="orange.500" fontWeight="bold">
+                Join 1BTC Chat
+              </PopoverHeader>
+              <PopoverArrow bg="orange.500" />
+              <PopoverCloseButton />
+              <Text p={2}>
+                Congratulations! You've successfully verified your ownership of
+                more than 1 BTC. Now the fun begins - click on the link below to
+                join our exclusive 1BTC console chat app. Get ready to mingle
+                with other Bitcoin enthusiasts who have journeyed the same path
+                as you. Welcome aboard!
+              </Text>
+            </PopoverContent>
+          </Popover>
+          <Button variant="1btc-orange">Access Console</Button>
         </Box>
       )}
     </>

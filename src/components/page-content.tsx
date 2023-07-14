@@ -1,4 +1,17 @@
-import { Box, Text, Spinner, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Spinner,
+  Stack,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Button,
+  PopoverHeader,
+  PopoverArrow,
+  PopoverCloseButton,
+  Link,
+} from "@chakra-ui/react";
 import { useAccount } from "@micro-stacks/react";
 import { useAtom } from "jotai";
 import { loadable } from "jotai/utils";
@@ -22,8 +35,41 @@ function Content() {
   // if user is not logged in already
   if (!stxAddress || !storedStxAddress || !storedUserData) {
     return (
-      <Box>
-        <Text>A wallet connection is required to verify with 1BTC.</Text>
+      <Box width="100%" maxW="1200px">
+        <Text>
+          Start the process of unlocking the exclusive 1BTC chat by connecting
+          your Hiro or Xverse wallet.
+        </Text>
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <Button>Learn More</Button>
+          </PopoverTrigger>
+          <PopoverContent width="100%" maxW="800px">
+            <PopoverHeader bg="orange.500" fontWeight="bold">
+              Connect your Wallet
+            </PopoverHeader>
+            <PopoverArrow bg="orange.500" />
+            <PopoverCloseButton />
+            <Text p={2}>
+              In order to access our exclusive 1BTC chat platform, connect your
+              Bitcoin wallet with our platform. We currently support both{" "}
+              <Link
+                color="orange.500"
+                href="https://wallet.hiro.so/wallet/install-web"
+              >
+                Hiro
+              </Link>{" "}
+              and{" "}
+              <Link color="orange.500" href="https://www.xverse.app/">
+                Xverse
+              </Link>{" "}
+              wallets. By clicking the Connect Wallet button and selecting your
+              account from the wallet, you initiate the secure, standardized
+              connection process.
+            </Text>
+          </PopoverContent>
+        </Popover>
+
         <ConnectWallet />
       </Box>
     );
@@ -31,7 +77,7 @@ function Content() {
 
   // if user is logged in, check if account data is loaded
   return (
-    <Box>
+    <Box width="100%" maxW="1200px">
       {accountData.state === "loading" && (
         <>
           <Spinner color="orange.500" emptyColor="gray.200" />
@@ -45,7 +91,7 @@ function Content() {
         </>
       )}
       {accountData.state === "hasData" && <VerificationFlow />}
-      <Stack direction="row">
+      <Stack direction="row" justifyContent="flex-end">
         <ClearData />
         <SignOut />
       </Stack>
