@@ -95,7 +95,7 @@ function VerificationFlow() {
           </Text>
           <Popover placement="bottom-start">
             <PopoverTrigger>
-              <Button>Learn More</Button>
+              <Button mr={4}>Learn More</Button>
             </PopoverTrigger>
             <PopoverContent width="100%" maxW="800px">
               <PopoverHeader bg="orange.500" fontWeight="bold">
@@ -125,7 +125,7 @@ function VerificationFlow() {
           </Text>
           <Popover placement="bottom-start">
             <PopoverTrigger>
-              <Button>Learn More</Button>
+              <Button mr={4}>Learn More</Button>
             </PopoverTrigger>
             <PopoverContent width="100%" maxW="800px">
               <PopoverHeader bg="orange.500" fontWeight="bold">
@@ -155,7 +155,7 @@ function VerificationFlow() {
           </Text>
           <Popover placement="bottom-start">
             <PopoverTrigger>
-              <Button>Learn More</Button>
+              <Button mr={4}>Learn More</Button>
             </PopoverTrigger>
             <PopoverContent width="100%" maxW="800px">
               <PopoverHeader bg="orange.500" fontWeight="bold">
