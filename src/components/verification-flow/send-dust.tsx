@@ -1,5 +1,14 @@
-import { Image, Spinner, Text } from "@chakra-ui/react";
+import {
+  HStack,
+  IconButton,
+  Image,
+  Spinner,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { useAtom } from "jotai";
+import copy from "copy-to-clipboard";
+import { FiCopy } from "react-icons/fi";
 import {
   fetchAccountData,
   fetchRegistrationResponseAtom,
@@ -17,6 +26,33 @@ function SendDust() {
   const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
   const registrationResponseLoader = loadable(fetchRegistrationResponseAtom);
   const [registrationResponse] = useAtom(registrationResponseLoader);
+
+  const toast = useToast();
+
+  const copyText = (text: string) => {
+    const copyStatus = copy(text);
+    if (copyStatus) {
+      toast({
+        title: `Copied text to clipboard`,
+        description: text,
+        position: "top",
+        status: "success",
+        variant: "left-accent",
+        duration: 2000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: `Unable to copy text to clipboard`,
+        description: "Please refresh and try again, or copy manually",
+        position: "top",
+        status: "error",
+        variant: "left-accent",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
 
   useEffect(() => {
     if (
@@ -94,9 +130,17 @@ function SendDust() {
 
     return (
       <>
-        <Text my={4}>
-          Send a dust amount of BTC to {accountData.receiveAddress}
-        </Text>
+        <HStack>
+          <Text my={4}>
+            Send a dust amount of BTC to {accountData.receiveAddress}
+          </Text>
+          <IconButton
+            variant="1btc-orange"
+            aria-label="Copy Bitcoin address"
+            icon={<FiCopy />}
+            onClick={() => copyText(accountData.receiveAddress)}
+          />
+        </HStack>
         <Image
           boxSize="250px"
           src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${accountData.receiveAddress}`}
