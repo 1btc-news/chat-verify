@@ -156,6 +156,15 @@ function VerificationFlow() {
           <Popover placement="bottom-start">
             <PopoverTrigger>
               <Button mr={4}>Learn More</Button>
+              <Button
+                as="a"
+                variant="ghost"
+                href="https://app.console.xyz/c/1btc/chat"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join 1BTC
+              </Button>
             </PopoverTrigger>
             <PopoverContent width="100%" maxW="800px">
               <PopoverHeader bg="orange.500" fontWeight="bold">
