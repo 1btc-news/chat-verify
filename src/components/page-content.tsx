@@ -85,7 +85,7 @@ function Content() {
     <Box width="100%" maxW="1200px">
       {accountData.state === "loading" && (
         <>
-          <Spinner color="orange.500" emptyColor="gray.200" />
+          <Spinner color="orange.500" emptyColor="orange.200" />
           <Text>Loading account data...</Text>
         </>
       )}

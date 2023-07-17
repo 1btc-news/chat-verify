@@ -23,7 +23,7 @@ function SignMessage() {
   if (signatureMsg.state === "loading") {
     return (
       <>
-        <Spinner color="orange.500" emptyColor="gray.200" />
+        <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading signature data...</Text>
       </>
     );
