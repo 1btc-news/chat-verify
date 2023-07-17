@@ -54,13 +54,18 @@ function Content() {
               In order to access our exclusive 1BTC chat platform, connect your
               Bitcoin wallet with our platform. We currently support both{" "}
               <Link
+                isExternal
                 color="orange.500"
                 href="https://wallet.hiro.so/wallet/install-web"
               >
                 Hiro
               </Link>{" "}
               and{" "}
-              <Link color="orange.500" href="https://www.xverse.app/">
+              <Link
+                isExternal
+                color="orange.500"
+                href="https://www.xverse.app/"
+              >
                 Xverse
               </Link>{" "}
               wallets. By clicking the Connect Wallet button and selecting your
