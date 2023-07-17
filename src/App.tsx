@@ -4,6 +4,7 @@ import theme from "./theme";
 import Header from "./components/page-header";
 import Content from "./components/page-content";
 import Footer from "./components/page-footer";
+import { useNoWalletFound } from "./hooks/no-wallet-found";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -11,9 +12,7 @@ export const App = () => (
       appName="1BTC"
       enableNetworkSwitching
       appIconUrl={`${window.origin}/logo512.png`}
-      onNoWalletFound={() => {
-        console.log("No wallet found");
-      }}
+      onNoWalletFound={useNoWalletFound()}
     >
       <Flex direction="column" minH="100vh" p={8}>
         <Header />
