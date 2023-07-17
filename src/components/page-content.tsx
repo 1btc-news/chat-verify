@@ -36,7 +36,7 @@ function Content() {
   if (!stxAddress || !storedStxAddress || !storedUserData) {
     return (
       <Box width="100%" maxW="1200px">
-        <Text>
+        <Text mb={4}>
           Start the process of unlocking the exclusive 1BTC chat by connecting
           your Hiro or Xverse wallet.
         </Text>

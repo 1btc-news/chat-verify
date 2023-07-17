@@ -7,7 +7,6 @@ import {
   storedUserDataAtom,
 } from "../../constants";
 import { loadable } from "jotai/utils";
-import SignOut from "../sign-out";
 import { useEffect, useState } from "react";
 
 function SendDust() {
@@ -68,7 +67,6 @@ function SendDust() {
       <>
         <Text>There was an error, please sign out and try again.</Text>
         <Text>{String(registrationResponse.error)}</Text>
-        <SignOut />
       </>
     );
   }
@@ -96,7 +94,9 @@ function SendDust() {
 
     return (
       <>
-        <Text>Send a dust amount of BTC to {accountData.receiveAddress}</Text>
+        <Text my={4}>
+          Send a dust amount of BTC to {accountData.receiveAddress}
+        </Text>
         <Image
           boxSize="250px"
           src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${accountData.receiveAddress}`}

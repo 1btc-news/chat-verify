@@ -89,7 +89,7 @@ function VerificationFlow() {
 
       {activeStep === 0 && (
         <Box my={8}>
-          <Text>
+          <Text mb={4}>
             Confirm ownership of your wallet by signing a message from your
             wallet.
           </Text>
@@ -119,7 +119,7 @@ function VerificationFlow() {
       )}
       {activeStep === 1 && (
         <Box my={8}>
-          <Text>
+          <Text mb={4}>
             Demonstrate your BTC ownership by sending a small (dust) transaction
             to your unique address.
           </Text>
@@ -149,7 +149,7 @@ function VerificationFlow() {
       )}
       {activeStep === 2 && (
         <Box my={8}>
-          <Text>
+          <Text mb={4}>
             You made it! Celebrate by joining our exclusive 1BTC chat - just a
             click away.
           </Text>
