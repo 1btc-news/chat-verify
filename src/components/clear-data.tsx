@@ -1,8 +1,10 @@
 import { Button } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
 import { storedStxAddressAtom, storedUserDataAtom } from "../constants";
+import { useAuth } from "@micro-stacks/react";
 
 function ClearData() {
+  const { signOut } = useAuth();
   const [storedStxAddress, setStoredStxAddress] = useAtom(storedStxAddressAtom);
   const setStoredUserData = useSetAtom(storedUserDataAtom);
 
@@ -10,16 +12,21 @@ function ClearData() {
     <Button
       variant="1btc-orange"
       onClick={() => {
-        if (!storedStxAddress) return;
-        // clear userData for key stxAddress, leaving other contents
-        setStoredUserData((prevUserData) => {
-          if (!prevUserData) return null;
-          const updatedUserData = { ...prevUserData };
-          delete updatedUserData[storedStxAddress];
-          return updatedUserData;
-        });
-        // clear the stxAddress
-        setStoredStxAddress(null);
+        try {
+          // sign out of the wallet
+          signOut();
+          // clear userData for key stxAddress, leaving other contents
+          setStoredUserData((prevUserData) => {
+            if (!storedStxAddress || !prevUserData) return null;
+            const updatedUserData = { ...prevUserData };
+            delete updatedUserData[storedStxAddress];
+            return updatedUserData;
+          });
+          // clear storedStxAddress
+          setStoredStxAddress(null);
+        } catch (error) {
+          console.error("Error while clearing data: ", error);
+        }
       }}
     >
       Clear Data

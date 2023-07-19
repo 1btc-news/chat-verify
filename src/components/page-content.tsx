@@ -11,21 +11,53 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   Link,
+  HStack,
+  Heading,
 } from "@chakra-ui/react";
 import { useAccount } from "@micro-stacks/react";
 import { useAtom } from "jotai";
 import { storedStxAddressAtom, storedUserDataAtom } from "../constants";
-import ConnectWallet from "./connect-wallet";
+import { useAccountData } from "../hooks/account-data";
+import { useActiveStep } from "../hooks/active-step";
+import SignIn from "./sign-in";
+import ClearData from "./clear-data";
 import SignOut from "./sign-out";
 import VerificationFlow from "./verification-flow";
-import ClearData from "./clear-data";
-import { useAccountData } from "../hooks/account-data";
+
+import VerificationStepper from "./stepper";
 
 function Content() {
   const { stxAddress } = useAccount();
   const [storedStxAddress] = useAtom(storedStxAddressAtom);
   const [storedUserData] = useAtom(storedUserDataAtom);
-  const { isLoading, hasError, hasData, error } = useAccountData();
+  const { isLoading, hasError, hasData, data, error } = useAccountData();
+  console.log("stxAddress", stxAddress);
+
+  const activeStep = useActiveStep();
+
+  return (
+    <Box width="100%" maxW="1200px">
+      <Heading>
+        Verify that you are a Fullcoiner to join the 1btc community
+      </Heading>
+      <VerificationStepper activeStep={activeStep} />
+      {activeStep === 0 && <Text>Connect Wallet</Text>}
+      {activeStep === 1 && <Text>Sign Message</Text>}
+      {activeStep === 2 && <Text>Send Dust</Text>}
+      {activeStep === 3 && <Text>Success!</Text>}
+      {activeStep === 4 && <Text>Insufficient</Text>}
+      <Stack direction="row" justifyContent="flex-end">
+        {stxAddress === undefined ? (
+          <SignIn />
+        ) : (
+          <>
+            <ClearData />
+            <SignOut />
+          </>
+        )}
+      </Stack>
+    </Box>
+  );
 
   // if user is not logged in already
   if (!stxAddress || !storedStxAddress || !storedUserData) {
@@ -69,8 +101,6 @@ function Content() {
             </Text>
           </PopoverContent>
         </Popover>
-
-        <ConnectWallet />
       </Box>
     );
   }

@@ -5,16 +5,18 @@ import { storedStxAddressAtom } from "../constants";
 
 function SignOut() {
   const { signOut } = useAuth();
-  const setStxAddress = useSetAtom(storedStxAddressAtom);
+  const setStoredStxAddress = useSetAtom(storedStxAddressAtom);
   return (
     <Button
       variant="1btc-orange"
-      onClick={async () => {
+      onClick={() => {
         try {
-          await signOut();
-          setStxAddress(null);
+          // sign out of the wallet
+          signOut();
+          // clear storedStxAddress
+          setStoredStxAddress(null);
         } catch (error) {
-          console.error("Error during signOut: ", error);
+          console.error("Error while signing out: ", error);
         }
       }}
     >

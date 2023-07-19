@@ -3,7 +3,7 @@ import { useAuth } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import { storedStxAddressAtom, storedUserDataAtom } from "../constants";
 
-function ConnectWallet() {
+function SignIn() {
   const { openAuthRequest, isRequestPending } = useAuth();
   const setStxAddress = useSetAtom(storedStxAddressAtom);
   const [userData, setUserData] = useAtom(storedUserDataAtom);
@@ -44,4 +44,4 @@ function ConnectWallet() {
   );
 }
 
-export default ConnectWallet;
+export default SignIn;
