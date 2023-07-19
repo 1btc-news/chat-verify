@@ -54,8 +54,8 @@ const components = {
 
 // Chakra font overrides
 const fonts = {
-  heading: "Open Sans, sans-serif",
-  body: "Open Sans, sans-serif",
+  heading: "Really Sans Large, Open Sans, sans-serif",
+  body: "Really Sans Small, Open Sans, sans-serif",
 };
 
 const styles = {
