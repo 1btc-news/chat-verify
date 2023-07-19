@@ -62,6 +62,7 @@ const styles = {
   global: {
     "html, body": {
       fontSize: "lg",
+      backgroundColor: "#0B0C14",
     },
   },
 };
