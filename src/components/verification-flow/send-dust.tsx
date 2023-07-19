@@ -1,8 +1,15 @@
 import {
-  HStack,
+  Button,
   IconButton,
   Image,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Spinner,
+  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -91,10 +98,10 @@ function SendDust() {
 
   if (registrationResponse.state === "loading") {
     return (
-      <>
+      <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />{" "}
         <Text>Loading registration response...</Text>
-      </>
+      </Stack>
     );
   }
 
@@ -130,7 +137,34 @@ function SendDust() {
 
     return (
       <>
-        <HStack>
+        <Stack direction="row">
+          <Text mb={4}>
+            Demonstrate your BTC ownership by sending a small (dust) transaction
+            to your unique address.
+          </Text>
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <Button mr={4}>Learn More</Button>
+            </PopoverTrigger>
+            <PopoverContent width="100%" maxW="800px">
+              <PopoverHeader bg="orange.500" fontWeight="bold">
+                Send Dust Transaction
+              </PopoverHeader>
+              <PopoverArrow bg="orange.500" />
+              <PopoverCloseButton />
+              <Text p={2}>
+                In order to prove that you hold wallet holds more than 1 BTC,
+                you're required to send a small amount of BTC (commonly 0.00006
+                BTC or 6,000 satoshis, referred to as "dust") to a unique,
+                deterministic address generated for you in the previous step.
+                Note, this dust transaction is non-refundable. The 1BTC API will
+                verify this transaction and ensure that the input amount from
+                the source wallet is greater than 1 BTC.
+              </Text>
+            </PopoverContent>
+          </Popover>
+        </Stack>
+        <Stack direction="row">
           <Text my={4}>
             Send a dust amount of BTC to {accountData.receiveAddress}
           </Text>
@@ -140,7 +174,7 @@ function SendDust() {
             icon={<FiCopy />}
             onClick={() => copyText(accountData.receiveAddress)}
           />
-        </HStack>
+        </Stack>
         <Image
           boxSize="250px"
           src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${accountData.receiveAddress}`}

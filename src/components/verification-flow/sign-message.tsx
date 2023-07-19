@@ -1,4 +1,15 @@
-import { Button, Spinner, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom } from "jotai";
 import {
@@ -22,10 +33,10 @@ function SignMessage() {
 
   if (signatureMsg.state === "loading") {
     return (
-      <>
+      <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading signature data...</Text>
-      </>
+      </Stack>
     );
   }
 
@@ -51,29 +62,64 @@ function SignMessage() {
     }
 
     return (
-      <Button
-        variant="1btc-orange"
-        disabled={!storedUserData[storedStxAddress].signatureMsg}
-        isLoading={isRequestPending}
-        onClick={() => {
-          openSignMessage({ message: signatureMsg.data! }).then(
-            (signatureData) => {
-              if (signatureData) {
-                setStoredUserData({
-                  ...storedUserData,
-                  [storedStxAddress]: {
-                    ...storedUserData[storedStxAddress],
-                    activeStep: storedUserData[storedStxAddress].activeStep + 1,
-                    signatureData,
-                  },
-                });
+      <>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={8}
+        >
+          <Text>
+            Confirm ownership of your wallet by signing a message from your
+            wallet.
+          </Text>
+          <Popover placement="bottom-start">
+            <PopoverTrigger>
+              <Button mr={4}>Learn More</Button>
+            </PopoverTrigger>
+            <PopoverContent width="100%" maxW="800px">
+              <PopoverHeader bg="orange.500" fontWeight="bold">
+                Sign a Message
+              </PopoverHeader>
+              <PopoverArrow bg="orange.500" />
+              <PopoverCloseButton />
+              <Text p={2}>
+                In this step, we request you to verify the ownership of your
+                Bitcoin wallet. This is achieved by signing a unique message
+                provided by us using your wallet. This process happens through a
+                pop-up window triggered by your wallet software, ensuring that
+                your private key never leaves your device. The data from your
+                signature is then used by our system to create a unique,
+                deterministic Bitcoin address associated with your account.
+              </Text>
+            </PopoverContent>
+          </Popover>
+        </Stack>
+        <Button
+          variant="1btc-orange"
+          disabled={!storedUserData[storedStxAddress].signatureMsg}
+          isLoading={isRequestPending}
+          onClick={() => {
+            openSignMessage({ message: signatureMsg.data! }).then(
+              (signatureData) => {
+                if (signatureData) {
+                  setStoredUserData({
+                    ...storedUserData,
+                    [storedStxAddress]: {
+                      ...storedUserData[storedStxAddress],
+                      activeStep:
+                        storedUserData[storedStxAddress].activeStep + 1,
+                      signatureData,
+                    },
+                  });
+                }
               }
-            }
-          );
-        }}
-      >
-        Sign Message
-      </Button>
+            );
+          }}
+        >
+          Sign Message
+        </Button>
+      </>
     );
   }
 

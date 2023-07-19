@@ -11,6 +11,24 @@ function Footer() {
       <Button
         as="a"
         variant="ghost"
+        href="https://1btc.chat"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        About
+      </Button>
+      <Button
+        as="a"
+        variant="ghost"
+        href="https://docs.1btc.chat"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Docs
+      </Button>
+      <Button
+        as="a"
+        variant="ghost"
         href="https://docs.1btc.chat/1btc-chat-api"
         target="_blank"
         rel="noopener noreferrer"
