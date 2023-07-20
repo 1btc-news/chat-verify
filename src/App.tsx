@@ -16,7 +16,7 @@ export const App = () => (
       onNoWalletFound={useNoWalletFound()}
     >
       <CustomFonts />
-      <Flex direction="column" minH="100vh" p={8}>
+      <Flex direction="column" minH="100vh" p={4}>
         <Header />
         <Flex flex="1" alignItems="center" justifyContent="center">
           <Content />

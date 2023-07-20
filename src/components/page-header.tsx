@@ -9,9 +9,9 @@ function Header() {
   const { stxAddress } = useAccount();
   return (
     <Flex align="center">
-      <OneBtcLogo width="75px" height="75px" />
+      <OneBtcLogo width="45px" height="45px" />
       <Flex flexGrow="1" ml={2} align="center">
-        <Heading>1btc</Heading>
+        <Heading size="md">1btc</Heading>
       </Flex>
       <Stack direction="row" justifyContent="flex-end" alignItems="center">
         {stxAddress === undefined ? (
