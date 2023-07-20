@@ -1,20 +1,36 @@
 import { Box, Text, Spinner, Stack, Heading } from "@chakra-ui/react";
-import { useAccount } from "@micro-stacks/react";
+import { useAtom } from "jotai";
+import { activeStepAtom } from "../constants";
 import { useAccountData } from "../hooks/account-data";
-import { useActiveStep } from "../hooks/active-step";
 import VerificationStepper from "./stepper";
 import ConnectWallet from "./verification-flow/connect-wallet";
 import SignMessage from "./verification-flow/sign-message";
 import SendDust from "./verification-flow/send-dust";
 import SuccessfulVerification from "./verification-flow/successful-verification";
 import InsufficientBalance from "./verification-flow/insufficient-balance";
+import { useEffect } from "react";
 
 function Content() {
-  const { stxAddress } = useAccount();
-  const { isLoading } = useAccountData();
-  console.log("stxAddress", stxAddress);
+  const { isLoading, data } = useAccountData();
+  const [activeStep, setActiveStep] = useAtom(activeStepAtom);
 
-  const activeStep = useActiveStep();
+  useEffect(() => {
+    if (!isLoading && data) {
+      switch (data.status) {
+        case "pending":
+          setActiveStep(2);
+          break;
+        case "valid":
+          setActiveStep(3);
+          break;
+        case "insufficient":
+          setActiveStep(4);
+          break;
+        default:
+          setActiveStep(1);
+      }
+    }
+  }, [isLoading, data, setActiveStep]);
 
   return (
     <Box width="100%" maxW="1200px">

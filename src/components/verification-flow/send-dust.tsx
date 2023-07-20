@@ -13,10 +13,11 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import { FiCopy } from "react-icons/fi";
 import {
+  activeStepAtom,
   fetchAccountData,
   fetchRegistrationResponseAtom,
   storedStxAddressAtom,
@@ -33,6 +34,7 @@ function SendDust() {
   const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
   const registrationResponseLoader = loadable(fetchRegistrationResponseAtom);
   const [registrationResponse] = useAtom(registrationResponseLoader);
+  const setActiveStep = useSetAtom(activeStepAtom);
 
   const toast = useToast();
 
@@ -73,16 +75,20 @@ function SendDust() {
       console.log("fetching account status");
       fetchAccountData(storedStxAddress).then((accountData) => {
         if (!accountData) return undefined;
+        if (accountData.status === "insufficient") {
+          setActiveStep(4);
+        }
         if (accountData.status === "valid") {
           setStoredUserData({
             ...storedUserData,
             [storedStxAddress]: {
               ...storedUserData[storedStxAddress],
-              activeStep: storedUserData[storedStxAddress].activeStep + 1,
               accountData,
             },
           });
+          setActiveStep(3);
         }
+        setQueriedStxAddress(null);
         return accountData;
       });
     };

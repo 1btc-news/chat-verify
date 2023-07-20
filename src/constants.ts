@@ -23,7 +23,6 @@ export const apiUrl = "https://1btc-api.console.xyz";
 type UserData = {
   [key: string]: {
     accountData?: AccountData;
-    activeStep: number;
     signatureMsg?: string; // https://1btc-api.console.xyz/get-hiro-signature-message
     signatureData?: SignatureData;
   };
@@ -58,11 +57,7 @@ export const storedStxAddressAtom = atomWithStorage<string | null>(
   null
 );
 
-/////////////////////////
-// ACTIVE STEP ATOM
-/////////////////////////
-
-export const activeStepAtom = atom(0);
+export const activeStepAtom = atomWithStorage("activeStep", 0);
 
 /////////////////////////
 // ACCOUNT DATA ATOM

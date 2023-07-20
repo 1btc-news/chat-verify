@@ -1,11 +1,16 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
-import { storedStxAddressAtom, storedUserDataAtom } from "../constants";
+import {
+  activeStepAtom,
+  storedStxAddressAtom,
+  storedUserDataAtom,
+} from "../constants";
 
 function SignIn() {
   const { openAuthRequest, isRequestPending } = useAuth();
   const setStxAddress = useSetAtom(storedStxAddressAtom);
+  const setActiveStep = useSetAtom(activeStepAtom);
   const [userData, setUserData] = useAtom(storedUserDataAtom);
   return (
     <Button
@@ -14,13 +19,13 @@ function SignIn() {
       onClick={() =>
         void openAuthRequest({
           onFinish: (session) => {
-            // set STX address in localstorage
             setStxAddress(session.addresses.mainnet);
+            setActiveStep(1);
             if (!userData) {
               // initialize userData if not already set
               setUserData({
                 [session.addresses.mainnet]: {
-                  activeStep: 0,
+                  accountData: undefined,
                 },
               });
             } else if (!userData[session.addresses.mainnet]) {
@@ -28,7 +33,7 @@ function SignIn() {
               setUserData({
                 ...userData,
                 [session.addresses.mainnet]: {
-                  activeStep: 0,
+                  accountData: undefined,
                 },
               });
             }

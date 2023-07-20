@@ -1,11 +1,17 @@
 import { Button } from "@chakra-ui/react";
 import { useAtom, useSetAtom } from "jotai";
-import { storedStxAddressAtom, storedUserDataAtom } from "../constants";
+import {
+  activeStepAtom,
+  storedStxAddressAtom,
+  storedUserDataAtom,
+} from "../constants";
 import { useAuth } from "@micro-stacks/react";
 
 function ClearData() {
   const { signOut } = useAuth();
+
   const [storedStxAddress, setStoredStxAddress] = useAtom(storedStxAddressAtom);
+  const setActiveStep = useSetAtom(activeStepAtom);
   const setStoredUserData = useSetAtom(storedUserDataAtom);
 
   return (
@@ -24,6 +30,7 @@ function ClearData() {
           });
           // clear storedStxAddress
           setStoredStxAddress(null);
+          setActiveStep(0);
         } catch (error) {
           console.error("Error while clearing data: ", error);
         }

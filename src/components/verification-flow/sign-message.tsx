@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useOpenSignMessage } from "@micro-stacks/react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import {
   storedUserDataAtom,
   storedStxAddressAtom,
@@ -25,7 +25,7 @@ function SignMessage() {
   const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
   const signatureMsgLoader = loadable(fetchSignatureMsgAtom);
   const [signatureMsg] = useAtom(signatureMsgLoader);
-  const [activeStep, setActiveStep] = useAtom(activeStepAtom);
+  const setActiveStep = useSetAtom(activeStepAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
 
   // verify stored user data exists
@@ -112,7 +112,7 @@ function SignMessage() {
                       signatureData,
                     },
                   });
-                  setActiveStep(activeStep + 1);
+                  setActiveStep(2);
                 }
               }
             );
