@@ -2,7 +2,7 @@ import { Box, Text, Spinner, Stack, Heading } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { activeStepAtom } from "../constants";
 import { useAccountData } from "../hooks/account-data";
-import VerificationStepper from "./stepper";
+import VerificationStepper from "./verification-stepper";
 import ConnectWallet from "./verification-flow/connect-wallet";
 import SignMessage from "./verification-flow/sign-message";
 import SendDust from "./verification-flow/send-dust";

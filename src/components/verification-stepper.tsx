@@ -14,7 +14,7 @@ import { registrationSteps } from "../constants";
 
 function VerificationStepper(props: { activeStep: number }) {
   return (
-    <Stepper index={props.activeStep} size="lg" my={8} colorScheme="orange">
+    <Stepper index={props.activeStep} size="lg" my={8} colorScheme="stepper">
       {registrationSteps.map((step, index) => (
         <Step key={index}>
           <StepIndicator>
