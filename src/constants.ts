@@ -52,12 +52,40 @@ export const storedUserDataAtom = atomWithStorage<UserData | null>(
   null
 );
 
+// new approach
+//   individual atoms like they should be
+//   updated by components
+// user data derived automatically
+//   fetch checks object first
+//   returns value from API if not
+//   naturally should update user data?
+// double check flows
+//   set data on login
+//   clear data on logout
+//   clear object on clear data
+
+// this should be "activeStxAddressAtom"
 export const storedStxAddressAtom = atomWithStorage<string | null>(
   "stxAddress",
   null
 );
 
 export const activeStepAtom = atomWithStorage("activeStep", 0);
+
+export const activeSignatureMsgAtom = atomWithStorage<string | null>(
+  "signatureMsg",
+  null
+);
+
+export const activeSignatureDataAtom = atomWithStorage<SignatureData | null>(
+  "signatureData",
+  null
+);
+
+export const activeRegistrationResponseAtom = atomWithStorage<string | null>(
+  "registrationResponse",
+  null
+);
 
 /////////////////////////
 // ACCOUNT DATA ATOM

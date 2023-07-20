@@ -13,12 +13,13 @@ import {
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import {
-  storedUserDataAtom,
   storedStxAddressAtom,
-  fetchSignatureMsgAtom,
   activeStepAtom,
+  activeSignatureMsgAtom,
+  activeSignatureDataAtom,
 } from "../../constants";
-import { loadable } from "jotai/utils";
+import { useSignatureMsg } from "../../hooks/signature-msg";
+import { useEffect } from "react";
 
 // active step = 1
 // queries signature message from API
@@ -27,18 +28,24 @@ import { loadable } from "jotai/utils";
 
 function SignMessage() {
   const [storedStxAddress] = useAtom(storedStxAddressAtom);
-  const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
-  const signatureMsgLoader = loadable(fetchSignatureMsgAtom);
-  const [signatureMsg] = useAtom(signatureMsgLoader);
   const setActiveStep = useSetAtom(activeStepAtom);
+  const setActiveSignatureMsg = useSetAtom(activeSignatureMsgAtom);
+  const setActiveSignatureData = useSetAtom(activeSignatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
+  const { isLoading, hasData, data } = useSignatureMsg();
+
+  useEffect(() => {
+    if (hasData && data) {
+      setActiveSignatureMsg(data);
+    }
+  }, [hasData, data]);
 
   // verify stored user data exists
-  if (!storedStxAddress || !storedUserData) {
+  if (!storedStxAddress) {
     return null;
   }
 
-  if (signatureMsg.state === "loading") {
+  if (isLoading) {
     return (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
@@ -47,90 +54,57 @@ function SignMessage() {
     );
   }
 
-  if (signatureMsg.state === "hasError") {
-    return (
-      <>
-        <Text>There was an error, please sign out and try again.</Text>
-        <Text>{String(signatureMsg.error)}</Text>
-      </>
-    );
-  }
-
-  if (signatureMsg.state === "hasData") {
-    // store in user data if not already stored
-    if (signatureMsg.data && !storedUserData[storedStxAddress].signatureMsg) {
-      setStoredUserData({
-        ...storedUserData,
-        [storedStxAddress]: {
-          ...storedUserData[storedStxAddress],
-          signatureMsg: signatureMsg.data,
-        },
-      });
-    }
-
-    return (
-      <>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={8}
-        >
-          <Text>
-            Confirm ownership of your wallet by signing a message from your
-            wallet.
-          </Text>
-          <Popover placement="bottom-start">
-            <PopoverTrigger>
-              <Button mr={4}>Learn More</Button>
-            </PopoverTrigger>
-            <PopoverContent width="100%" maxW="800px">
-              <PopoverHeader bg="orange.500" fontWeight="bold">
-                Sign a Message
-              </PopoverHeader>
-              <PopoverArrow bg="orange.500" />
-              <PopoverCloseButton />
-              <Text p={2}>
-                In this step, we request you to verify the ownership of your
-                Bitcoin wallet. This is achieved by signing a unique message
-                provided by us using your wallet. This process happens through a
-                pop-up window triggered by your wallet software, ensuring that
-                your private key never leaves your device. The data from your
-                signature is then used by our system to create a unique,
-                deterministic Bitcoin address associated with your account.
-              </Text>
-            </PopoverContent>
-          </Popover>
-        </Stack>
-        <Button
-          variant="1btc-orange"
-          disabled={!storedUserData[storedStxAddress].signatureMsg}
-          isLoading={isRequestPending}
-          onClick={() => {
-            openSignMessage({ message: signatureMsg.data! }).then(
-              (signatureData) => {
-                if (signatureData) {
-                  setStoredUserData({
-                    ...storedUserData,
-                    [storedStxAddress]: {
-                      ...storedUserData[storedStxAddress],
-                      signatureData,
-                    },
-                  });
-                  setActiveStep(2);
-                }
-              }
-            );
-          }}
-        >
-          Sign Message
-        </Button>
-      </>
-    );
-  }
-
-  // shouldn't get here, but just in case
-  return null;
+  return (
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={8}
+      >
+        <Text>
+          Confirm ownership of your wallet by signing a message from your
+          wallet.
+        </Text>
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <Button mr={4}>Learn More</Button>
+          </PopoverTrigger>
+          <PopoverContent width="100%" maxW="800px">
+            <PopoverHeader bg="orange.500" fontWeight="bold">
+              Sign a Message
+            </PopoverHeader>
+            <PopoverArrow bg="orange.500" />
+            <PopoverCloseButton />
+            <Text p={2}>
+              In this step, we request you to verify the ownership of your
+              Bitcoin wallet. This is achieved by signing a unique message
+              provided by us using your wallet. This process happens through a
+              pop-up window triggered by your wallet software, ensuring that
+              your private key never leaves your device. The data from your
+              signature is then used by our system to create a unique,
+              deterministic Bitcoin address associated with your account.
+            </Text>
+          </PopoverContent>
+        </Popover>
+      </Stack>
+      <Button
+        variant="1btc-orange"
+        disabled={!data}
+        isLoading={isRequestPending}
+        onClick={() => {
+          openSignMessage({ message: data! }).then((signatureData) => {
+            if (signatureData) {
+              setActiveSignatureData(signatureData);
+              setActiveStep(2);
+            }
+          });
+        }}
+      >
+        Sign Message
+      </Button>
+    </>
+  );
 }
 
 export default SignMessage;

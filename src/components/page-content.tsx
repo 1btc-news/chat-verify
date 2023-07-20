@@ -30,7 +30,7 @@ function Content() {
           setActiveStep(1);
       }
     }
-  }, [isLoading, data, setActiveStep]);
+  }, [isLoading, data]);
 
   return (
     <Box width="100%" maxW="1200px">
