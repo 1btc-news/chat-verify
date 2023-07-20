@@ -4,6 +4,7 @@ import { Box, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
 import {
   accountDataAtom,
   activeStepAtom,
+  registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
 } from "../../constants";
@@ -15,6 +16,7 @@ import SuccessfulVerification from "../verification-flow/successful-verification
 import InsufficientBalance from "../verification-flow/insufficient-balance";
 import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
+import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 // determines current step in the process and renders content
 
@@ -23,8 +25,10 @@ function Content() {
   const activeStep = useAtomValue(activeStepAtom);
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
+  const setRegistrationResponse = useSetAtom(registrationResponseAtom);
   const { isLoading: isAccountLoading, data: accountData } = useAccountData();
   const { data: signatureMsgData } = useSignatureMsg();
+  const { data: registrationData } = useRegistrationResponse();
 
   useEffect(() => {
     if (accountData) {
@@ -37,6 +41,12 @@ function Content() {
       setSignatureMsg(signatureMsgData);
     }
   }, [signatureMsgData, setSignatureMsg]);
+
+  useEffect(() => {
+    if (registrationData) {
+      setRegistrationResponse(registrationData);
+    }
+  }, [registrationData, setRegistrationResponse]);
 
   return (
     <Box width="100%" maxW="1200px">

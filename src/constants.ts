@@ -72,6 +72,13 @@ export const signatureDataAtom = atomWithStorage<SignatureData | null>(
   null
 );
 
+// registration response from API
+// matches account object
+export const registrationResponseAtom = atomWithStorage<AccountData | null>(
+  "1btc-registrationResponse",
+  null
+);
+
 /////////////////////////
 // ATOMS
 // updated by components
@@ -95,35 +102,26 @@ export const activeStepAtom = atom((get) => {
     signatureData,
   });
   if (!stxAddress) {
-    console.log("activeStepAtom: no stx address, returning 0");
     return 0;
   }
   if (signatureData) {
-    console.log("activeStepAtom: signature data detected, returning 2");
     return 2;
-  }
-  if (!accountData) {
-    console.log("activeStepAtom: no account data, returning 1");
-    return 1;
   }
   if (accountData) {
     if (accountData.status === "insufficient") {
-      console.log("activeStepAtom: insufficient balance, returning 4");
       return 4;
     }
     if (accountData.status === "valid") {
-      console.log("activeStepAtom: account valid, returning 3");
       return 3;
     }
     if (accountData.status === "pending") {
-      console.log("activeStepAtom: account pending, returning 2");
       return 2;
     }
   } else {
-    console.log("activeStepAtom: no account data, returning 1");
+    // no accountData
     return 1;
   }
-  console.log("activeStepAtom: default, returning 0");
+  // default return
   return 0;
 });
 
@@ -167,7 +165,11 @@ export const fetchSignatureMsgAtom = atom(async (get) => {
 
 // fetch registration response from API
 export const fetchRegistrationResponseAtom = atom(async (get) => {
+  const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
+  if (accountData) {
+    return accountData;
+  }
   if (!signatureData) {
     return undefined;
   }

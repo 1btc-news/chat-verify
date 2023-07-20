@@ -41,8 +41,7 @@ function SendDust() {
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
     null
   );
-  // what about the accountData atom? only want to post if not registered
-  const { isLoading, hasData, data } = useRegistrationResponse();
+  const { isLoading, data } = useRegistrationResponse();
 
   const toast = useToast();
 
@@ -54,8 +53,8 @@ function SendDust() {
         description: text,
         position: "top",
         status: "success",
-        variant: "left-accent",
-        duration: 2000,
+        variant: "1btc-orange",
+        duration: 3000,
         isClosable: true,
       });
     } else {
@@ -63,9 +62,8 @@ function SendDust() {
         title: `Unable to copy text to clipboard`,
         description: "Please refresh and try again, or copy manually",
         position: "top",
-        status: "error",
-        variant: "left-accent",
-        duration: 2000,
+        variant: "1btc-orange",
+        duration: 3000,
         isClosable: true,
       });
     }
@@ -75,12 +73,10 @@ function SendDust() {
     if (!stxAddress) {
       return;
     }
-
     // rather: check if query is in progress
     if (stxAddress === queriedStxAddress) {
       return;
     }
-
     setQueriedStxAddress(stxAddress);
 
     const fetchAccountStatus = () => {
@@ -96,6 +92,7 @@ function SendDust() {
     const intervalId = setInterval(fetchAccountStatus, 5000);
 
     return () => clearInterval(intervalId);
+    // TODO: correct this dependency issue
   }, [stxAddress]);
 
   // verify STX address is known
@@ -146,7 +143,7 @@ function SendDust() {
           </PopoverContent>
         </Popover>
       </Stack>
-      {hasData && data ? (
+      {data && (
         <>
           <Stack
             direction="row"
@@ -170,11 +167,6 @@ function SendDust() {
             src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
           />
         </>
-      ) : (
-        <Stack direction="row">
-          <Spinner color="orange.500" emptyColor="orange.200" />{" "}
-          <Text>Loading BTC address for dust...</Text>
-        </Stack>
       )}
     </>
   );
