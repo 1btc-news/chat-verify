@@ -20,6 +20,11 @@ import {
 } from "../../constants";
 import { loadable } from "jotai/utils";
 
+// active step = 1
+// queries signature message from API
+//   once loaded, user can sign the message
+// once user signs progresses to next step
+
 function SignMessage() {
   const [storedStxAddress] = useAtom(storedStxAddressAtom);
   const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);

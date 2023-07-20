@@ -11,6 +11,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+// active step = 0
+// uses sign-in.tsx to progress to next step
+
 function ConnectWallet() {
   return (
     <Stack

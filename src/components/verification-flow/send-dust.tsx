@@ -26,6 +26,10 @@ import {
 import { loadable } from "jotai/utils";
 import { useEffect, useState } from "react";
 
+// active step = 2
+// queries registration response from API
+// needs more review
+
 function SendDust() {
   const [storedStxAddress] = useAtom(storedStxAddressAtom);
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
@@ -147,8 +151,13 @@ function SendDust() {
 
     return (
       <>
-        <Stack direction="row">
-          <Text mb={4}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={8}
+        >
+          <Text>
             Demonstrate your BTC ownership by sending a small (dust) transaction
             to your unique address.
           </Text>
