@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
 import { loadable } from "jotai/utils";
-import { fetchSignatureMsgAtom } from "../constants";
+import { signatureMsgAtom } from "../constants";
 
 export const useSignatureMsg = () => {
-  const signatureMsgLoader = loadable(fetchSignatureMsgAtom);
+  const signatureMsgLoader = loadable(signatureMsgAtom);
   const [signatureMsg] = useAtom(signatureMsgLoader);
 
   const isLoading = signatureMsg.state === "loading";

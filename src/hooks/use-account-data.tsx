@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
 import { loadable } from "jotai/utils";
-import { fetchAccountDataAtom } from "../constants";
+import { accountDataAtom } from "../constants";
 
 export const useAccountData = () => {
-  const accountDataLoader = loadable(fetchAccountDataAtom);
+  const accountDataLoader = loadable(accountDataAtom);
   const [accountData] = useAtom(accountDataLoader);
 
   const isLoading = accountData.state === "loading";

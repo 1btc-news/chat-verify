@@ -20,7 +20,7 @@ export const apiUrl = "https://1btc-api.console.xyz";
 /////////////////////////
 
 // define locally stored data keyed by STX address
-type UserData = {
+export type UserData = {
   [key: string]: {
     accountData?: AccountData;
     signatureMsg?: string; // https://1btc-api.console.xyz/get-hiro-signature-message
@@ -29,13 +29,13 @@ type UserData = {
 };
 
 // signature message returned from the API
-type SignatureMessage = {
+export type SignatureMessage = {
   msg: string;
 };
 
 // registration data returned from the API
 // https://1btc-api.console.xyz/register-hiro
-type AccountData = {
+export type AccountData = {
   owner: string;
   receiveAddress: string;
   origin: string | null;
@@ -47,164 +47,78 @@ type AccountData = {
 // updated by components
 /////////////////////////
 
-export const storedUserDataAtom = atomWithStorage<UserData | null>(
-  "userData",
-  null
-);
-
-// new approach
-//   individual atoms like they should be
-//   updated by components
-// user data derived automatically
-//   fetch checks object first
-//   returns value from API if not
-//   naturally should update user data?
-// double check flows
-//   set data on login
-//   clear data on logout
-//   clear object on clear data
-
-export const activeStxAddressAtom = atomWithStorage<string | null>(
+// current Stacks (STX) address
+export const stxAddressAtom = atomWithStorage<string | null>(
   "stxAddress",
   null
 );
 
-export const activeStepAtom = atomWithStorage("activeStep", 0);
+// current registration step
+export const activeStepAtom = atomWithStorage<number>("activeStep", 0);
 
-export const activeAccountDataAtom = atomWithStorage<AccountData | null>(
-  "accountData",
-  null
-);
-
-export const activeSignatureMsgAtom = atomWithStorage<string | null>(
-  "signatureMsg",
-  null
-);
-
-export const activeSignatureDataAtom = atomWithStorage<SignatureData | null>(
+// current signature data
+export const signatureDataAtom = atomWithStorage<SignatureData | null>(
   "signatureData",
   null
 );
 
 /////////////////////////
-// ACCOUNT DATA ATOM
+// LOADABLE ASYNC ATOMS
+// updated by API calls
 /////////////////////////
 
-// returns value if known, otherwise fetches it from API
-export const fetchAccountDataAtom = atom(async (get) => {
-  const stxAddress = get(activeStxAddressAtom);
-  if (stxAddress === null) {
-    throw new Error("STX Address is null");
+// fetch account data from API
+export const accountDataAtom = atom(async (get) => {
+  const stxAddress = get(stxAddressAtom);
+  if (!stxAddress) {
+    return undefined;
   }
-  const userData = get(storedUserDataAtom);
-  console.log(
-    "userData from fetchAccountDataAtom():",
-    JSON.stringify(userData, null, 2)
-  );
-  if (userData && userData[stxAddress] && userData[stxAddress].accountData) {
-    console.log(`accountData returned from object`);
-    return userData[stxAddress].accountData;
-  } else {
-    console.log(`accountData fetched from API`);
-    const accountData = await fetchAccountData(stxAddress);
+  try {
+    const accountData = await getAccountData(stxAddress);
+    return accountData;
+  } catch (error) {
+    console.error(`Failed to fetch account data for ${stxAddress}:`, error);
+    return undefined;
+  }
+});
+
+// fetch signature message from API
+export const signatureMsgAtom = atom(async (get) => {
+  const stxAddress = get(stxAddressAtom);
+  if (!stxAddress) {
+    return undefined;
+  }
+  try {
+    const signatureMsg = await postSignatureMsg(stxAddress);
+    return signatureMsg?.msg;
+  } catch (error) {
+    console.error(
+      `Failed to fetch signature message for ${stxAddress}:`,
+      error
+    );
+    return undefined;
+  }
+});
+
+// fetch registration response from API
+export const registrationResponseAtom = atom(async (get) => {
+  const accountData = get(accountDataAtom);
+  const signatureData = get(signatureDataAtom);
+  if (!signatureData) {
+    return undefined;
+  }
+  if (accountData) {
     return accountData;
   }
-});
-
-// This derived atom will update storedUserDataAtom based on the status of accountData
-export const updateAccountDataAtom = atom(
-  (get) => {
-    const userData = get(storedUserDataAtom);
-    const accountData = get(activeAccountDataAtom);
-    const activeStxAddress = get(activeStxAddressAtom);
-
-    if (!userData || !accountData || !activeStxAddress) {
-      return userData;
-    }
-
-    return {
-      ...userData,
-      [activeStxAddress]: {
-        ...userData[activeStxAddress],
-        accountData: accountData,
-      },
-    };
-  },
-  (get, set) => {
-    // When this atom is set, it also updates storedUserDataAtom
-    set(storedUserDataAtom, get(updateAccountDataAtom));
-  }
-);
-
-/////////////////////////
-// SIGNATURE MSG ATOM
-/////////////////////////
-
-// returns value if known, otherwise fetches it from API
-export const fetchSignatureMsgAtom = atom(async (get) => {
-  const stxAddress = get(activeStxAddressAtom);
-  if (stxAddress === null) {
-    throw new Error("STX Address is null");
-  }
-  const userData = get(storedUserDataAtom);
-  if (userData && userData[stxAddress] && userData[stxAddress].signatureMsg) {
-    console.log(`signatureMsg returned from object`);
-    return userData[stxAddress].signatureMsg;
-  } else {
-    console.log(`signatureMsg fetched from API`);
-    const signatureMsg = await fetchSignatureMsg(stxAddress);
-    return signatureMsg?.msg;
-  }
-});
-
-// This derived atom will update storedUserDataAtom based on the status of signatureMsg
-export const updateSignatureMsgAtom = atom(
-  (get) => {
-    const userData = get(storedUserDataAtom);
-    const signatureMsg = get(activeSignatureMsgAtom);
-    const activeStxAddress = get(activeStxAddressAtom);
-
-    if (!userData || !signatureMsg || !activeStxAddress) {
-      return userData;
-    }
-
-    return {
-      ...userData,
-      [activeStxAddress]: {
-        ...userData[activeStxAddress],
-        signatureMsg: signatureMsg,
-      },
-    };
-  },
-  (get, set) => {
-    // When this atom is set, it also updates storedUserDataAtom
-    set(storedUserDataAtom, get(updateSignatureMsgAtom));
-  }
-);
-
-/////////////////////////
-// REGISTRATION ATOM
-/////////////////////////
-
-// returns value if known, otherwise fetches it from API
-export const fetchRegistrationResponseAtom = atom(async (get) => {
-  const stxAddress = get(activeStxAddressAtom);
-  if (stxAddress === null) {
-    throw new Error("STX Address is null");
-  }
-  const userData = get(storedUserDataAtom);
-  if (userData && userData[stxAddress] && userData[stxAddress].accountData) {
-    console.log(`registrationResponse returned from object`);
-    return userData[stxAddress].accountData;
-  } else {
-    console.log(`registrationResponse fetched from API`);
-    if (userData && userData[stxAddress]) {
-      const accountData = await fetchRegistrationResponse(
-        userData[stxAddress].signatureData!
-      );
-      return accountData;
-    }
-    throw new Error("User data or signature data is undefined");
+  try {
+    const registrationResponse = await postRegistrationResponse(signatureData);
+    return registrationResponse;
+  } catch (error) {
+    console.error(
+      `Failed to fetch registration response for ${signatureData}:`,
+      error
+    );
+    return undefined;
   }
 });
 
@@ -212,14 +126,14 @@ export const fetchRegistrationResponseAtom = atom(async (get) => {
 // HELPER FUNCTIONS
 /////////////////////////
 
-export async function fetchAccountData(
+export async function getAccountData(
   stxAddress: string
 ): Promise<AccountData | undefined> {
   const accountQuery = await fetch(`${apiUrl}/account/${stxAddress}`);
   return accountQuery.status === 200 ? await accountQuery.json() : undefined;
 }
 
-async function fetchSignatureMsg(
+async function postSignatureMsg(
   stxAddress: string
 ): Promise<SignatureMessage | undefined> {
   const signatureMsgQuery = await fetch(`${apiUrl}/get-hiro-signature-msg`, {
@@ -232,7 +146,7 @@ async function fetchSignatureMsg(
     : undefined;
 }
 
-async function fetchRegistrationResponse(
+async function postRegistrationResponse(
   signatureData: SignatureData
 ): Promise<AccountData | undefined> {
   console.log(`fetchRegistrationResponse`);

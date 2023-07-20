@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   IconButton,
   Image,
@@ -18,22 +19,22 @@ import copy from "copy-to-clipboard";
 import { FiCopy } from "react-icons/fi";
 import {
   activeStepAtom,
-  fetchAccountData,
-  activeStxAddressAtom,
-  storedUserDataAtom,
+  getAccountData,
+  stxAddressAtom,
 } from "../../constants";
-import { useEffect, useState } from "react";
-import { useRegistrationResponse } from "../../hooks/registration-response";
+import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 // active step = 2
 // queries registration response from API
-// needs more review
+// monitors for pending transaction to dust account
 
 function SendDust() {
-  const [activeStxAddress] = useAtom(activeStxAddressAtom);
+  const [stxAddress] = useAtom(stxAddressAtom);
+  // TODO: better way to handle this? use an atom?
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
     null
   );
+  // what about the accountData atom? only want to post if not registered
   const { isLoading, hasData, data } = useRegistrationResponse();
   const setActiveStep = useSetAtom(activeStepAtom);
 
@@ -65,19 +66,21 @@ function SendDust() {
   };
 
   useEffect(() => {
-    if (!activeStxAddress) {
+    if (!stxAddress) {
       return;
     }
 
-    if (activeStxAddress === queriedStxAddress) {
+    // rather: check if query is in progress
+    if (stxAddress === queriedStxAddress) {
       return;
     }
 
-    setQueriedStxAddress(activeStxAddress);
+    setQueriedStxAddress(stxAddress);
 
     const fetchAccountStatus = () => {
-      console.log("fetching account status");
-      fetchAccountData(activeStxAddress).then((accountData) => {
+      console.log("fetching account status in send-dust.tsx");
+      getAccountData(stxAddress).then((accountData) => {
+        console.log("accountData: ", accountData);
         if (!accountData) return undefined;
         if (accountData.status === "insufficient") {
           setActiveStep(4);
@@ -93,24 +96,20 @@ function SendDust() {
     const intervalId = setInterval(fetchAccountStatus, 5000);
 
     return () => clearInterval(intervalId);
-  }, [setActiveStep, activeStxAddress]);
+  }, [setActiveStep, stxAddress]);
 
-  // verify stored user data exists
-  if (!activeStxAddress) {
+  // verify STX address is known
+  if (!stxAddress) {
     return null;
   }
 
   if (isLoading) {
     return (
       <Stack direction="row">
-        <Spinner color="orange.500" emptyColor="orange.200" />{" "}
+        <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading registration response...</Text>
       </Stack>
     );
-  }
-
-  if (hasData) {
-    console.log(`hasData: ${data}`);
   }
 
   return (

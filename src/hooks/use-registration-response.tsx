@@ -1,9 +1,9 @@
 import { useAtom } from "jotai";
 import { loadable } from "jotai/utils";
-import { fetchRegistrationResponseAtom } from "../constants";
+import { registrationResponseAtom } from "../constants";
 
 export const useRegistrationResponse = () => {
-  const registrationResponseLoader = loadable(fetchRegistrationResponseAtom);
+  const registrationResponseLoader = loadable(registrationResponseAtom);
   const [registrationResponse] = useAtom(registrationResponseLoader);
 
   const isLoading = registrationResponse.state === "loading";

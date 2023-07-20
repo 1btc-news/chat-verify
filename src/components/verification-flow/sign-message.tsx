@@ -15,14 +15,11 @@ import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import {
-  activeStxAddressAtom,
   activeStepAtom,
-  activeSignatureMsgAtom,
-  activeSignatureDataAtom,
-  updateSignatureMsgAtom,
+  signatureDataAtom,
+  stxAddressAtom,
 } from "../../constants";
-import { useSignatureMsg } from "../../hooks/signature-msg";
-import { useEffect } from "react";
+import { useSignatureMsg } from "../../hooks/use-signature-msg";
 
 // active step = 1
 // queries signature message from API
@@ -30,29 +27,14 @@ import { useEffect } from "react";
 // once user signs progresses to next step
 
 function SignMessage() {
-  const [activeStxAddress] = useAtom(activeStxAddressAtom);
+  const [stxAddress] = useAtom(stxAddressAtom);
   const setActiveStep = useSetAtom(activeStepAtom);
-  const setActiveSignatureMsg = useSetAtom(activeSignatureMsgAtom);
-  const setActiveSignatureData = useSetAtom(activeSignatureDataAtom);
+  const setSignatureData = useSetAtom(signatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
-  const { isLoading, hasData, data } = useSignatureMsg();
-  const updateSignatureMsg = useSetAtom(updateSignatureMsgAtom);
+  const { isLoading, data } = useSignatureMsg();
 
-  useEffect(() => {
-    if (hasData && data) {
-      setActiveSignatureMsg(data);
-      //updateSignatureMsg();
-    }
-  }, [
-    hasData,
-    data,
-    setActiveSignatureMsg,
-    activeStxAddress,
-    updateSignatureMsg,
-  ]);
-
-  // verify stored user data exists
-  if (!activeStxAddress) {
+  // verify STX address is known
+  if (!stxAddress) {
     return null;
   }
 
@@ -106,7 +88,7 @@ function SignMessage() {
         onClick={() => {
           openSignMessage({ message: data! }).then((signatureData) => {
             if (signatureData) {
-              setActiveSignatureData(signatureData);
+              setSignatureData(signatureData);
               setActiveStep(2);
             }
           });
