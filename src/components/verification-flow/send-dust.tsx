@@ -42,6 +42,7 @@ function SendDust() {
     null
   );
   const { isLoading, data } = useRegistrationResponse();
+  // const { data: btcTxStatus } = useBtcTxStatus();
 
   const toast = useToast();
 
@@ -69,6 +70,8 @@ function SendDust() {
     }
   };
 
+  // TODO: set timers or limits here to prevent a lone tab fetching forever?
+
   useEffect(() => {
     if (!stxAddress) {
       return;
@@ -94,6 +97,13 @@ function SendDust() {
     return () => clearInterval(intervalId);
     // TODO: correct this dependency issue
   }, [stxAddress]);
+
+  // TODO:
+  //useEffect(() => {
+  // same as fetchAccountStatus
+  // need receive address from accountData
+  // review state logic
+  // })
 
   // verify STX address is known
   if (!stxAddress) {
