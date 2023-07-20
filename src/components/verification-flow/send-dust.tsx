@@ -1,5 +1,4 @@
 import {
-  Button,
   IconButton,
   Image,
   Popover,
@@ -13,6 +12,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { FaQuestion } from "react-icons/fa";
 import { useAtom, useSetAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import { FiCopy } from "react-icons/fi";
@@ -124,7 +124,7 @@ function SendDust() {
         </Text>
         <Popover placement="bottom-start">
           <PopoverTrigger>
-            <Button mr={4}>Learn More</Button>
+            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
           <PopoverContent width="100%" maxW="800px">
             <PopoverHeader bg="orange.500" fontWeight="bold">
@@ -146,7 +146,12 @@ function SendDust() {
       </Stack>
       {hasData && data ? (
         <>
-          <Stack direction="row">
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={8}
+          >
             <Text my={4}>
               Send a dust amount of BTC to {data.receiveAddress}
             </Text>

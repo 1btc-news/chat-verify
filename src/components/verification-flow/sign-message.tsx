@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Popover,
   PopoverArrow,
   PopoverCloseButton,
@@ -10,6 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -68,7 +70,7 @@ function SignMessage() {
         </Text>
         <Popover placement="bottom-start">
           <PopoverTrigger>
-            <Button mr={4}>Learn More</Button>
+            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
           <PopoverContent width="100%" maxW="800px">
             <PopoverHeader bg="orange.500" fontWeight="bold">

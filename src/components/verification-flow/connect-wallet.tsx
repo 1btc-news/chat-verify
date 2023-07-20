@@ -1,5 +1,5 @@
 import {
-  Button,
+  IconButton,
   Link,
   Popover,
   PopoverArrow,
@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { FaQuestion } from "react-icons/fa";
 
 // active step = 0
 // uses sign-in.tsx to progress to next step
@@ -28,7 +29,7 @@ function ConnectWallet() {
       </Text>
       <Popover placement="bottom-start">
         <PopoverTrigger>
-          <Button>Learn More</Button>
+          <IconButton aria-label="Learn More" icon={<FaQuestion />} />
         </PopoverTrigger>
         <PopoverContent width="100%" maxW="800px">
           <PopoverHeader bg="orange.500" fontWeight="bold">

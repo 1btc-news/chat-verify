@@ -1,5 +1,6 @@
 import {
   Button,
+  IconButton,
   Popover,
   PopoverArrow,
   PopoverCloseButton,
@@ -9,18 +10,24 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { FaQuestion } from "react-icons/fa";
 
 function SuccessfulVerification() {
   return (
     <>
-      <Stack direction="row">
-        <Text mb={4}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={8}
+      >
+        <Text>
           You made it! Celebrate by joining our exclusive 1BTC chat - just a
           click away.
         </Text>
         <Popover placement="bottom-start">
           <PopoverTrigger>
-            <Button mr={4}>Learn More</Button>
+            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
           <PopoverContent width="100%" maxW="800px">
             <PopoverHeader bg="orange.500" fontWeight="bold">
