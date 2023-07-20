@@ -30,7 +30,7 @@ function SignIn() {
             }
           },
           onCancel: () => {
-            // console.log("User cancelled auth request");
+            // console.log("sign-in: ser cancelled auth request");
           },
         })
       }
