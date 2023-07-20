@@ -50,6 +50,12 @@ const components = {
       },
     },
   },
+  StepNumber: {
+    baseStyle: {
+      // style properties for Stepper component
+      color: "purple.500",
+    },
+  },
 };
 
 // Chakra font overrides
