@@ -1,84 +1,97 @@
-import { Button, Spinner, Text } from "@chakra-ui/react";
-import { useOpenSignMessage } from "@micro-stacks/react";
-import { useAtom } from "jotai";
 import {
-  storedUserDataAtom,
-  storedStxAddressAtom,
-  fetchSignatureMsgAtom,
-} from "../../constants";
-import { loadable } from "jotai/utils";
+  Button,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { FaQuestion } from "react-icons/fa";
+import { useOpenSignMessage } from "@micro-stacks/react";
+import { useAtom, useSetAtom } from "jotai";
+import { signatureDataAtom, stxAddressAtom } from "../../constants";
+import { useSignatureMsg } from "../../hooks/use-signature-msg";
+
+// active step = 1
+// queries signature message from API
+//   once loaded, user can sign the message
+// once user signs progresses to next step
 
 function SignMessage() {
-  const [storedStxAddress] = useAtom(storedStxAddressAtom);
-  const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
-  const signatureMsgLoader = loadable(fetchSignatureMsgAtom);
-  const [signatureMsg] = useAtom(signatureMsgLoader);
+  const [stxAddress] = useAtom(stxAddressAtom);
+  const setSignatureData = useSetAtom(signatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
+  const { isLoading, data } = useSignatureMsg();
 
-  // verify stored user data exists
-  if (!storedStxAddress || !storedUserData) {
+  // verify STX address is known
+  if (!stxAddress) {
     return null;
   }
 
-  if (signatureMsg.state === "loading") {
+  if (isLoading) {
     return (
-      <>
+      <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading signature data...</Text>
-      </>
+      </Stack>
     );
   }
 
-  if (signatureMsg.state === "hasError") {
-    return (
-      <>
-        <Text>There was an error, please sign out and try again.</Text>
-        <Text>{String(signatureMsg.error)}</Text>
-      </>
-    );
-  }
-
-  if (signatureMsg.state === "hasData") {
-    // store in user data if not already stored
-    if (signatureMsg.data && !storedUserData[storedStxAddress].signatureMsg) {
-      setStoredUserData({
-        ...storedUserData,
-        [storedStxAddress]: {
-          ...storedUserData[storedStxAddress],
-          signatureMsg: signatureMsg.data,
-        },
-      });
-    }
-
-    return (
+  return (
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={8}
+      >
+        <Text>
+          Confirm ownership of your wallet by signing a message from your
+          wallet.
+        </Text>
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
+          </PopoverTrigger>
+          <PopoverContent width="100%" maxW="800px">
+            <PopoverHeader bg="orange.500" fontWeight="bold">
+              Sign a Message
+            </PopoverHeader>
+            <PopoverArrow bg="orange.500" />
+            <PopoverCloseButton />
+            <Text p={2}>
+              In this step, we request you to verify the ownership of your
+              Bitcoin wallet. This is achieved by signing a unique message
+              provided by us using your wallet. This process happens through a
+              pop-up window triggered by your wallet software, ensuring that
+              your private key never leaves your device. The data from your
+              signature is then used by our system to create a unique,
+              deterministic Bitcoin address associated with your account.
+            </Text>
+          </PopoverContent>
+        </Popover>
+      </Stack>
       <Button
         variant="1btc-orange"
-        disabled={!storedUserData[storedStxAddress].signatureMsg}
+        disabled={!data}
         isLoading={isRequestPending}
         onClick={() => {
-          openSignMessage({ message: signatureMsg.data! }).then(
-            (signatureData) => {
-              if (signatureData) {
-                setStoredUserData({
-                  ...storedUserData,
-                  [storedStxAddress]: {
-                    ...storedUserData[storedStxAddress],
-                    activeStep: storedUserData[storedStxAddress].activeStep + 1,
-                    signatureData,
-                  },
-                });
-              }
+          openSignMessage({ message: data! }).then((signatureData) => {
+            if (signatureData) {
+              setSignatureData(signatureData);
             }
-          );
+          });
         }}
       >
         Sign Message
       </Button>
-    );
-  }
-
-  // shouldn't get here, but just in case
-  return null;
+    </>
+  );
 }
 
 export default SignMessage;

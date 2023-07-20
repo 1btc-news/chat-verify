@@ -1,20 +1,17 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
-import { useSetAtom } from "jotai";
-import { storedStxAddressAtom } from "../constants";
 
 function SignOut() {
   const { signOut } = useAuth();
-  const setStxAddress = useSetAtom(storedStxAddressAtom);
   return (
     <Button
       variant="1btc-orange"
-      onClick={async () => {
+      onClick={() => {
+        // sign out of the wallet
         try {
-          await signOut();
-          setStxAddress(null);
+          signOut();
         } catch (error) {
-          console.error("Error during signOut: ", error);
+          console.error("Error while signing out: ", error);
         }
       }}
     >

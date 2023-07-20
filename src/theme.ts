@@ -20,10 +20,31 @@ const colors = {
     800: "#612B00",
     900: "#301500",
   },
+  stepper: {
+    200: "#F27400", // 1btc-orange
+  },
 };
 
 // Chakra component style overrides
 const components = {
+  Alert: {
+    //parts: ["container"],
+    variants: {
+      "1btc-orange": {
+        container: {
+          background: "#0B0C14",
+          border: "1px solid",
+          borderColor: "orange.500",
+        },
+        title: {
+          color: "white",
+        },
+        icon: {
+          color: "orange.500",
+        },
+      },
+    },
+  },
   Button: {
     variants: {
       "1btc-orange": {
@@ -54,14 +75,15 @@ const components = {
 
 // Chakra font overrides
 const fonts = {
-  heading: "Open Sans, sans-serif",
-  body: "Open Sans, sans-serif",
+  heading: "Really Sans Large, Open Sans, sans-serif",
+  body: "Really Sans Small, Open Sans, sans-serif",
 };
 
 const styles = {
   global: {
     "html, body": {
       fontSize: "lg",
+      backgroundColor: "#0B0C14",
     },
   },
 };

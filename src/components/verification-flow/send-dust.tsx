@@ -1,31 +1,57 @@
+import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import copy from "copy-to-clipboard";
 import {
-  HStack,
   IconButton,
   Image,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Spinner,
+  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { useAtom } from "jotai";
-import copy from "copy-to-clipboard";
+import { FaQuestion } from "react-icons/fa";
 import { FiCopy } from "react-icons/fi";
 import {
-  fetchAccountData,
-  fetchRegistrationResponseAtom,
-  storedStxAddressAtom,
-  storedUserDataAtom,
+  accountDataAtom,
+  getAccountData,
+  getBtcTxs,
+  stxAddressAtom,
 } from "../../constants";
-import { loadable } from "jotai/utils";
-import { useEffect, useState } from "react";
+import { useRegistrationResponse } from "../../hooks/use-registration-response";
+
+// active step = 2
+// queries registration response from API
+// monitors for pending transaction to dust account
+
+// works on first pass through logic
+// stuck waiting for btc address on second login
+// need to avoid sending duplicate registration request
+// does continue to query status of account either way
+// rename send-dust.tsx to verify-account.tsx or register-account.tsx
+//   if not registered, registers and displays BTC address (send-dust)
+//   if already registered, displays BTC address (send-dust)
+//   if pending tx, displays loading spinner (awaiting-dust-tx)
+//   if account is valid, move on to next step
+// localstorage data for loadable data? with useActiveStep hook!
 
 function SendDust() {
-  const [storedStxAddress] = useAtom(storedStxAddressAtom);
+  const [stxAddress] = useAtom(stxAddressAtom);
+  const [accountData] = useAtom(accountDataAtom);
+  // TODO: better way to handle this? use an atom?
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
     null
   );
-  const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
-  const registrationResponseLoader = loadable(fetchRegistrationResponseAtom);
-  const [registrationResponse] = useAtom(registrationResponseLoader);
+  const [queriedBtcAddress, setQueriedBtcAddress] = useState<string | null>(
+    null
+  );
+  const { isLoading, data } = useRegistrationResponse();
+  // const { data: btcTxStatus } = useBtcTxStatus();
 
   const toast = useToast();
 
@@ -37,8 +63,8 @@ function SendDust() {
         description: text,
         position: "top",
         status: "success",
-        variant: "left-accent",
-        duration: 2000,
+        variant: "1btc-orange",
+        duration: 3000,
         isClosable: true,
       });
     } else {
@@ -46,110 +72,145 @@ function SendDust() {
         title: `Unable to copy text to clipboard`,
         description: "Please refresh and try again, or copy manually",
         position: "top",
-        status: "error",
-        variant: "left-accent",
-        duration: 2000,
+        status: "warning",
+        variant: "1btc-orange",
+        duration: 3000,
         isClosable: true,
       });
     }
   };
 
+  // TODO: set timers or limits here to prevent a lone tab fetching forever?
+
   useEffect(() => {
-    if (
-      !storedStxAddress ||
-      !storedUserData ||
-      storedStxAddress === queriedStxAddress
-    )
+    if (!stxAddress) {
       return;
-    setQueriedStxAddress(storedStxAddress);
-    const fetchAccountStatus = () => {
-      console.log("fetching account status");
-      fetchAccountData(storedStxAddress).then((accountData) => {
+    }
+    // rather: check if query is in progress
+    if (stxAddress === queriedStxAddress) {
+      return;
+    }
+    setQueriedStxAddress(stxAddress);
+
+    const fetchStxAccountStatus = () => {
+      console.log("send-dust: fetching STX account", stxAddress);
+      getAccountData(stxAddress).then((accountData) => {
+        console.log("accountData: ", accountData);
         if (!accountData) return undefined;
-        if (accountData.status === "valid") {
-          setStoredUserData({
-            ...storedUserData,
-            [storedStxAddress]: {
-              ...storedUserData[storedStxAddress],
-              activeStep: storedUserData[storedStxAddress].activeStep + 1,
-              accountData,
-            },
-          });
-        }
+        setQueriedStxAddress(null);
         return accountData;
       });
     };
-    fetchAccountStatus();
-    const int = setInterval(() => fetchAccountStatus(), 5000);
-    return () => clearInterval(int);
-  }, [queriedStxAddress, setStoredUserData, storedStxAddress, storedUserData]);
 
-  // verify stored user data exists
-  if (!storedStxAddress || !storedUserData) {
+    const intervalId = setInterval(fetchStxAccountStatus, 5000);
+
+    return () => clearInterval(intervalId);
+    // TODO: correct this dependency issue
+  }, [stxAddress]);
+
+  useEffect(() => {
+    if (!accountData || !accountData.receiveAddress) {
+      return;
+    }
+    // rather: check if query is in progress
+    if (accountData.receiveAddress === queriedBtcAddress) {
+      return;
+    }
+
+    setQueriedBtcAddress(accountData.receiveAddress);
+
+    const fetchBtcAccountStatus = () => {
+      console.log("send-dust: fetching BTC account", queriedBtcAddress);
+      getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
+        console.log("btcTxs: ", btcTxs);
+        if (!btcTxs) return undefined;
+        setQueriedBtcAddress(null);
+        return btcTxs;
+      });
+    };
+
+    // every 5 min
+    const intervalId = setInterval(fetchBtcAccountStatus, 300000);
+
+    return () => clearInterval(intervalId);
+    // TODO: correct this dependency issue
+  }, [accountData, accountData?.receiveAddress]);
+
+  // verify STX address is known
+  if (!stxAddress) {
     return null;
   }
 
-  if (registrationResponse.state === "loading") {
+  if (isLoading) {
     return (
-      <>
-        <Spinner color="orange.500" emptyColor="orange.200" />{" "}
+      <Stack direction="row">
+        <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading registration response...</Text>
-      </>
+      </Stack>
     );
   }
 
-  if (registrationResponse.state === "hasError") {
-    return (
-      <>
-        <Text>There was an error, please sign out and try again.</Text>
-        <Text>{String(registrationResponse.error)}</Text>
-      </>
-    );
-  }
-
-  if (registrationResponse.state === "hasData") {
-    // store in user data if not already stored
-    if (
-      registrationResponse.data &&
-      !storedUserData[storedStxAddress].accountData
-    ) {
-      setStoredUserData({
-        ...storedUserData,
-        [storedStxAddress]: {
-          ...storedUserData[storedStxAddress],
-          accountData: registrationResponse.data,
-        },
-      });
-    }
-
-    const accountData = registrationResponse.data;
-
-    if (!accountData) {
-      return null;
-    }
-
-    return (
-      <>
-        <HStack>
-          <Text my={4}>
-            Send a dust amount of BTC to {accountData.receiveAddress}
-          </Text>
-          <IconButton
-            variant="1btc-orange"
-            aria-label="Copy Bitcoin address"
-            icon={<FiCopy />}
-            onClick={() => copyText(accountData.receiveAddress)}
+  return (
+    <>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={8}
+      >
+        <Text>
+          Demonstrate your BTC ownership by sending a small (dust) transaction
+          to your unique address.
+        </Text>
+        <Popover placement="bottom-start">
+          <PopoverTrigger>
+            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
+          </PopoverTrigger>
+          <PopoverContent width="100%" maxW="800px">
+            <PopoverHeader bg="orange.500" fontWeight="bold">
+              Send Dust Transaction
+            </PopoverHeader>
+            <PopoverArrow bg="orange.500" />
+            <PopoverCloseButton />
+            <Text p={2}>
+              In order to prove that you hold wallet holds more than 1 BTC,
+              you're required to send a small amount of BTC (commonly 0.00006
+              BTC or 6,000 satoshis, referred to as "dust") to a unique,
+              deterministic address generated for you in the previous step.
+              Note, this dust transaction is non-refundable. The 1BTC API will
+              verify this transaction and ensure that the input amount from the
+              source wallet is greater than 1 BTC.
+            </Text>
+          </PopoverContent>
+        </Popover>
+      </Stack>
+      {data && (
+        <>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={8}
+          >
+            <Text my={4}>
+              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to{" "}
+              {data.receiveAddress}
+            </Text>
+            <IconButton
+              variant="1btc-orange"
+              aria-label="Copy Bitcoin address"
+              icon={<FiCopy />}
+              onClick={() => copyText(data.receiveAddress)}
+            />
+          </Stack>
+          <Image
+            boxSize="250px"
+            src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
           />
-        </HStack>
-        <Image
-          boxSize="250px"
-          src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${accountData.receiveAddress}`}
-        />
-      </>
-    );
-  }
-
-  return <Text>SendDust</Text>;
+        </>
+      )}
+    </>
+  );
 }
 
 export default SendDust;
