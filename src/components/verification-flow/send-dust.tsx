@@ -19,7 +19,7 @@ import { FiCopy } from "react-icons/fi";
 import {
   activeStepAtom,
   fetchAccountData,
-  storedStxAddressAtom,
+  activeStxAddressAtom,
   storedUserDataAtom,
 } from "../../constants";
 import { useEffect, useState } from "react";
@@ -30,11 +30,10 @@ import { useRegistrationResponse } from "../../hooks/registration-response";
 // needs more review
 
 function SendDust() {
-  const [storedStxAddress] = useAtom(storedStxAddressAtom);
+  const [activeStxAddress] = useAtom(activeStxAddressAtom);
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
     null
   );
-  const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
   const { isLoading, hasData, data } = useRegistrationResponse();
   const setActiveStep = useSetAtom(activeStepAtom);
 
@@ -66,19 +65,19 @@ function SendDust() {
   };
 
   useEffect(() => {
-    if (!storedStxAddress || !storedUserData) {
+    if (!activeStxAddress) {
       return;
     }
 
-    if (storedStxAddress === queriedStxAddress) {
+    if (activeStxAddress === queriedStxAddress) {
       return;
     }
 
-    setQueriedStxAddress(storedStxAddress);
+    setQueriedStxAddress(activeStxAddress);
 
     const fetchAccountStatus = () => {
       console.log("fetching account status");
-      fetchAccountData(storedStxAddress).then((accountData) => {
+      fetchAccountData(activeStxAddress).then((accountData) => {
         if (!accountData) return undefined;
         if (accountData.status === "insufficient") {
           setActiveStep(4);
@@ -94,10 +93,10 @@ function SendDust() {
     const intervalId = setInterval(fetchAccountStatus, 5000);
 
     return () => clearInterval(intervalId);
-  }, [setActiveStep, setStoredUserData, storedStxAddress, storedUserData]);
+  }, [setActiveStep, activeStxAddress]);
 
   // verify stored user data exists
-  if (!storedStxAddress || !storedUserData) {
+  if (!activeStxAddress) {
     return null;
   }
 
@@ -108,6 +107,10 @@ function SendDust() {
         <Text>Loading registration response...</Text>
       </Stack>
     );
+  }
+
+  if (hasData) {
+    console.log(`hasData: ${data}`);
   }
 
   return (
@@ -153,7 +156,8 @@ function SendDust() {
             mb={8}
           >
             <Text my={4}>
-              Send a dust amount of BTC to {data.receiveAddress}
+              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to{" "}
+              {data.receiveAddress}
             </Text>
             <IconButton
               variant="1btc-orange"

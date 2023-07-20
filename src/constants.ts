@@ -64,13 +64,17 @@ export const storedUserDataAtom = atomWithStorage<UserData | null>(
 //   clear data on logout
 //   clear object on clear data
 
-// this should be "activeStxAddressAtom"
-export const storedStxAddressAtom = atomWithStorage<string | null>(
+export const activeStxAddressAtom = atomWithStorage<string | null>(
   "stxAddress",
   null
 );
 
 export const activeStepAtom = atomWithStorage("activeStep", 0);
+
+export const activeAccountDataAtom = atomWithStorage<AccountData | null>(
+  "accountData",
+  null
+);
 
 export const activeSignatureMsgAtom = atomWithStorage<string | null>(
   "signatureMsg",
@@ -82,20 +86,21 @@ export const activeSignatureDataAtom = atomWithStorage<SignatureData | null>(
   null
 );
 
-export const activeRegistrationResponseAtom =
-  atomWithStorage<AccountData | null>("registrationResponse", null);
-
 /////////////////////////
 // ACCOUNT DATA ATOM
 /////////////////////////
 
 // returns value if known, otherwise fetches it from API
 export const fetchAccountDataAtom = atom(async (get) => {
-  const stxAddress = get(storedStxAddressAtom);
+  const stxAddress = get(activeStxAddressAtom);
   if (stxAddress === null) {
     throw new Error("STX Address is null");
   }
   const userData = get(storedUserDataAtom);
+  console.log(
+    "userData from fetchAccountDataAtom():",
+    JSON.stringify(userData, null, 2)
+  );
   if (userData && userData[stxAddress] && userData[stxAddress].accountData) {
     console.log(`accountData returned from object`);
     return userData[stxAddress].accountData;
@@ -106,13 +111,38 @@ export const fetchAccountDataAtom = atom(async (get) => {
   }
 });
 
+// This derived atom will update storedUserDataAtom based on the status of accountData
+export const updateAccountDataAtom = atom(
+  (get) => {
+    const userData = get(storedUserDataAtom);
+    const accountData = get(activeAccountDataAtom);
+    const activeStxAddress = get(activeStxAddressAtom);
+
+    if (!userData || !accountData || !activeStxAddress) {
+      return userData;
+    }
+
+    return {
+      ...userData,
+      [activeStxAddress]: {
+        ...userData[activeStxAddress],
+        accountData: accountData,
+      },
+    };
+  },
+  (get, set) => {
+    // When this atom is set, it also updates storedUserDataAtom
+    set(storedUserDataAtom, get(updateAccountDataAtom));
+  }
+);
+
 /////////////////////////
 // SIGNATURE MSG ATOM
 /////////////////////////
 
 // returns value if known, otherwise fetches it from API
 export const fetchSignatureMsgAtom = atom(async (get) => {
-  const stxAddress = get(storedStxAddressAtom);
+  const stxAddress = get(activeStxAddressAtom);
   if (stxAddress === null) {
     throw new Error("STX Address is null");
   }
@@ -127,13 +157,38 @@ export const fetchSignatureMsgAtom = atom(async (get) => {
   }
 });
 
+// This derived atom will update storedUserDataAtom based on the status of signatureMsg
+export const updateSignatureMsgAtom = atom(
+  (get) => {
+    const userData = get(storedUserDataAtom);
+    const signatureMsg = get(activeSignatureMsgAtom);
+    const activeStxAddress = get(activeStxAddressAtom);
+
+    if (!userData || !signatureMsg || !activeStxAddress) {
+      return userData;
+    }
+
+    return {
+      ...userData,
+      [activeStxAddress]: {
+        ...userData[activeStxAddress],
+        signatureMsg: signatureMsg,
+      },
+    };
+  },
+  (get, set) => {
+    // When this atom is set, it also updates storedUserDataAtom
+    set(storedUserDataAtom, get(updateSignatureMsgAtom));
+  }
+);
+
 /////////////////////////
 // REGISTRATION ATOM
 /////////////////////////
 
 // returns value if known, otherwise fetches it from API
 export const fetchRegistrationResponseAtom = atom(async (get) => {
-  const stxAddress = get(storedStxAddressAtom);
+  const stxAddress = get(activeStxAddressAtom);
   if (stxAddress === null) {
     throw new Error("STX Address is null");
   }
@@ -143,11 +198,7 @@ export const fetchRegistrationResponseAtom = atom(async (get) => {
     return userData[stxAddress].accountData;
   } else {
     console.log(`registrationResponse fetched from API`);
-    if (
-      userData &&
-      userData[stxAddress] &&
-      userData[stxAddress].signatureData
-    ) {
+    if (userData && userData[stxAddress]) {
       const accountData = await fetchRegistrationResponse(
         userData[stxAddress].signatureData!
       );
@@ -184,11 +235,16 @@ async function fetchSignatureMsg(
 async function fetchRegistrationResponse(
   signatureData: SignatureData
 ): Promise<AccountData | undefined> {
+  console.log(`fetchRegistrationResponse`);
   const registrationResponseQuery = await fetch(`${apiUrl}/register-hiro`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(signatureData),
   });
+  console.log(
+    `registrationResponseQuery`,
+    JSON.stringify(registrationResponseQuery, null, 2)
+  );
   return registrationResponseQuery.status === 200
     ? await registrationResponseQuery.json()
     : undefined;

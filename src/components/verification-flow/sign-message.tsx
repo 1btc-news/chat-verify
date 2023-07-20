@@ -15,10 +15,11 @@ import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import {
-  storedStxAddressAtom,
+  activeStxAddressAtom,
   activeStepAtom,
   activeSignatureMsgAtom,
   activeSignatureDataAtom,
+  updateSignatureMsgAtom,
 } from "../../constants";
 import { useSignatureMsg } from "../../hooks/signature-msg";
 import { useEffect } from "react";
@@ -29,21 +30,29 @@ import { useEffect } from "react";
 // once user signs progresses to next step
 
 function SignMessage() {
-  const [storedStxAddress] = useAtom(storedStxAddressAtom);
+  const [activeStxAddress] = useAtom(activeStxAddressAtom);
   const setActiveStep = useSetAtom(activeStepAtom);
   const setActiveSignatureMsg = useSetAtom(activeSignatureMsgAtom);
   const setActiveSignatureData = useSetAtom(activeSignatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
   const { isLoading, hasData, data } = useSignatureMsg();
+  const updateSignatureMsg = useSetAtom(updateSignatureMsgAtom);
 
   useEffect(() => {
     if (hasData && data) {
       setActiveSignatureMsg(data);
+      //updateSignatureMsg();
     }
-  }, [hasData, data]);
+  }, [
+    hasData,
+    data,
+    setActiveSignatureMsg,
+    activeStxAddress,
+    updateSignatureMsg,
+  ]);
 
   // verify stored user data exists
-  if (!storedStxAddress) {
+  if (!activeStxAddress) {
     return null;
   }
 

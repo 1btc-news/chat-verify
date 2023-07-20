@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import {
   activeStepAtom,
-  storedStxAddressAtom,
+  activeStxAddressAtom,
   storedUserDataAtom,
 } from "../constants";
 import { useAccountData } from "./account-data";
@@ -9,7 +9,7 @@ import { useAccount } from "@micro-stacks/react";
 
 export const useActiveStep = () => {
   const { stxAddress } = useAccount();
-  const [storedStxAddress] = useAtom(storedStxAddressAtom);
+  const [activeStxAddress] = useAtom(activeStxAddressAtom);
   const [storedUserData] = useAtom(storedUserDataAtom);
   const [activeStep, setActiveStep] = useAtom(activeStepAtom);
   const { isLoading, hasError, hasData, data } = useAccountData();
@@ -22,7 +22,7 @@ export const useActiveStep = () => {
   }
 
   // if the user is known and not loading or error
-  if (storedStxAddress && storedUserData && !isLoading && !hasError) {
+  if (activeStxAddress && storedUserData && !isLoading && !hasError) {
     // adjust activeStep based on accountData status
     if (hasData && data && data.status === "insufficient") {
       setActiveStep(4);

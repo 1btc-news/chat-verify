@@ -1,11 +1,11 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
 import { useSetAtom } from "jotai";
-import { activeStepAtom, storedStxAddressAtom } from "../constants";
+import { activeStepAtom, activeStxAddressAtom } from "../constants";
 
 function SignOut() {
   const { signOut } = useAuth();
-  const setStoredStxAddress = useSetAtom(storedStxAddressAtom);
+  const setActiveStxAddress = useSetAtom(activeStxAddressAtom);
   const setActiveStep = useSetAtom(activeStepAtom);
   return (
     <Button
@@ -14,8 +14,8 @@ function SignOut() {
         try {
           // sign out of the wallet
           signOut();
-          // clear storedStxAddress
-          setStoredStxAddress(null);
+          // clear activeStxAddress
+          setActiveStxAddress(null);
           setActiveStep(0);
         } catch (error) {
           console.error("Error while signing out: ", error);
