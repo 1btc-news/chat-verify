@@ -4,6 +4,7 @@ import { Box, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
 import {
   accountDataAtom,
   activeStepAtom,
+  signatureMsgAtom,
   stxAddressAtom,
 } from "../../constants";
 import VerificationStepper from "../verification-flow/verification-stepper";
@@ -13,6 +14,7 @@ import SendDust from "../verification-flow/send-dust";
 import SuccessfulVerification from "../verification-flow/successful-verification";
 import InsufficientBalance from "../verification-flow/insufficient-balance";
 import { useAccountData } from "../../hooks/use-account-data";
+import { useSignatureMsg } from "../../hooks/use-signature-msg";
 
 // determines current step in the process and renders content
 
@@ -20,13 +22,21 @@ function Content() {
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
   const setAccountData = useSetAtom(accountDataAtom);
-  const { isLoading, data } = useAccountData();
+  const setSignatureMsg = useSetAtom(signatureMsgAtom);
+  const { isLoading: isAccountLoading, data: accountData } = useAccountData();
+  const { data: signatureMsgData } = useSignatureMsg();
 
   useEffect(() => {
-    if (data) {
-      setAccountData(data);
+    if (accountData) {
+      setAccountData(accountData);
     }
-  }, [data, setAccountData]);
+  }, [accountData, setAccountData]);
+
+  useEffect(() => {
+    if (signatureMsgData) {
+      setSignatureMsg(signatureMsgData);
+    }
+  }, [signatureMsgData, setSignatureMsg]);
 
   return (
     <Box width="100%" maxW="1200px">
@@ -35,7 +45,7 @@ function Content() {
       </Heading>
       <VerificationStepper activeStep={activeStep} />
       {stxAddress ? (
-        isLoading ? (
+        isAccountLoading ? (
           <Stack direction="row">
             <Spinner color="orange.500" emptyColor="orange.200" />
             <Text>Loading account data...</Text>

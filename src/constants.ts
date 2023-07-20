@@ -98,6 +98,10 @@ export const activeStepAtom = atom((get) => {
     console.log("activeStepAtom: no stx address, returning 0");
     return 0;
   }
+  if (signatureData) {
+    console.log("activeStepAtom: signature data detected, returning 2");
+    return 2;
+  }
   if (!accountData) {
     console.log("activeStepAtom: no account data, returning 1");
     return 1;
@@ -115,10 +119,9 @@ export const activeStepAtom = atom((get) => {
       console.log("activeStepAtom: account pending, returning 2");
       return 2;
     }
-  }
-  if (signatureData) {
-    console.log("activeStepAtom: signature data detected, returning 2");
-    return 2;
+  } else {
+    console.log("activeStepAtom: no account data, returning 1");
+    return 1;
   }
   console.log("activeStepAtom: default, returning 0");
   return 0;
