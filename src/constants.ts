@@ -1,5 +1,5 @@
-import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { atom, useAtom } from "jotai";
+import { atomWithStorage, loadable } from "jotai/utils";
 import { SignatureData } from "micro-stacks/connect";
 
 /////////////////////////
@@ -62,6 +62,9 @@ export const signatureDataAtom = atomWithStorage<SignatureData | null>(
   null
 );
 
+// current user registration status
+export const isRegisteredAtom = atomWithStorage<boolean>("isRegistered", false);
+
 /////////////////////////
 // LOADABLE ASYNC ATOMS
 // updated by API calls
@@ -102,15 +105,13 @@ export const signatureMsgAtom = atom(async (get) => {
 
 // fetch registration response from API
 export const registrationResponseAtom = atom(async (get) => {
-  const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
-  if (!signatureData) {
+  const isRegistered = get(isRegisteredAtom);
+  if (!signatureData || isRegistered) {
     return undefined;
   }
-  if (accountData) {
-    return accountData;
-  }
   try {
+    console.log("registrationResponseAtom: fetching registrationResponse");
     const registrationResponse = await postRegistrationResponse(signatureData);
     return registrationResponse;
   } catch (error) {

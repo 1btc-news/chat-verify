@@ -3,6 +3,7 @@ import { useAccount } from "@micro-stacks/react";
 import OneBtcLogo from "./1btc-logo";
 import SignIn from "./sign-in";
 import SignOut from "./sign-out";
+import ClearData from "./clear-data";
 
 function Header() {
   const { stxAddress } = useAccount();
@@ -18,6 +19,7 @@ function Header() {
         ) : (
           <>
             <Text>{`${stxAddress.slice(0, 5)}...${stxAddress.slice(-5)}`}</Text>
+            <ClearData />
             <SignOut />
           </>
         )}

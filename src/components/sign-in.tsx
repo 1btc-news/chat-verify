@@ -1,12 +1,17 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
-import { useSetAtom } from "jotai";
-import { activeStepAtom, stxAddressAtom } from "../constants";
+import { useAtom, useSetAtom } from "jotai";
+import {
+  activeStepAtom,
+  signatureDataAtom,
+  stxAddressAtom,
+} from "../constants";
 
 function SignIn() {
   const { openAuthRequest, isRequestPending } = useAuth();
-  const setStxAddress = useSetAtom(stxAddressAtom);
+  const [stxAddress, setStxAddress] = useAtom(stxAddressAtom);
   const setActiveStep = useSetAtom(activeStepAtom);
+  const setSignatureData = useSetAtom(signatureDataAtom);
 
   return (
     <Button
@@ -15,8 +20,11 @@ function SignIn() {
       onClick={() =>
         void openAuthRequest({
           onFinish: (session) => {
-            setStxAddress(session.addresses.mainnet);
-            setActiveStep(1);
+            if (session.addresses.mainnet !== stxAddress) {
+              setStxAddress(session.addresses.mainnet);
+              setActiveStep(1);
+              setSignatureData(null);
+            }
           },
           onCancel: () => {
             console.log("User cancelled auth request");
