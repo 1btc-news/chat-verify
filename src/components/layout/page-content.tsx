@@ -1,14 +1,18 @@
 import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { Box, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
-import { accountDataAtom, activeStepAtom, stxAddressAtom } from "../constants";
-import VerificationStepper from "./verification-stepper";
-import ConnectWallet from "./verification-flow/connect-wallet";
-import SignMessage from "./verification-flow/sign-message";
-import SendDust from "./verification-flow/send-dust";
-import SuccessfulVerification from "./verification-flow/successful-verification";
-import InsufficientBalance from "./verification-flow/insufficient-balance";
-import { useAccountData } from "../hooks/use-account-data";
+import {
+  accountDataAtom,
+  activeStepAtom,
+  stxAddressAtom,
+} from "../../constants";
+import VerificationStepper from "../verification-flow/verification-stepper";
+import ConnectWallet from "../verification-flow/connect-wallet";
+import SignMessage from "../verification-flow/sign-message";
+import SendDust from "../verification-flow/send-dust";
+import SuccessfulVerification from "../verification-flow/successful-verification";
+import InsufficientBalance from "../verification-flow/insufficient-balance";
+import { useAccountData } from "../../hooks/use-account-data";
 
 // determines current step in the process and renders content
 

@@ -11,7 +11,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
-import SignIn from "../sign-in";
+import SignIn from "../auth/sign-in";
 
 // active step = 0
 // uses sign-in.tsx to progress to next step

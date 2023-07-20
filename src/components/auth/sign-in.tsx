@@ -6,7 +6,7 @@ import {
   signatureDataAtom,
   signatureMsgAtom,
   stxAddressAtom,
-} from "../constants";
+} from "../../constants";
 
 function SignIn() {
   const { openAuthRequest, isRequestPending } = useAuth();

@@ -1,9 +1,9 @@
 import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useAccount } from "@micro-stacks/react";
 import OneBtcLogo from "./1btc-logo";
-import SignIn from "./sign-in";
-import SignOut from "./sign-out";
-import ClearData from "./clear-data";
+import SignIn from "../auth/sign-in";
+import SignOut from "../auth/sign-out";
+import ClearData from "../auth/clear-data";
 
 function Header() {
   const { stxAddress } = useAccount();

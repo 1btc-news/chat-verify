@@ -1,6 +1,6 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { loadable } from "jotai/utils";
-import { accountDataAtom, fetchAccountDataAtom } from "../constants";
+import { fetchAccountDataAtom } from "../constants";
 
 export const useAccountData = () => {
   const accountDataLoader = loadable(fetchAccountDataAtom);

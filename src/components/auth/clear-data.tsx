@@ -2,11 +2,10 @@ import { useAuth } from "@micro-stacks/react";
 import { useSetAtom } from "jotai";
 import {
   accountDataAtom,
-  activeStepAtom,
   signatureDataAtom,
   signatureMsgAtom,
   stxAddressAtom,
-} from "../constants";
+} from "../../constants";
 import { Button } from "@chakra-ui/react";
 
 function ClearData() {

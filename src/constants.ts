@@ -1,5 +1,5 @@
-import { atom, useAtom } from "jotai";
-import { atomWithStorage, loadable } from "jotai/utils";
+import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { SignatureData } from "micro-stacks/connect";
 
 /////////////////////////

@@ -10,7 +10,7 @@ import {
   StepTitle,
   Stepper,
 } from "@chakra-ui/react";
-import { registrationSteps } from "../constants";
+import { registrationSteps } from "../../constants";
 
 function VerificationStepper(props: { activeStep: number }) {
   return (

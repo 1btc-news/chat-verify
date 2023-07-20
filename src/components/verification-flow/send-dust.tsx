@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import copy from "copy-to-clipboard";
 import {
   IconButton,
   Image,
@@ -14,14 +16,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
-import { useAtom, useSetAtom } from "jotai";
-import copy from "copy-to-clipboard";
 import { FiCopy } from "react-icons/fi";
-import {
-  activeStepAtom,
-  getAccountData,
-  stxAddressAtom,
-} from "../../constants";
+import { getAccountData, stxAddressAtom } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 // active step = 2

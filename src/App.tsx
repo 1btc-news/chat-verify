@@ -1,10 +1,10 @@
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { ClientProvider } from "@micro-stacks/react";
 import theme from "./theme";
-import Header from "./components/page-header";
-import Content from "./components/page-content";
-import Footer from "./components/page-footer";
-import CustomFonts from "./components/custom-fonts";
+import Header from "./components/layout/page-header";
+import Content from "./components/layout/page-content";
+import Footer from "./components/layout/page-footer";
+import CustomFonts from "./components/layout/custom-fonts";
 import { useNoWalletFound } from "./hooks/use-no-wallet-found";
 
 export const App = () => (
