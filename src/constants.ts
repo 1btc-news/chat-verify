@@ -59,6 +59,12 @@ export const storedStxAddressAtom = atomWithStorage<string | null>(
 );
 
 /////////////////////////
+// ACTIVE STEP ATOM
+/////////////////////////
+
+export const activeStepAtom = atom(0);
+
+/////////////////////////
 // ACCOUNT DATA ATOM
 /////////////////////////
 

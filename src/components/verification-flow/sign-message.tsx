@@ -16,6 +16,7 @@ import {
   storedUserDataAtom,
   storedStxAddressAtom,
   fetchSignatureMsgAtom,
+  activeStepAtom,
 } from "../../constants";
 import { loadable } from "jotai/utils";
 
@@ -24,6 +25,7 @@ function SignMessage() {
   const [storedUserData, setStoredUserData] = useAtom(storedUserDataAtom);
   const signatureMsgLoader = loadable(fetchSignatureMsgAtom);
   const [signatureMsg] = useAtom(signatureMsgLoader);
+  const [activeStep, setActiveStep] = useAtom(activeStepAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
 
   // verify stored user data exists
@@ -107,11 +109,10 @@ function SignMessage() {
                     ...storedUserData,
                     [storedStxAddress]: {
                       ...storedUserData[storedStxAddress],
-                      activeStep:
-                        storedUserData[storedStxAddress].activeStep + 1,
                       signatureData,
                     },
                   });
+                  setActiveStep(activeStep + 1);
                 }
               }
             );
