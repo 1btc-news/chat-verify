@@ -1,5 +1,9 @@
 import { extendTheme, type ThemeConfig } from "@chakra-ui/react";
 
+interface VariantColorProps {
+  colorScheme?: string;
+}
+
 // Chakra theme configuration
 const config: ThemeConfig = {
   initialColorMode: "dark",
@@ -25,8 +29,46 @@ const colors = {
   },
 };
 
+/*
+import { alertAnatomy } from "@chakra-ui/anatomy";
+import { createMultiStyleConfigHelpers, defineStyle } from "@chakra-ui/react";
+
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(alertAnatomy.keys);
+
+const leftAccentVariant = definePartsStyle({
+  container: (props) => ({
+    borderLeft: '4px solid',
+    borderColor: props.colorScheme === 'warning' ? 'orange.500' : undefined,
+    background: props.colorScheme === 'warning' ? 'orange.50' : undefined,
+    color: props.colorScheme === 'warning' ? 'white' : undefined,
+  }),
+});
+
+export const alertTheme = defineMultiStyleConfig({
+  variants: { 'left-accent': leftAccentVariant },
+});
+*/
+
 // Chakra component style overrides
 const components = {
+  Alert: {
+    //parts: ["container"],
+    variants: {
+      "1btc-orange": {
+        container: {
+          background: "#0B0C14",
+          border: "1px solid",
+          borderColor: "orange.500",
+        },
+        title: {
+          color: "white",
+        },
+        icon: {
+          color: "orange.500",
+        },
+      },
+    },
+  },
   Button: {
     variants: {
       "1btc-orange": {

@@ -7,8 +7,7 @@ export const useNoWalletFound = () => {
       title: "No wallet found",
       description: `Please install either the Hiro or Xverse Stacks wallet to continue.`,
       position: "top",
-      status: "warning",
-      variant: "left-accent",
+      variant: "1btc-orange",
       duration: 9000,
       isClosable: true,
     });
