@@ -17,7 +17,12 @@ import {
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import { FiCopy } from "react-icons/fi";
-import { getAccountData, stxAddressAtom } from "../../constants";
+import {
+  accountDataAtom,
+  getAccountData,
+  getBtcTxs,
+  stxAddressAtom,
+} from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 // active step = 2
@@ -37,8 +42,12 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
+  const [accountData] = useAtom(accountDataAtom);
   // TODO: better way to handle this? use an atom?
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
+    null
+  );
+  const [queriedBtcAddress, setQueriedBtcAddress] = useState<string | null>(
     null
   );
   const { isLoading, data } = useRegistrationResponse();
@@ -63,6 +72,7 @@ function SendDust() {
         title: `Unable to copy text to clipboard`,
         description: "Please refresh and try again, or copy manually",
         position: "top",
+        status: "warning",
         variant: "1btc-orange",
         duration: 3000,
         isClosable: true,
@@ -82,8 +92,8 @@ function SendDust() {
     }
     setQueriedStxAddress(stxAddress);
 
-    const fetchAccountStatus = () => {
-      console.log("fetching account status in send-dust.tsx");
+    const fetchStxAccountStatus = () => {
+      console.log("send-dust: fetching STX account", stxAddress);
       getAccountData(stxAddress).then((accountData) => {
         console.log("accountData: ", accountData);
         if (!accountData) return undefined;
@@ -92,18 +102,39 @@ function SendDust() {
       });
     };
 
-    const intervalId = setInterval(fetchAccountStatus, 5000);
+    const intervalId = setInterval(fetchStxAccountStatus, 5000);
 
     return () => clearInterval(intervalId);
     // TODO: correct this dependency issue
   }, [stxAddress]);
 
-  // TODO:
-  //useEffect(() => {
-  // same as fetchAccountStatus
-  // need receive address from accountData
-  // review state logic
-  // })
+  useEffect(() => {
+    if (!accountData || !accountData.receiveAddress) {
+      return;
+    }
+    // rather: check if query is in progress
+    if (accountData.receiveAddress === queriedBtcAddress) {
+      return;
+    }
+
+    setQueriedBtcAddress(accountData.receiveAddress);
+
+    const fetchBtcAccountStatus = () => {
+      console.log("send-dust: fetching BTC account", queriedBtcAddress);
+      getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
+        console.log("btcTxs: ", btcTxs);
+        if (!btcTxs) return undefined;
+        setQueriedBtcAddress(null);
+        return btcTxs;
+      });
+    };
+
+    // every 5 min
+    const intervalId = setInterval(fetchBtcAccountStatus, 300000);
+
+    return () => clearInterval(intervalId);
+    // TODO: correct this dependency issue
+  }, [accountData, accountData?.receiveAddress]);
 
   // verify STX address is known
   if (!stxAddress) {

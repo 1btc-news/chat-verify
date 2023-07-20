@@ -186,6 +186,24 @@ export const fetchRegistrationResponseAtom = atom(async (get) => {
   }
 });
 
+// fetch transaction details for BTC address
+export const fetchBtcTxsAtom = atom(async (get) => {
+  const accountData = get(accountDataAtom);
+  if (!accountData) {
+    return undefined;
+  }
+  try {
+    const btcTxsResponse = await getBtcTxs(accountData.receiveAddress);
+    return btcTxsResponse;
+  } catch (error) {
+    console.error(
+      `Failed to fetch BTC transactions for ${accountData.receiveAddress}:`,
+      error
+    );
+    return undefined;
+  }
+});
+
 /////////////////////////
 // HELPER FUNCTIONS
 /////////////////////////
@@ -195,6 +213,13 @@ export async function getAccountData(
 ): Promise<AccountData | undefined> {
   const accountQuery = await fetch(`${apiUrl}/account/${stxAddress}`);
   return accountQuery.status === 200 ? await accountQuery.json() : undefined;
+}
+
+export async function getBtcTxs(btcAddress: string) {
+  const btcTxQuery = await fetch(
+    `https://blockchain.info/rawaddr/${btcAddress}`
+  );
+  return btcTxQuery.status === 200 ? await btcTxQuery.json() : undefined;
 }
 
 async function postSignatureMsg(
