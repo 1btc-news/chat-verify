@@ -82,10 +82,8 @@ export const activeSignatureDataAtom = atomWithStorage<SignatureData | null>(
   null
 );
 
-export const activeRegistrationResponseAtom = atomWithStorage<string | null>(
-  "registrationResponse",
-  null
-);
+export const activeRegistrationResponseAtom =
+  atomWithStorage<AccountData | null>("registrationResponse", null);
 
 /////////////////////////
 // ACCOUNT DATA ATOM
