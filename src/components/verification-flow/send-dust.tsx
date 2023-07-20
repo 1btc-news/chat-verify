@@ -64,13 +64,16 @@ function SendDust() {
   };
 
   useEffect(() => {
-    if (
-      !storedStxAddress ||
-      !storedUserData ||
-      storedStxAddress === queriedStxAddress
-    )
+    if (!storedStxAddress || !storedUserData) {
       return;
+    }
+
+    if (storedStxAddress === queriedStxAddress) {
+      return;
+    }
+
     setQueriedStxAddress(storedStxAddress);
+
     const fetchAccountStatus = () => {
       console.log("fetching account status");
       fetchAccountData(storedStxAddress).then((accountData) => {
@@ -92,10 +95,11 @@ function SendDust() {
         return accountData;
       });
     };
-    fetchAccountStatus();
-    const int = setInterval(() => fetchAccountStatus(), 5000);
-    return () => clearInterval(int);
-  }, [queriedStxAddress, setStoredUserData, storedStxAddress, storedUserData]);
+
+    const intervalId = setInterval(fetchAccountStatus, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [setActiveStep, setStoredUserData, storedStxAddress, storedUserData]);
 
   // verify stored user data exists
   if (!storedStxAddress || !storedUserData) {

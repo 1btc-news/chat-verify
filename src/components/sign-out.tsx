@@ -1,11 +1,12 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
 import { useSetAtom } from "jotai";
-import { storedStxAddressAtom } from "../constants";
+import { activeStepAtom, storedStxAddressAtom } from "../constants";
 
 function SignOut() {
   const { signOut } = useAuth();
   const setStoredStxAddress = useSetAtom(storedStxAddressAtom);
+  const setActiveStep = useSetAtom(activeStepAtom);
   return (
     <Button
       variant="1btc-orange"
@@ -15,6 +16,7 @@ function SignOut() {
           signOut();
           // clear storedStxAddress
           setStoredStxAddress(null);
+          setActiveStep(0);
         } catch (error) {
           console.error("Error while signing out: ", error);
         }
