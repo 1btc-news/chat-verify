@@ -1,11 +1,10 @@
 import { useAtom, useSetAtom } from "jotai";
 import { loadable } from "jotai/utils";
-import { accountDataAtom, isRegisteredAtom } from "../constants";
+import { accountDataAtom, fetchAccountDataAtom } from "../constants";
 
 export const useAccountData = () => {
-  const accountDataLoader = loadable(accountDataAtom);
+  const accountDataLoader = loadable(fetchAccountDataAtom);
   const [accountData] = useAtom(accountDataLoader);
-  const setIsRegistered = useSetAtom(isRegisteredAtom);
 
   const isLoading = accountData.state === "loading";
   const hasError = accountData.state === "hasError" && "error" in accountData;
@@ -13,10 +12,6 @@ export const useAccountData = () => {
 
   const error = hasError ? accountData.error : undefined;
   const data = hasData ? accountData.data : undefined;
-
-  if (hasData && data) {
-    setIsRegistered(true);
-  }
 
   return { isLoading, hasError, hasData, error, data };
 };

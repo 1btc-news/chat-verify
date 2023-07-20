@@ -28,6 +28,17 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // queries registration response from API
 // monitors for pending transaction to dust account
 
+// works on first pass through logic
+// stuck waiting for btc address on second login
+// need to avoid sending duplicate registration request
+// does continue to query status of account either way
+// rename send-dust.tsx to verify-account.tsx or register-account.tsx
+//   if not registered, registers and displays BTC address (send-dust)
+//   if already registered, displays BTC address (send-dust)
+//   if pending tx, displays loading spinner (awaiting-dust-tx)
+//   if account is valid, move on to next step
+// localstorage data for loadable data? with useActiveStep hook!
+
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
   // TODO: better way to handle this? use an atom?
@@ -36,7 +47,6 @@ function SendDust() {
   );
   // what about the accountData atom? only want to post if not registered
   const { isLoading, hasData, data } = useRegistrationResponse();
-  const setActiveStep = useSetAtom(activeStepAtom);
 
   const toast = useToast();
 
@@ -82,12 +92,6 @@ function SendDust() {
       getAccountData(stxAddress).then((accountData) => {
         console.log("accountData: ", accountData);
         if (!accountData) return undefined;
-        if (accountData.status === "insufficient") {
-          setActiveStep(4);
-        }
-        if (accountData.status === "valid") {
-          setActiveStep(3);
-        }
         setQueriedStxAddress(null);
         return accountData;
       });
@@ -96,7 +100,7 @@ function SendDust() {
     const intervalId = setInterval(fetchAccountStatus, 5000);
 
     return () => clearInterval(intervalId);
-  }, [setActiveStep, stxAddress]);
+  }, [stxAddress]);
 
   // verify STX address is known
   if (!stxAddress) {

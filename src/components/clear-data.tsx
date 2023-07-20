@@ -1,8 +1,10 @@
 import { useAuth } from "@micro-stacks/react";
 import { useSetAtom } from "jotai";
 import {
+  accountDataAtom,
   activeStepAtom,
   signatureDataAtom,
+  signatureMsgAtom,
   stxAddressAtom,
 } from "../constants";
 import { Button } from "@chakra-ui/react";
@@ -10,7 +12,8 @@ import { Button } from "@chakra-ui/react";
 function ClearData() {
   const { signOut } = useAuth();
   const setActiveStxAddress = useSetAtom(stxAddressAtom);
-  const setActiveStep = useSetAtom(activeStepAtom);
+  const setAccountData = useSetAtom(accountDataAtom);
+  const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
   return (
     <Button
@@ -18,7 +21,8 @@ function ClearData() {
       onClick={() => {
         // clear all locally stored data
         setActiveStxAddress(null);
-        setActiveStep(0);
+        setAccountData(null);
+        setSignatureMsg(null);
         setSignatureData(null);
         // sign out of the wallet
         try {

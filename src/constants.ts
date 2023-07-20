@@ -45,25 +45,84 @@ export type AccountData = {
 /////////////////////////
 // LOCAL STORAGE ATOMS
 // updated by components
+// used to persist on close/open
 /////////////////////////
 
-// current Stacks (STX) address
+// stacks addres from wallet
 export const stxAddressAtom = atomWithStorage<string | null>(
-  "stxAddress",
+  "1btc-stxAddress",
   null
 );
 
-// current registration step
-export const activeStepAtom = atomWithStorage<number>("activeStep", 0);
+// account data from API
+export const accountDataAtom = atomWithStorage<AccountData | null>(
+  "1btc-accountData",
+  null
+);
 
-// current signature data
+// signature message from API
+export const signatureMsgAtom = atomWithStorage<string | null>(
+  "1btc-signatureMsg",
+  null
+);
+
+// signature data from wallet
 export const signatureDataAtom = atomWithStorage<SignatureData | null>(
-  "signatureData",
+  "1btc-signatureData",
   null
 );
 
-// current user registration status
-export const isRegisteredAtom = atomWithStorage<boolean>("isRegistered", false);
+/////////////////////////
+// ATOMS
+// updated by components
+// used to trigger API calls
+/////////////////////////
+
+// registration status based on existing data
+export const isRegistered = atom((get) => {
+  const accountData = get(accountDataAtom);
+  return accountData ? true : false;
+});
+
+// active step based on existing data
+export const activeStepAtom = atom((get) => {
+  const stxAddress = get(stxAddressAtom);
+  const accountData = get(accountDataAtom);
+  const signatureData = get(signatureDataAtom);
+  console.log("activeStepAtom: get results:", {
+    stxAddress,
+    accountData,
+    signatureData,
+  });
+  if (!stxAddress) {
+    console.log("activeStepAtom: no stx address, returning 0");
+    return 0;
+  }
+  if (!accountData) {
+    console.log("activeStepAtom: no account data, returning 1");
+    return 1;
+  }
+  if (accountData) {
+    if (accountData.status === "insufficient") {
+      console.log("activeStepAtom: insufficient balance, returning 4");
+      return 4;
+    }
+    if (accountData.status === "valid") {
+      console.log("activeStepAtom: account valid, returning 3");
+      return 3;
+    }
+    if (accountData.status === "pending") {
+      console.log("activeStepAtom: account pending, returning 2");
+      return 2;
+    }
+  }
+  if (signatureData) {
+    console.log("activeStepAtom: signature data detected, returning 2");
+    return 2;
+  }
+  console.log("activeStepAtom: default, returning 0");
+  return 0;
+});
 
 /////////////////////////
 // LOADABLE ASYNC ATOMS
@@ -71,7 +130,7 @@ export const isRegisteredAtom = atomWithStorage<boolean>("isRegistered", false);
 /////////////////////////
 
 // fetch account data from API
-export const accountDataAtom = atom(async (get) => {
+export const fetchAccountDataAtom = atom(async (get) => {
   const stxAddress = get(stxAddressAtom);
   if (!stxAddress) {
     return undefined;
@@ -86,7 +145,7 @@ export const accountDataAtom = atom(async (get) => {
 });
 
 // fetch signature message from API
-export const signatureMsgAtom = atom(async (get) => {
+export const fetchSignatureMsgAtom = atom(async (get) => {
   const stxAddress = get(stxAddressAtom);
   if (!stxAddress) {
     return undefined;
@@ -104,10 +163,9 @@ export const signatureMsgAtom = atom(async (get) => {
 });
 
 // fetch registration response from API
-export const registrationResponseAtom = atom(async (get) => {
+export const fetchRegistrationResponseAtom = atom(async (get) => {
   const signatureData = get(signatureDataAtom);
-  const isRegistered = get(isRegisteredAtom);
-  if (!signatureData || isRegistered) {
+  if (!signatureData) {
     return undefined;
   }
   try {

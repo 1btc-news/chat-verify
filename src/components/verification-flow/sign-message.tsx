@@ -14,11 +14,7 @@ import {
 import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
-import {
-  activeStepAtom,
-  signatureDataAtom,
-  stxAddressAtom,
-} from "../../constants";
+import { signatureDataAtom, stxAddressAtom } from "../../constants";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 
 // active step = 1
@@ -28,7 +24,6 @@ import { useSignatureMsg } from "../../hooks/use-signature-msg";
 
 function SignMessage() {
   const [stxAddress] = useAtom(stxAddressAtom);
-  const setActiveStep = useSetAtom(activeStepAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
   const { isLoading, data } = useSignatureMsg();
@@ -89,7 +84,6 @@ function SignMessage() {
           openSignMessage({ message: data! }).then((signatureData) => {
             if (signatureData) {
               setSignatureData(signatureData);
-              setActiveStep(2);
             }
           });
         }}
