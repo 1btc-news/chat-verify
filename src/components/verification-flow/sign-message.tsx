@@ -2,7 +2,7 @@ import {
   Button,
   IconButton,
   Popover,
-  PopoverArrow,
+  PopoverBody,
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
@@ -54,25 +54,26 @@ function SignMessage() {
           Confirm ownership of your wallet by signing a message from your
           wallet.
         </Text>
-        <Popover placement="bottom-start">
+        <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
             <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
-          <PopoverContent width="100%" maxW="800px">
-            <PopoverHeader bg="orange.500" fontWeight="bold">
+          <PopoverContent>
+            <PopoverHeader pl={4} pt={4}>
               Sign a Message
             </PopoverHeader>
-            <PopoverArrow bg="orange.500" />
             <PopoverCloseButton />
-            <Text p={2}>
-              In this step, we request you to verify the ownership of your
-              Bitcoin wallet. This is achieved by signing a unique message
-              provided by us using your wallet. This process happens through a
-              pop-up window triggered by your wallet software, ensuring that
-              your private key never leaves your device. The data from your
-              signature is then used by our system to create a unique,
-              deterministic Bitcoin address associated with your account.
-            </Text>
+            <PopoverBody p={4}>
+              <Text>
+                In this step, we request you to verify the ownership of your
+                Bitcoin wallet. This is achieved by signing a unique message
+                provided by us using your wallet. This process happens through a
+                pop-up window triggered by your wallet software, ensuring that
+                your private key never leaves your device. The data from your
+                signature is then used by our system to create a unique,
+                deterministic Bitcoin address associated with your account.
+              </Text>
+            </PopoverBody>
           </PopoverContent>
         </Popover>
       </Stack>
