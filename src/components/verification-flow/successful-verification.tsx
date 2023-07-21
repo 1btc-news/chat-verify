@@ -33,14 +33,14 @@ function SuccessfulVerification() {
           </PopoverTrigger>
           <PopoverContent>
             <PopoverHeader pl={4} pt={4}>
-              Join 1BTC Chat
+              Join 1btc Chat
             </PopoverHeader>
             <PopoverCloseButton />
             <PopoverBody p={4}>
               <Text>
                 Congratulations! You've successfully verified your ownership of
                 more than 1 BTC. Now the fun begins - click on the link below to
-                join our exclusive 1BTC console chat app. Get ready to mingle
+                join our exclusive 1btc console chat app. Get ready to mingle
                 with other Bitcoin enthusiasts who have journeyed the same path
                 as you. Welcome aboard!
               </Text>
@@ -55,7 +55,7 @@ function SuccessfulVerification() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Join 1BTC
+        Join 1btc Chat
       </Button>
     </>
   );

@@ -26,7 +26,7 @@ function ConnectWallet() {
         mb={8}
       >
         <Text>
-          Start the process of unlocking the exclusive 1BTC chat by connecting
+          Start the process of unlocking the exclusive 1btc chat by connecting
           your Hiro or Xverse wallet.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
@@ -40,7 +40,7 @@ function ConnectWallet() {
             <PopoverCloseButton />
             <PopoverBody p={4}>
               <Text>
-                In order to access our exclusive 1BTC chat platform, connect
+                In order to access our exclusive 1btc chat platform, connect
                 your Bitcoin wallet with our platform. We currently support both{" "}
                 <Link
                   isExternal
