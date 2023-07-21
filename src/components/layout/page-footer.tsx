@@ -3,10 +3,12 @@ import OneBtcLogo from "./1btc-logo";
 
 function Footer() {
   return (
-    <Flex align="center">
-      <OneBtcLogo width="45px" height="45px" />
-      <Flex flexGrow="1" ml={2} align="center">
-        <Heading size="md">1btc</Heading>
+    <Flex align="center" direction={["column", "row"]}>
+      <Flex flexGrow="1" align="center">
+        <OneBtcLogo width="45px" height="45px" />
+        <Heading size="md" ml={2}>
+          1btc
+        </Heading>
       </Flex>
       <Button
         as="a"

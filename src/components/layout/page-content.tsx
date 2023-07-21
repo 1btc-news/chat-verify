@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { Box, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Spinner,
+  Stack,
+  Text,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import {
   accountDataAtom,
   activeStepAtom,
@@ -31,6 +38,10 @@ function Content() {
   const { isLoading: isAccountLoading, data: accountData } = useAccountData();
   const { data: signatureMsgData } = useSignatureMsg();
   const { data: registrationData } = useRegistrationResponse();
+  const stepperOrientation = useBreakpointValue({
+    base: "vertical",
+    md: "horizontal",
+  }) as "vertical" | "horizontal";
 
   useEffect(() => {
     if (accountData) {
@@ -59,7 +70,10 @@ function Content() {
           ? "Congratulations, you are verified!"
           : "Verify that you are a Fullcoiner to join the 1btc community"}
       </Heading>
-      <VerificationStepper activeStep={activeStep} />
+      <VerificationStepper
+        activeStep={activeStep}
+        orientation={stepperOrientation}
+      />
       {stxAddress ? (
         isAccountLoading ? (
           <Stack direction="row">
