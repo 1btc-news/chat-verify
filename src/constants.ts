@@ -85,6 +85,13 @@ export const registrationResponseAtom = atomWithStorage<AccountData | null>(
 // used to trigger API calls
 /////////////////////////
 
+// verification status based on existing data
+export const isValid = atom((get) => {
+  const accountData = get(accountDataAtom);
+  console.log("isValid: accountData status:", accountData?.status);
+  return accountData?.status === "valid";
+});
+
 // registration status based on existing data
 export const isRegistered = atom((get) => {
   const accountData = get(accountDataAtom);
@@ -96,11 +103,6 @@ export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
-  console.log("activeStepAtom: get results:", {
-    stxAddress,
-    accountData,
-    signatureData,
-  });
   if (!stxAddress) {
     return 0;
   }

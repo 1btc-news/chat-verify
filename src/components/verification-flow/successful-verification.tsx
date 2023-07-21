@@ -11,10 +11,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
+import Fireworks from "./fireworks";
 
 function SuccessfulVerification() {
   return (
     <>
+      <Fireworks />
       <Stack
         direction="row"
         justifyContent="space-between"

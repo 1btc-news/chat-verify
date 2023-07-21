@@ -4,6 +4,7 @@ import { Box, Heading, Spinner, Stack, Text } from "@chakra-ui/react";
 import {
   accountDataAtom,
   activeStepAtom,
+  isValid,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -23,6 +24,7 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 function Content() {
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
+  const validated = useAtomValue(isValid);
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setRegistrationResponse = useSetAtom(registrationResponseAtom);
@@ -48,10 +50,14 @@ function Content() {
     }
   }, [registrationData, setRegistrationResponse]);
 
+  console.log("isValid: ", validated);
+
   return (
     <Box width="100%" maxW="1200px">
       <Heading>
-        Verify that you are a Fullcoiner to join the 1btc community
+        {validated
+          ? "Congratulations, you are verified!"
+          : "Verify that you are a Fullcoiner to join the 1btc community"}
       </Heading>
       <VerificationStepper activeStep={activeStep} />
       {stxAddress ? (
