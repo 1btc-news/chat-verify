@@ -7,10 +7,11 @@ import {
   stxAddressAtom,
 } from "../../constants";
 import { Button } from "@chakra-ui/react";
+import { RESET } from "jotai/utils";
 
 function ClearData() {
   const { signOut } = useAuth();
-  const setActiveStxAddress = useSetAtom(stxAddressAtom);
+  const setStxAddress = useSetAtom(stxAddressAtom);
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
@@ -19,10 +20,10 @@ function ClearData() {
       variant="1btc-orange"
       onClick={() => {
         // clear all locally stored data
-        setActiveStxAddress(null);
-        setAccountData(null);
-        setSignatureMsg(null);
-        setSignatureData(null);
+        setStxAddress(RESET);
+        setAccountData(RESET);
+        setSignatureMsg(RESET);
+        setSignatureData(RESET);
         // sign out of the wallet
         try {
           signOut();

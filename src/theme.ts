@@ -28,7 +28,6 @@ const colors = {
 // Chakra component style overrides
 const components = {
   Alert: {
-    //parts: ["container"],
     variants: {
       "1btc-orange": {
         container: {
@@ -68,6 +67,23 @@ const components = {
         fontSize: "2xl",
         px: 10,
         py: 5,
+      },
+    },
+  },
+  Popover: {
+    variants: {
+      "1btc-orange": {
+        header: {
+          fontWeight: "bold",
+          borderBottom: "none",
+        },
+        content: {
+          background: "#0B0C14",
+          width: "fit-content",
+          maxWidth: ["80vw", null, "800px"],
+          border: "1px solid",
+          borderColor: "orange.500",
+        },
       },
     },
   },

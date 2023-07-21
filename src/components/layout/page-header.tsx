@@ -12,30 +12,23 @@ function Header() {
   const [storedStxAddress] = useAtom(stxAddressAtom);
 
   return (
-    <Flex align="center">
-      <OneBtcLogo width="45px" height="45px" />
-      <Flex flexGrow="1" ml={2} align="center">
-        <Heading size="md">1btc</Heading>
+    <Flex align="center" direction={["column", "row"]}>
+      <Flex flexGrow="1" align="center">
+        <OneBtcLogo width="45px" height="45px" />
+        <Heading size="md" ml={2}>
+          1btc
+        </Heading>
       </Flex>
-      <Stack direction="row" justifyContent="flex-end" alignItems="center">
-        {stxAddress === undefined ? (
-          <>
-            {storedStxAddress && (
-              <Text>{`${storedStxAddress.slice(
-                0,
-                5
-              )}...${storedStxAddress.slice(-5)}`}</Text>
-            )}
-            <ClearData />
-            <SignIn />
-          </>
-        ) : (
-          <>
-            <Text>{`${stxAddress.slice(0, 5)}...${stxAddress.slice(-5)}`}</Text>
-            <ClearData />
-            <SignOut />
-          </>
-        )}
+      <Stack direction={["column", "row"]} alignItems="center">
+        <Text>
+          {stxAddress === undefined && storedStxAddress
+            ? `${storedStxAddress.slice(0, 5)}...${storedStxAddress.slice(-5)}`
+            : stxAddress
+            ? `${stxAddress.slice(0, 5)}...${stxAddress.slice(-5)}`
+            : ""}
+        </Text>
+        <ClearData />
+        {stxAddress === undefined ? <SignIn /> : <SignOut />}
       </Stack>
     </Flex>
   );

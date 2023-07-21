@@ -5,7 +5,7 @@ import {
   IconButton,
   Image,
   Popover,
-  PopoverArrow,
+  PopoverBody,
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
@@ -162,25 +162,26 @@ function SendDust() {
           Demonstrate your BTC ownership by sending a small (dust) transaction
           to your unique address.
         </Text>
-        <Popover placement="bottom-start">
+        <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
             <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
-          <PopoverContent width="100%" maxW="800px">
-            <PopoverHeader bg="orange.500" fontWeight="bold">
+          <PopoverContent>
+            <PopoverHeader pl={4} pt={4}>
               Send Dust Transaction
             </PopoverHeader>
-            <PopoverArrow bg="orange.500" />
             <PopoverCloseButton />
-            <Text p={2}>
-              In order to prove that you hold wallet holds more than 1 BTC,
-              you're required to send a small amount of BTC (commonly 0.00006
-              BTC or 6,000 satoshis, referred to as "dust") to a unique,
-              deterministic address generated for you in the previous step.
-              Note, this dust transaction is non-refundable. The 1BTC API will
-              verify this transaction and ensure that the input amount from the
-              source wallet is greater than 1 BTC.
-            </Text>
+            <PopoverBody p={4}>
+              <Text>
+                In order to prove that you hold wallet holds more than 1 BTC,
+                you're required to send a small amount of BTC (commonly 0.00006
+                BTC or 6,000 satoshis, referred to as "dust") to a unique,
+                deterministic address generated for you in the previous step.
+                Note, this dust transaction is non-refundable. The 1BTC API will
+                verify this transaction and ensure that the input amount from
+                the source wallet is greater than 1 BTC.
+              </Text>
+            </PopoverBody>
           </PopoverContent>
         </Popover>
       </Stack>

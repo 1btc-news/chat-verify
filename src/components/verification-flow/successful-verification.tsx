@@ -2,7 +2,7 @@ import {
   Button,
   IconButton,
   Popover,
-  PopoverArrow,
+  PopoverBody,
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,
@@ -11,10 +11,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
+import Fireworks from "./fireworks";
 
 function SuccessfulVerification() {
   return (
     <>
+      <Fireworks />
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -25,23 +27,24 @@ function SuccessfulVerification() {
           You made it! Celebrate by joining our exclusive 1BTC chat - just a
           click away.
         </Text>
-        <Popover placement="bottom-start">
+        <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
             <IconButton aria-label="Learn More" icon={<FaQuestion />} />
           </PopoverTrigger>
-          <PopoverContent width="100%" maxW="800px">
-            <PopoverHeader bg="orange.500" fontWeight="bold">
-              Join 1BTC Chat
+          <PopoverContent>
+            <PopoverHeader pl={4} pt={4}>
+              Join 1btc Chat
             </PopoverHeader>
-            <PopoverArrow bg="orange.500" />
             <PopoverCloseButton />
-            <Text p={2}>
-              Congratulations! You've successfully verified your ownership of
-              more than 1 BTC. Now the fun begins - click on the link below to
-              join our exclusive 1BTC console chat app. Get ready to mingle with
-              other Bitcoin enthusiasts who have journeyed the same path as you.
-              Welcome aboard!
-            </Text>
+            <PopoverBody p={4}>
+              <Text>
+                Congratulations! You've successfully verified your ownership of
+                more than 1 BTC. Now the fun begins - click on the link below to
+                join our exclusive 1btc console chat app. Get ready to mingle
+                with other Bitcoin enthusiasts who have journeyed the same path
+                as you. Welcome aboard!
+              </Text>
+            </PopoverBody>
           </PopoverContent>
         </Popover>
       </Stack>
@@ -52,7 +55,7 @@ function SuccessfulVerification() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Join 1BTC
+        Join 1btc Chat
       </Button>
     </>
   );

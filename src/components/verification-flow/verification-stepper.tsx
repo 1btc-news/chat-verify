@@ -12,9 +12,17 @@ import {
 } from "@chakra-ui/react";
 import { registrationSteps } from "../../constants";
 
-function VerificationStepper(props: { activeStep: number }) {
+function VerificationStepper(props: {
+  activeStep: number;
+  orientation: "horizontal" | "vertical";
+}) {
   return (
-    <Stepper index={props.activeStep} size="lg" my={8} colorScheme="stepper">
+    <Stepper
+      index={props.activeStep}
+      orientation={props.orientation || "horizontal"}
+      my={8}
+      colorScheme="stepper"
+    >
       {registrationSteps.map((step, index) => (
         <Step key={index}>
           <StepIndicator>
