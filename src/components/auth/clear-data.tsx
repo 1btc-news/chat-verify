@@ -9,7 +9,7 @@ import {
 import { Button } from "@chakra-ui/react";
 import { RESET } from "jotai/utils";
 
-function ClearData() {
+function ClearData(props: { variant?: string }) {
   const { signOut } = useAuth();
   const setStxAddress = useSetAtom(stxAddressAtom);
   const setAccountData = useSetAtom(accountDataAtom);
@@ -17,7 +17,7 @@ function ClearData() {
   const setSignatureData = useSetAtom(signatureDataAtom);
   return (
     <Button
-      variant="1btc-orange"
+      variant={props.variant || "1btc-orange"}
       onClick={() => {
         // clear all locally stored data
         setStxAddress(RESET);
