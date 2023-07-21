@@ -56,6 +56,18 @@ const components = {
           bg: "orange.700",
         },
       },
+      "1btc-orange-outline": {
+        bg: "transparent",
+        color: "white",
+        border: "1px solid",
+        borderColor: "orange.500",
+        _hover: {
+          color: "orange.500",
+        },
+        _active: {
+          bg: "orange.600",
+        },
+      },
     },
     sizes: {
       xl: {

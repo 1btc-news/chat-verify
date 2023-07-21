@@ -20,15 +20,19 @@ function Header() {
         </Heading>
       </Flex>
       <Stack direction={["column", "row"]} alignItems="center">
-        <Text>
+        <Text fontWeight="semibold" fontSize="md">
           {stxAddress === undefined && storedStxAddress
             ? `${storedStxAddress.slice(0, 5)}...${storedStxAddress.slice(-5)}`
             : stxAddress
             ? `${stxAddress.slice(0, 5)}...${stxAddress.slice(-5)}`
             : ""}
         </Text>
-        <ClearData />
-        {stxAddress === undefined ? <SignIn /> : <SignOut />}
+        <ClearData variant="1btc-orange-outline" />
+        {stxAddress === undefined ? (
+          <SignIn variant="1btc-orange-outline" />
+        ) : (
+          <SignOut variant="1btc-orange-outline" />
+        )}
       </Stack>
     </Flex>
   );

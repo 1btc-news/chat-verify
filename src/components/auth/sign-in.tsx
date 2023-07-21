@@ -8,7 +8,7 @@ import {
   stxAddressAtom,
 } from "../../constants";
 
-function SignIn() {
+function SignIn(props: { variant?: string }) {
   const { openAuthRequest, isRequestPending } = useAuth();
   const [stxAddress, setStxAddress] = useAtom(stxAddressAtom);
   const setAccountData = useSetAtom(accountDataAtom);
@@ -17,7 +17,7 @@ function SignIn() {
 
   return (
     <Button
-      variant="1btc-orange"
+      variant={props.variant || "1btc-orange"}
       isLoading={isRequestPending}
       onClick={() =>
         void openAuthRequest({
