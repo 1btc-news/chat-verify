@@ -119,6 +119,9 @@ const components = {
         },
         separator: {
           bg: "gray.700",
+          "&[data-status='complete']": {
+            bg: "gray.900",
+          },
         },
       },
     },
