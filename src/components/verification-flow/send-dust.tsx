@@ -188,13 +188,13 @@ function SendDust() {
       {data && (
         <>
           <Stack
-            direction="row"
-            justifyContent="space-between"
+            direction={["column", "row"]}
+            justifyContent={["flex-end", "space-between"]}
             alignItems="center"
             mb={8}
           >
-            <Text my={4}>
-              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to{" "}
+            <Text my={4} overflowWrap="anywhere">
+              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
               {data.receiveAddress}
             </Text>
             <IconButton
