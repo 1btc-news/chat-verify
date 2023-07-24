@@ -188,8 +188,8 @@ function SendDust() {
       {data && (
         <>
           <Stack
-            direction={["column", "row"]}
-            justifyContent={["flex-end", "space-between"]}
+            direction="row"
+            justifyContent="space-between"
             alignItems="center"
             mb={8}
           >
