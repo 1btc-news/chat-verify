@@ -18,7 +18,7 @@ export const App = () => (
       <CustomFonts />
       <Flex direction="column" minH="100vh" p={4}>
         <Header />
-        <Flex flex="1" alignItems="center" justifyContent="center">
+        <Flex flex="1" alignItems="center" justifyContent="center" my={16}>
           <Content />
         </Flex>
         <Footer />
