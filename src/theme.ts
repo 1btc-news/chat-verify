@@ -20,9 +20,6 @@ const colors = {
     800: "#612B00",
     900: "#301500",
   },
-  stepper: {
-    200: "#F27400", // 1btc-orange
-  },
 };
 
 // Chakra component style overrides
