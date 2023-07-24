@@ -21,7 +21,8 @@ function VerificationStepper(props: {
       index={props.activeStep}
       orientation={props.orientation || "horizontal"}
       my={8}
-      colorScheme="stepper"
+      variant="1btc-orange"
+      colorScheme="1btc-orange"
     >
       {registrationSteps.map((step, index) => (
         <Step key={index}>

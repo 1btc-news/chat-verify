@@ -99,6 +99,33 @@ const components = {
       },
     },
   },
+  Stepper: {
+    variants: {
+      "1btc-orange": {
+        stepper: {
+          bg: "transparent",
+        },
+        indicator: {
+          border: "2px solid",
+          borderColor: "gray.700",
+          "&[data-status='active']": {
+            bg: "transparent",
+            border: "2px solid",
+            borderColor: "orange.500",
+          },
+        },
+        icon: {
+          color: "white",
+        },
+        number: {
+          color: "white",
+        },
+        separator: {
+          bg: "gray.700",
+        },
+      },
+    },
+  },
 };
 
 // Chakra font overrides
