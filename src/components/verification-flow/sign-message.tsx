@@ -1,6 +1,7 @@
 import {
   Button,
   IconButton,
+  ListItem,
   Popover,
   PopoverBody,
   PopoverCloseButton,
@@ -10,6 +11,7 @@ import {
   Spinner,
   Stack,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
@@ -51,8 +53,8 @@ function SignMessage() {
         mb={8}
       >
         <Text>
-          Confirm ownership of your wallet by signing a message from your
-          wallet.
+          Sign a message to verify ownership of your wallet and generate a
+          unique BTC address.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -64,15 +66,21 @@ function SignMessage() {
             </PopoverHeader>
             <PopoverCloseButton />
             <PopoverBody p={4}>
-              <Text>
-                In this step, we request you to verify the ownership of your
-                Bitcoin wallet. This is achieved by signing a unique message
-                provided by us using your wallet. This process happens through a
-                pop-up window triggered by your wallet software, ensuring that
-                your private key never leaves your device. The data from your
-                signature is then used by our system to create a unique,
-                deterministic Bitcoin address associated with your account.
-              </Text>
+              <UnorderedList>
+                <ListItem>
+                  Verify ownwership of your Bitcoin wallet by signing a unique
+                  message provided by the software.
+                </ListItem>
+                <ListItem>
+                  The signature is made by the wallet in a pop-up window,
+                  ensuring that your private key never leaves your device.
+                </ListItem>
+                <ListItem>
+                  The data from your signature is used by our system to create a
+                  unique, deterministic Bitcoin address associated with your
+                  account.
+                </ListItem>
+              </UnorderedList>
             </PopoverBody>
           </PopoverContent>
         </Popover>

@@ -40,7 +40,7 @@ function Content() {
   const { data: registrationData } = useRegistrationResponse();
   const stepperOrientation = useBreakpointValue({
     base: "vertical",
-    md: "horizontal",
+    sm: "horizontal",
   }) as "vertical" | "horizontal";
 
   useEffect(() => {
@@ -67,8 +67,8 @@ function Content() {
     <Box width="100%" maxW="1200px">
       <Heading>
         {validated
-          ? "Congratulations, you are verified!"
-          : "Verify that you are a Fullcoiner to join the 1btc community"}
+          ? "Congratulations, you are verified Fullcoiner!"
+          : "Verify you are a Fullcoiner to join the 1btc community"}
       </Heading>
       <VerificationStepper
         activeStep={activeStep}

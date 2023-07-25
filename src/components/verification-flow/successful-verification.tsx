@@ -1,6 +1,7 @@
 import {
   Button,
   IconButton,
+  ListItem,
   Popover,
   PopoverBody,
   PopoverCloseButton,
@@ -9,6 +10,7 @@ import {
   PopoverTrigger,
   Stack,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import Fireworks from "./fireworks";
@@ -24,8 +26,8 @@ function SuccessfulVerification() {
         mb={8}
       >
         <Text>
-          You made it! Celebrate by joining our exclusive 1BTC chat - just a
-          click away.
+          Welcome to 1btc, you're one click away from joining our verified
+          Fullcoiner chat.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -37,13 +39,20 @@ function SuccessfulVerification() {
             </PopoverHeader>
             <PopoverCloseButton />
             <PopoverBody p={4}>
-              <Text>
-                Congratulations! You've successfully verified your ownership of
-                more than 1 BTC. Now the fun begins - click on the link below to
-                join our exclusive 1btc console chat app. Get ready to mingle
-                with other Bitcoin enthusiasts who have journeyed the same path
-                as you. Welcome aboard!
-              </Text>
+              <UnorderedList>
+                <ListItem>
+                  Congratulations! You've successfully verified your ownership
+                  of more than 1 BTC.
+                </ListItem>
+                <ListItem>
+                  Now the fun begins - click on the link below to join our
+                  exclusive 1btc chat app.
+                </ListItem>
+                <ListItem>
+                  Get ready to mingle with other Bitcoin enthusiasts who have
+                  journeyed the same path as you. Welcome aboard!
+                </ListItem>
+              </UnorderedList>
             </PopoverBody>
           </PopoverContent>
         </Popover>

@@ -1,6 +1,7 @@
 import {
   IconButton,
   Link,
+  ListItem,
   Popover,
   PopoverBody,
   PopoverCloseButton,
@@ -9,6 +10,7 @@ import {
   PopoverTrigger,
   Stack,
   Text,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import SignIn from "../auth/sign-in";
@@ -26,8 +28,8 @@ function ConnectWallet() {
         mb={8}
       >
         <Text>
-          Start the process of unlocking the exclusive 1btc chat by connecting
-          your Hiro or Xverse wallet.
+          Connect your Hiro or Xverse wallet to authenticate into 1btc's
+          Fullcoiner chat.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -39,28 +41,36 @@ function ConnectWallet() {
             </PopoverHeader>
             <PopoverCloseButton />
             <PopoverBody p={4}>
-              <Text>
-                In order to access our exclusive 1btc chat platform, connect
-                your Bitcoin wallet with our platform. We currently support both{" "}
-                <Link
-                  isExternal
-                  color="orange.500"
-                  href="https://wallet.hiro.so/wallet/install-web"
-                >
-                  Hiro
-                </Link>{" "}
-                and{" "}
-                <Link
-                  isExternal
-                  color="orange.500"
-                  href="https://www.xverse.app/"
-                >
-                  Xverse
-                </Link>{" "}
-                wallets. By clicking the Connect Wallet button and selecting
-                your account from the wallet, you initiate the secure,
-                standardized connection process.
-              </Text>
+              <UnorderedList>
+                <ListItem>
+                  To access the 1btc chat platform, connect your Bitcoin wallet
+                  to use with the chat.
+                </ListItem>
+                <ListItem>
+                  We currently support both{" "}
+                  <Link
+                    isExternal
+                    color="orange.500"
+                    href="https://wallet.hiro.so/wallet/install-web"
+                  >
+                    Hiro
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    isExternal
+                    color="orange.500"
+                    href="https://www.xverse.app/"
+                  >
+                    Xverse
+                  </Link>{" "}
+                  wallets.
+                </ListItem>
+                <ListItem>
+                  By clicking the Connect Wallet button and selecting your
+                  account from the wallet, you initiate the secure, standardized
+                  connection process.
+                </ListItem>
+              </UnorderedList>
             </PopoverBody>
           </PopoverContent>
         </Popover>
