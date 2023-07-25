@@ -5,7 +5,7 @@ export const useNoWalletFound = () => {
   return () => {
     toast({
       title: "No wallet found",
-      description: `Please install either the Hiro or Xverse Stacks wallet to continue.`,
+      description: `Please install or enable the Hiro or Xverse wallet to continue.`,
       position: "top",
       variant: "1btc-orange",
       duration: 9000,
