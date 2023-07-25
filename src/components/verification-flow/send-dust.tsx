@@ -4,8 +4,10 @@ import copy from "copy-to-clipboard";
 import {
   Alert,
   AlertIcon,
+  Icon,
   IconButton,
   Image,
+  ListItem,
   Popover,
   PopoverBody,
   PopoverCloseButton,
@@ -15,10 +17,11 @@ import {
   Spinner,
   Stack,
   Text,
+  UnorderedList,
   useToast,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
-import { FiCopy } from "react-icons/fi";
+import { FiCopy, FiSend } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
@@ -122,9 +125,9 @@ function SendDust() {
     setQueriedBtcAddress(accountData.receiveAddress);
 
     const fetchBtcAccountStatus = () => {
-      console.log("send-dust: fetching BTC account", queriedBtcAddress);
+      //console.log("send-dust: fetching BTC account", queriedBtcAddress);
       getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
-        console.log("btcTxs: ", btcTxs);
+        //console.log("btcTxs: ", btcTxs);
         if (!btcTxs) return undefined;
         setQueriedBtcAddress(null);
         return btcTxs;
@@ -161,8 +164,8 @@ function SendDust() {
         mb={8}
       >
         <Text>
-          Demonstrate your BTC ownership by sending a small transaction to your
-          unique address.
+          To demonstrate ownership of your BTC, you need to send a small (dust)
+          transaction to your unique address.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -174,22 +177,34 @@ function SendDust() {
             </PopoverHeader>
             <PopoverCloseButton />
             <PopoverBody p={4}>
-              <Text>
-                In order to prove that you hold wallet holds more than 1 BTC,
-                you're required to send a small amount of BTC (commonly 0.00006
-                BTC or 6,000 satoshis, referred to as "dust") to a unique,
-                deterministic address generated for you in the previous step.
-                Note, this dust transaction is non-refundable. The 1BTC API will
-                verify this transaction and ensure that the input amount from
-                the source wallet is greater than 1 BTC.
-              </Text>
+              <UnorderedList>
+                <ListItem>
+                  To prove that you own a wallet that holds more than 1 BTC, you
+                  are required to send a small amount of BTC.
+                </ListItem>
+                <ListItem>
+                  This small amount is commonly 0.00006 BTC or 6,000 satoshis,
+                  known as "dust".
+                </ListItem>
+                <ListItem>
+                  <Text as="b" color="orange.500">
+                    Please note: nobody has access to this address, and the dust
+                    transaction is non-refundable.
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  The 1btc API will verify this transaction and ensure that the
+                  input amount from the source wallet is greater than 1 BTC.
+                </ListItem>
+              </UnorderedList>
             </PopoverBody>
           </PopoverContent>
         </Popover>
       </Stack>
-      <Alert mb={8} variant="1btc-orange">
-        <AlertIcon /> Nobody owns this address and dust amount will not be
-        returned. It is only used to verify ownership of more than 1 BTC.
+      <Alert mb={8} variant="1btc-orange" status="warning">
+        <AlertIcon boxSize="6" /> Nobody has access to this address, and the
+        dust transaction is non-refundable. It is only used to verify ownership
+        of more than 1 BTC.
       </Alert>
       {data && (
         <>
@@ -199,9 +214,15 @@ function SendDust() {
             alignItems="center"
             mb={8}
           >
-            <Text my={4} overflowWrap="anywhere">
+            <Text my={4} as="b">
               Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
-              {data.receiveAddress}
+              <Text
+                color="orange.500"
+                textAlign={["left", "center"]}
+                overflowWrap="anywhere"
+              >
+                {data.receiveAddress}
+              </Text>
             </Text>
             <IconButton
               variant="1btc-orange"
