@@ -88,7 +88,7 @@ export const registrationResponseAtom = atomWithStorage<AccountData | null>(
 // verification status based on existing data
 export const isValid = atom((get) => {
   const accountData = get(accountDataAtom);
-  console.log("isValid: accountData status:", accountData?.status);
+  //console.log("isValid: accountData status:", accountData?.status);
   return accountData?.status === "valid";
 });
 
@@ -176,7 +176,7 @@ export const fetchRegistrationResponseAtom = atom(async (get) => {
     return undefined;
   }
   try {
-    console.log("registrationResponseAtom: fetching registrationResponse");
+    //console.log("registrationResponseAtom: fetching registrationResponse");
     const registrationResponse = await postRegistrationResponse(signatureData);
     return registrationResponse;
   } catch (error) {
@@ -240,16 +240,16 @@ async function postSignatureMsg(
 async function postRegistrationResponse(
   signatureData: SignatureData
 ): Promise<AccountData | undefined> {
-  console.log(`fetchRegistrationResponse`);
+  //console.log(`fetchRegistrationResponse`);
   const registrationResponseQuery = await fetch(`${apiUrl}/register-hiro`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(signatureData),
   });
-  console.log(
-    `registrationResponseQuery`,
-    JSON.stringify(registrationResponseQuery, null, 2)
-  );
+  //console.log(
+  //  `registrationResponseQuery`,
+  //  JSON.stringify(registrationResponseQuery, null, 2)
+  //);
   return registrationResponseQuery.status === 200
     ? await registrationResponseQuery.json()
     : undefined;

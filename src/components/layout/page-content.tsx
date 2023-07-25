@@ -61,7 +61,7 @@ function Content() {
     }
   }, [registrationData, setRegistrationResponse]);
 
-  console.log("isValid: ", validated);
+  //console.log("isValid: ", validated);
 
   return (
     <Box width="100%" maxW="1200px">

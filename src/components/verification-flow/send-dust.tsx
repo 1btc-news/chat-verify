@@ -125,9 +125,9 @@ function SendDust() {
     setQueriedBtcAddress(accountData.receiveAddress);
 
     const fetchBtcAccountStatus = () => {
-      console.log("send-dust: fetching BTC account", queriedBtcAddress);
+      //console.log("send-dust: fetching BTC account", queriedBtcAddress);
       getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
-        console.log("btcTxs: ", btcTxs);
+        //console.log("btcTxs: ", btcTxs);
         if (!btcTxs) return undefined;
         setQueriedBtcAddress(null);
         return btcTxs;
