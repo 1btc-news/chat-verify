@@ -20,9 +20,6 @@ const colors = {
     800: "#612B00",
     900: "#301500",
   },
-  stepper: {
-    200: "#F27400", // 1btc-orange
-  },
 };
 
 // Chakra component style overrides
@@ -95,6 +92,36 @@ const components = {
           maxWidth: ["80vw", null, "800px"],
           border: "1px solid",
           borderColor: "orange.500",
+        },
+      },
+    },
+  },
+  Stepper: {
+    variants: {
+      "1btc-orange": {
+        stepper: {
+          bg: "transparent",
+        },
+        indicator: {
+          border: "2px solid",
+          borderColor: "gray.700",
+          "&[data-status='active']": {
+            bg: "transparent",
+            border: "2px solid",
+            borderColor: "orange.500",
+          },
+        },
+        icon: {
+          color: "white",
+        },
+        number: {
+          color: "white",
+        },
+        separator: {
+          bg: "gray.700",
+          "&[data-status='complete']": {
+            bg: "gray.900",
+          },
         },
       },
     },

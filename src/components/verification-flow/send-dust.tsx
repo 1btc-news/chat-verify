@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import {
+  Alert,
+  AlertIcon,
   IconButton,
   Image,
   Popover,
@@ -159,8 +161,8 @@ function SendDust() {
         mb={8}
       >
         <Text>
-          Demonstrate your BTC ownership by sending a small (dust) transaction
-          to your unique address.
+          Demonstrate your BTC ownership by sending a small transaction to your
+          unique address.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -185,6 +187,10 @@ function SendDust() {
           </PopoverContent>
         </Popover>
       </Stack>
+      <Alert mb={8} variant="1btc-orange">
+        <AlertIcon /> Nobody owns this address and dust amount will not be
+        returned. It is only used to verify ownership of more than 1 BTC.
+      </Alert>
       {data && (
         <>
           <Stack
@@ -193,8 +199,8 @@ function SendDust() {
             alignItems="center"
             mb={8}
           >
-            <Text my={4}>
-              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to{" "}
+            <Text my={4} overflowWrap="anywhere">
+              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
               {data.receiveAddress}
             </Text>
             <IconButton
@@ -205,6 +211,7 @@ function SendDust() {
             />
           </Stack>
           <Image
+            m="auto"
             boxSize="250px"
             src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
           />
