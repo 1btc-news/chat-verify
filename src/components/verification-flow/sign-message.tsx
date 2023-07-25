@@ -68,7 +68,7 @@ function SignMessage() {
             <PopoverBody p={4}>
               <UnorderedList>
                 <ListItem>
-                  Verify ownwership of your Bitcoin wallet by signing a unique
+                  Verify ownership of your Bitcoin wallet by signing a unique
                   message provided by the software.
                 </ListItem>
                 <ListItem>
