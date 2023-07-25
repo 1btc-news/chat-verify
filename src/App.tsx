@@ -10,7 +10,7 @@ import { useNoWalletFound } from "./hooks/use-no-wallet-found";
 export const App = () => (
   <ChakraProvider theme={theme}>
     <ClientProvider
-      appName="1BTC"
+      appName="1btc"
       enableNetworkSwitching
       appIconUrl={`${window.origin}/logo512.png`}
       onNoWalletFound={useNoWalletFound()}
