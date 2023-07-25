@@ -7,9 +7,9 @@ import { SignatureData } from "micro-stacks/connect";
 /////////////////////////
 
 export const registrationSteps = [
-  { title: "First", description: "Connect Wallet" },
-  { title: "Second", description: "Sign Message" },
-  { title: "Third", description: "Send Dust" },
+  { title: "Connect Wallet", description: "Step 1" },
+  { title: "Sign Message", description: "Step 2" },
+  { title: "Send Dust", description: "Step 3" },
 ];
 
 // https://docs.1btc.chat/1btc-chat-api
