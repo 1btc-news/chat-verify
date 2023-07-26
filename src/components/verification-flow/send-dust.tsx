@@ -163,8 +163,9 @@ function SendDust() {
         mb={8}
       >
         <Text>
-          To demonstrate ownership of your BTC, you need to send a small (dust)
-          transaction to your unique address.
+          To demonstrate ownership of more than 1 BTC, send a tiny fraction of
+          your Bitcoin (known as "dust") to your unique address. This verifies
+          that the source address holds more than 1 BTC.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -179,21 +180,21 @@ function SendDust() {
               <UnorderedList>
                 <ListItem>
                   To prove that you own a wallet that holds more than 1 BTC, you
-                  are required to send a small amount of BTC.
+                  are required to send a small amount of BTC from that wallet.
                 </ListItem>
                 <ListItem>
-                  This small amount is commonly 0.00006 BTC or 6,000 satoshis,
-                  known as "dust".
+                  This small amount is known as "dust", commonly 0.00006 BTC or
+                  6,000 satoshis.
+                </ListItem>
+                <ListItem>
+                  The 1btc API will read the transaction and verify the input
+                  contains more than 1 BTC.
                 </ListItem>
                 <ListItem>
                   <Text as="b" color="orange.500">
-                    Please note: nobody has access to this address, and the dust
-                    transaction is non-refundable.
+                    Please note: nobody has access to the generated address, and
+                    the dust transaction is non-refundable.
                   </Text>
-                </ListItem>
-                <ListItem>
-                  The 1btc API will verify this transaction and ensure that the
-                  input amount from the source wallet is greater than 1 BTC.
                 </ListItem>
               </UnorderedList>
             </PopoverBody>
@@ -201,9 +202,11 @@ function SendDust() {
         </Popover>
       </Stack>
       <Alert mb={8} variant="1btc-orange" status="warning">
-        <AlertIcon boxSize="6" /> Nobody has access to this address, and the
-        dust transaction is non-refundable. It is only used to verify ownership
-        of more than 1 BTC.
+        <AlertIcon boxSize="6" />
+        Send only the tiniest amount. You maintain full control over your
+        Bitcoin. Nobody has access to this unique address, and the dust
+        transaction is non-refundable. It is only used to verify ownership of
+        more than 1 BTC.
       </Alert>
       {data && (
         <>
@@ -215,11 +218,7 @@ function SendDust() {
           >
             <Text my={4} as="b">
               Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
-              <Text
-                color="orange.500"
-                textAlign={["left", "center"]}
-                overflowWrap="anywhere"
-              >
+              <Text color="orange.500" overflowWrap="anywhere">
                 {data.receiveAddress}
               </Text>
             </Text>
