@@ -33,17 +33,6 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // queries registration response from API
 // monitors for pending transaction to dust account
 
-// works on first pass through logic
-// stuck waiting for btc address on second login
-// need to avoid sending duplicate registration request
-// does continue to query status of account either way
-// rename send-dust.tsx to verify-account.tsx or register-account.tsx
-//   if not registered, registers and displays BTC address (send-dust)
-//   if already registered, displays BTC address (send-dust)
-//   if pending tx, displays loading spinner (awaiting-dust-tx)
-//   if account is valid, move on to next step
-// localstorage data for loadable data? with useActiveStep hook!
-
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
   const [accountData, setAccountData] = useAtom(accountDataAtom);
