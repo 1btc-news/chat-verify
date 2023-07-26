@@ -4,7 +4,6 @@ import copy from "copy-to-clipboard";
 import {
   Alert,
   AlertIcon,
-  Icon,
   IconButton,
   Image,
   ListItem,
@@ -21,7 +20,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
-import { FiCopy, FiSend } from "react-icons/fi";
+import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
