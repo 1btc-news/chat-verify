@@ -103,12 +103,11 @@ export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
+  // no STX address
   if (!stxAddress) {
     return 0;
   }
-  if (signatureData) {
-    return 2;
-  }
+  // found account data
   if (accountData) {
     if (accountData.status === "insufficient") {
       return 4;
@@ -116,15 +115,12 @@ export const activeStepAtom = atom((get) => {
     if (accountData.status === "valid") {
       return 3;
     }
-    if (accountData.status === "pending") {
+    if (accountData.status === "pending" && signatureData) {
       return 2;
     }
-  } else {
-    // no accountData
-    return 1;
   }
-  // default return
-  return 0;
+  // no account data
+  return 1;
 });
 
 /////////////////////////

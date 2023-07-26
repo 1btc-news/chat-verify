@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   Box,
   Heading,
@@ -29,8 +29,8 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // determines current step in the process and renders content
 
 function Content() {
+  const [activeStep] = useAtom(activeStepAtom);
   const stxAddress = useAtomValue(stxAddressAtom);
-  const activeStep = useAtomValue(activeStepAtom);
   const validated = useAtomValue(isValid);
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);

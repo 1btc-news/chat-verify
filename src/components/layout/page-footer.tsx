@@ -12,6 +12,7 @@ function Footer() {
       </Flex>
       <Button
         as="a"
+        title="About"
         variant="ghost"
         href="https://1btc.chat"
         target="_blank"
@@ -21,6 +22,7 @@ function Footer() {
       </Button>
       <Button
         as="a"
+        title="Docs"
         variant="ghost"
         href="https://docs.1btc.chat"
         target="_blank"
@@ -30,6 +32,7 @@ function Footer() {
       </Button>
       <Button
         as="a"
+        title="API"
         variant="ghost"
         href="https://docs.1btc.chat/1btc-chat-api"
         target="_blank"
@@ -39,6 +42,7 @@ function Footer() {
       </Button>
       <Button
         as="a"
+        title="GitHub"
         variant="ghost"
         href="https://github.com/1btc-news"
         target="_blank"
@@ -48,6 +52,7 @@ function Footer() {
       </Button>
       <Button
         as="a"
+        title="Twitter"
         variant="ghost"
         href="https://www.twitter.com/1btcnews"
         target="_blank"

@@ -18,6 +18,7 @@ function ClearData(props: { variant?: string }) {
   return (
     <Button
       variant={props.variant || "1btc-orange"}
+      title="Clear Data"
       onClick={() => {
         // clear all locally stored data
         setStxAddress(RESET);
