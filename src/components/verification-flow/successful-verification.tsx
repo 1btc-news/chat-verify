@@ -31,7 +31,11 @@ function SuccessfulVerification() {
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
-            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
+            <IconButton
+              aria-label="Learn More"
+              title="Learn More"
+              icon={<FaQuestion />}
+            />
           </PopoverTrigger>
           <PopoverContent>
             <PopoverHeader pl={4} pt={4}>
@@ -59,6 +63,7 @@ function SuccessfulVerification() {
       </Stack>
       <Button
         as="a"
+        title="Join 1btc Chat"
         variant="1btc-orange"
         href="https://app.console.xyz/c/1btc/chat"
         target="_blank"

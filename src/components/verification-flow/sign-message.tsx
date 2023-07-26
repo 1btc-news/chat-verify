@@ -58,7 +58,11 @@ function SignMessage() {
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
-            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
+            <IconButton
+              aria-label="Learn More"
+              title="Learn More"
+              icon={<FaQuestion />}
+            />
           </PopoverTrigger>
           <PopoverContent>
             <PopoverHeader pl={4} pt={4}>
@@ -89,6 +93,7 @@ function SignMessage() {
         variant="1btc-orange"
         disabled={!data}
         isLoading={isRequestPending}
+        title="Sign Message"
         onClick={() => {
           openSignMessage({ message: data! }).then((signatureData) => {
             if (signatureData) {

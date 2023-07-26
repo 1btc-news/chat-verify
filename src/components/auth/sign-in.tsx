@@ -18,6 +18,7 @@ function SignIn(props: { variant?: string }) {
   return (
     <Button
       variant={props.variant || "1btc-orange"}
+      title="Connect Wallet"
       isLoading={isRequestPending}
       onClick={() =>
         void openAuthRequest({

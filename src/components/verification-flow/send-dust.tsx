@@ -169,7 +169,11 @@ function SendDust() {
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
-            <IconButton aria-label="Learn More" icon={<FaQuestion />} />
+            <IconButton
+              aria-label="Learn More"
+              title="Learn More"
+              icon={<FaQuestion />}
+            />
           </PopoverTrigger>
           <PopoverContent>
             <PopoverHeader pl={4} pt={4}>
@@ -225,6 +229,7 @@ function SendDust() {
             <IconButton
               variant="1btc-orange"
               aria-label="Copy Bitcoin address"
+              title="Copy Bitcoin address"
               icon={<FiCopy />}
               onClick={() => copyText(data.receiveAddress)}
             />

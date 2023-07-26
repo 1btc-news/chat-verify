@@ -6,6 +6,7 @@ function SignOut(props: { variant?: string }) {
   return (
     <Button
       variant={props.variant || "1btc-orange"}
+      title="Sign Out"
       onClick={() => {
         // sign out of the wallet
         try {
