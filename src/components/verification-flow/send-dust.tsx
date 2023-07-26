@@ -46,7 +46,7 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
-  const [accountData] = useAtom(accountDataAtom);
+  const [accountData, setAccountData] = useAtom(accountDataAtom);
   // TODO: better way to handle this? use an atom?
   const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
     null
@@ -102,6 +102,9 @@ function SendDust() {
         console.log("accountData: ", accountData);
         if (!accountData) return undefined;
         setQueriedStxAddress(null);
+        if (accountData.status !== "pending") {
+          setAccountData(accountData);
+        }
         return accountData;
       });
     };
