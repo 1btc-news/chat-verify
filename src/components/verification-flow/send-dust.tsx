@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import {
