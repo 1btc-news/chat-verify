@@ -19,7 +19,7 @@ import copy from "copy-to-clipboard";
 import { FaQuestion } from "react-icons/fa";
 import { accountDataAtom } from "../../constants";
 import { useAtomValue } from "jotai";
-import { FiCopy } from "react-icons/fi";
+import { FiCopy, FiSearch } from "react-icons/fi";
 
 function DuplicateOrigin() {
   const accountData = useAtomValue(accountDataAtom);
@@ -63,7 +63,7 @@ function DuplicateOrigin() {
           The address below that sent the dust transaction to verify has already
           been used.
           {accountData && (
-            <Text color="orange.500" overflowWrap="anywhere">
+            <Text mt={4} color="orange.500" overflowWrap="anywhere">
               {accountData.origin}{" "}
               <IconButton
                 variant="1btc-orange"
@@ -73,6 +73,18 @@ function DuplicateOrigin() {
                 title="Copy Bitcoin address"
                 icon={<FiCopy />}
                 onClick={() => copyText(accountData.origin!)}
+              />
+              <IconButton
+                variant="1btc-orange"
+                ml={4}
+                aria-label="View on mempool.space"
+                title="View on mempool.space"
+                icon={<FiSearch />}
+                size="sm"
+                as="a"
+                href={`https://mempool.space/address/${accountData.origin}`}
+                target="_blank"
+                rel="noopener noreferrer"
               />
             </Text>
           )}
@@ -93,8 +105,8 @@ function DuplicateOrigin() {
             <PopoverBody p={4}>
               <UnorderedList>
                 <ListItem>
-                  To participate in the 1btc chat, a balance of more than 1 BTC
-                  must be verified from another wallet.
+                  To participate in 1btc chat a balance of more than 1 BTC must
+                  be verified.
                 </ListItem>
                 <ListItem>
                   The wallet used to verify this account has already been used

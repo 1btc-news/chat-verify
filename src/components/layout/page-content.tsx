@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   Box,
   Heading,
@@ -31,7 +31,7 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // determines current step in the process and renders content
 
 function Content() {
-  const [activeStep] = useAtom(activeStepAtom);
+  const activeStep = useAtomValue(activeStepAtom);
   const stxAddress = useAtomValue(stxAddressAtom);
   const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
@@ -47,21 +47,21 @@ function Content() {
   }) as "vertical" | "horizontal";
 
   useEffect(() => {
-    console.log("page-content: checking accountData", accountData);
+    // console.log("page-content: checking accountData", accountData);
     if (accountData) {
       setAccountData(accountData);
     }
   }, [accountData, setAccountData]);
 
   useEffect(() => {
-    console.log("page-content: checking signatureMsgData", signatureMsgData);
+    // console.log("page-content: checking signatureMsgData", signatureMsgData);
     if (signatureMsgData) {
       setSignatureMsg(signatureMsgData);
     }
   }, [signatureMsgData, setSignatureMsg]);
 
   useEffect(() => {
-    console.log("page-content: checking registrationData", registrationData);
+    // console.log("page-content: checking registrationData", registrationData);
     if (registrationData) {
       setRegistrationResponse(registrationData);
     }
@@ -83,30 +83,30 @@ function Content() {
         </Stack>
       );
     } else if (isInsufficient) {
-      console.log("page-content: isInsufficient: true");
+      // console.log("page-content: isInsufficient: true");
       contentHeading = "The origin address does not have enough funds.";
       contentBody = <InsufficientBalance />;
     } else if (isDuplicate) {
-      console.log("page-content: isDuplicate: true");
+      // console.log("page-content: isDuplicate: true");
       contentHeading = "This origin address has already been used.";
       contentBody = <DuplicateOrigin />;
     } else {
       switch (activeStep) {
         case 1:
-          console.log("page-content: activeStep: 1");
+          // console.log("page-content: activeStep: 1");
           contentBody = <SignMessage />;
           break;
         case 2:
-          console.log("page-content: activeStep: 2");
+          // console.log("page-content: activeStep: 2");
           contentBody = <SendDust />;
           break;
         case 3:
-          console.log("page-content: activeStep: 3");
+          // console.log("page-content: activeStep: 3");
           contentHeading = "Congratulations, you are verified Fullcoiner!";
           contentBody = <SuccessfulVerification />;
           break;
         default:
-          console.log("page-content: activeStep: default", activeStep);
+          // console.log("page-content: activeStep: default", activeStep);
           contentBody = <ConnectWallet />;
       }
     }

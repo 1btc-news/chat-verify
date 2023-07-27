@@ -124,19 +124,19 @@ export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
-  console.log("activeStepAtom: stxAddress:", stxAddress);
-  console.log("activeStepAtom: accountData:", accountData);
-  console.log("activeStepAtom: signatureData:", signatureData);
+  // console.log("activeStepAtom: stxAddress:", stxAddress);
+  // console.log("activeStepAtom: accountData:", accountData);
+  // console.log("activeStepAtom: signatureData:", signatureData);
   // no STX address
   if (!stxAddress) {
-    console.log("activeStepAtom: no stxAddress, returning 0");
+    // console.log("activeStepAtom: no stxAddress, returning 0");
     return 0;
   }
   // no account data
   if (!accountData) {
-    console.log(
-      `activeStepAtom: no accountData, returning ${signatureData ? 2 : 1}`
-    );
+    // console.log(
+    //   `activeStepAtom: no accountData, returning ${signatureData ? 2 : 1}`
+    // );
     return signatureData ? 2 : 1;
   }
   // check error states
@@ -144,19 +144,19 @@ export const activeStepAtom = atom((get) => {
     accountData.status === "insufficient" ||
     accountData.status === "duplicate"
   ) {
-    console.log(
-      "activeStepAtom: insufficient or duplicate, returning undefined"
-    );
+    // console.log(
+    //   "activeStepAtom: insufficient or duplicate, returning undefined"
+    // );
     return undefined;
   }
   // check if valid
   if (accountData.status === "valid") {
-    console.log("activeStepAtom: valid, returning 3");
+    // console.log("activeStepAtom: valid, returning 3");
     return 3;
   }
   // check if pending or signature data
   if (accountData.status === "pending") {
-    console.log("activeStepAtom: pending, returning 2");
+    // console.log("activeStepAtom: pending, returning 2");
     return 2;
   }
   // start at signature message

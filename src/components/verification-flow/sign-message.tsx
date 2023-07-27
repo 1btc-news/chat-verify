@@ -30,7 +30,7 @@ function SignMessage() {
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
   const { isLoading, data } = useSignatureMsg();
 
-  console.log("sign-message: isLoading", isLoading);
+  // console.log("sign-message: isLoading", isLoading);
 
   // verify STX address is known
   if (!stxAddress) {

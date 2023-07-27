@@ -8,7 +8,7 @@ export const useNoWalletFound = () => {
       description: `Please install or enable the Hiro or Xverse wallet to continue.`,
       position: "top",
       variant: "1btc-orange",
-      duration: 9000,
+      duration: 6000,
       isClosable: true,
     });
   };

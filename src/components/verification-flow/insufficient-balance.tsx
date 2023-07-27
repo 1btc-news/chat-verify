@@ -54,7 +54,7 @@ function InsufficientBalance() {
     setQueriedStxAddress(stxAddress);
 
     const fetchStxAccountStatus = () => {
-      console.log("send-dust: fetching STX account", stxAddress);
+      console.log("insufficient-balance: fetching STX account", stxAddress);
       getAccountData(stxAddress).then((accountData) => {
         console.log("accountData: ", accountData);
         if (!accountData) return undefined;
@@ -66,7 +66,7 @@ function InsufficientBalance() {
       });
     };
 
-    const intervalId = setInterval(fetchStxAccountStatus, 5000);
+    const intervalId = setInterval(fetchStxAccountStatus, 10000);
 
     return () => clearInterval(intervalId);
     // TODO: correct this dependency issue
