@@ -205,7 +205,7 @@ function SendDust() {
           title="Take me back!"
           onClick={() => setSentDustToggle(false)}
         >
-          Take me back!
+          Take me back
         </Button>
       </>
     );
