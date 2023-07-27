@@ -15,6 +15,7 @@ function ClearData(props: { variant?: string }) {
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
+
   return (
     <Button
       variant={props.variant || "1btc-orange"}

@@ -152,6 +152,14 @@ function SendDust() {
     );
   }
 
+  // info: don't send from an exchange
+  // - tie into sovereignty, not your keys not your coins
+  // - don't know their balance, that's in the Exchange software
+  // info: don't spend the verified BTC
+  // - if the address that sends dust gets spent, you'll lose access
+  // - access can be restored by topping up the origin address
+  // info: do take pride...
+
   if (sentDustToggle) {
     return (
       <>
@@ -161,8 +169,37 @@ function SendDust() {
           alignItems="center"
           mb={8}
         >
-          <Text>Learn More</Text>
+          <Stack direction="row">
+            <Spinner color="orange.500" emptyColor="orange.200" />
+            <Text>Verifying dust transaction...</Text>
+          </Stack>
         </Stack>
+        <Alert mb={8} variant="1btc-orange" status="info">
+          <AlertIcon boxSize="6" />
+          Before you gain access
+          <UnorderedList>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do not spend the Bitcoin used to verify.
+              </Text>
+              If the balance drops below 1 BTC, you will lose access to the
+              chat. Access can be restored by topping up the origin address.
+            </ListItem>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do not send dust from an exchange.
+              </Text>
+              Your balance is in their software, not on the blockchain, so we
+              can't verify it.
+            </ListItem>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do be sovereign and inspire others.
+              </Text>
+              This is a special group of high-signal Bitcoiners.
+            </ListItem>
+          </UnorderedList>
+        </Alert>
         <Button
           variant="1btc-orange"
           title="Take me back!"
@@ -277,11 +314,3 @@ function SendDust() {
 }
 
 export default SendDust;
-
-// info: don't send from an exchange
-// - tie into sovereignty, not your keys not your coins
-// - don't know their balance, that's in the Exchange software
-// info: don't spend the verified BTC
-// - if the address that sends dust gets spent, you'll lose access
-// - access can be restored by topping up the origin address
-// info: do take pride...

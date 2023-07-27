@@ -129,12 +129,14 @@ export const activeStepAtom = atom((get) => {
   console.log("activeStepAtom: signatureData:", signatureData);
   // no STX address
   if (!stxAddress) {
-    console.log("activeStepAtom: no stxAddress, returning undefined");
-    return undefined;
+    console.log("activeStepAtom: no stxAddress, returning 0");
+    return 0;
   }
   // no account data
   if (!accountData) {
-    console.log("activeStepAtom: no accountData, returning 1");
+    console.log(
+      `activeStepAtom: no accountData, returning ${signatureData ? 2 : 1}`
+    );
     return signatureData ? 2 : 1;
   }
   // check error states

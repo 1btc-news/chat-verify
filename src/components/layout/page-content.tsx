@@ -47,18 +47,21 @@ function Content() {
   }) as "vertical" | "horizontal";
 
   useEffect(() => {
+    console.log("page-content: checking accountData", accountData);
     if (accountData) {
       setAccountData(accountData);
     }
   }, [accountData, setAccountData]);
 
   useEffect(() => {
+    console.log("page-content: checking signatureMsgData", signatureMsgData);
     if (signatureMsgData) {
       setSignatureMsg(signatureMsgData);
     }
   }, [signatureMsgData, setSignatureMsg]);
 
   useEffect(() => {
+    console.log("page-content: checking registrationData", registrationData);
     if (registrationData) {
       setRegistrationResponse(registrationData);
     }
@@ -70,9 +73,9 @@ function Content() {
 
   // work through state logic
   if (stxAddress) {
-    console.log("page-content: stxAddress: true");
+    //console.log("page-content: stxAddress: true");
     if (isAccountLoading) {
-      console.log("page-content: isAccountLoading: true");
+      //console.log("page-content: isAccountLoading: true");
       contentBody = (
         <Stack direction="row">
           <Spinner color="orange.500" emptyColor="orange.200" />
@@ -81,29 +84,29 @@ function Content() {
       );
     } else if (isInsufficient) {
       console.log("page-content: isInsufficient: true");
-      contentHeading = "The origin address did not have enough funds.";
+      contentHeading = "The origin address does not have enough funds.";
       contentBody = <InsufficientBalance />;
     } else if (isDuplicate) {
       console.log("page-content: isDuplicate: true");
       contentHeading = "This origin address has already been used.";
       contentBody = <DuplicateOrigin />;
     } else {
-      console.log("page-content: activeStep", activeStep);
       switch (activeStep) {
         case 1:
-          console.log("page-content: switch activestep: 1");
+          console.log("page-content: activeStep: 1");
           contentBody = <SignMessage />;
           break;
         case 2:
-          console.log("page-content: switch activestep: 2");
+          console.log("page-content: activeStep: 2");
           contentBody = <SendDust />;
           break;
         case 3:
-          console.log("page-content: switch activestep: 3");
+          console.log("page-content: activeStep: 3");
+          contentHeading = "Congratulations, you are verified Fullcoiner!";
           contentBody = <SuccessfulVerification />;
           break;
         default:
-          console.log("page-content: switch activestep: default");
+          console.log("page-content: activeStep: default", activeStep);
           contentBody = <ConnectWallet />;
       }
     }
@@ -148,13 +151,12 @@ function Content() {
   return (
     <Box width="100%" maxW="1200px">
       <Heading>{contentHeading}</Heading>
-      {activeStep && (
+      {activeStep !== undefined && (
         <VerificationStepper
           activeStep={activeStep}
           orientation={stepperOrientation}
         />
       )}
-
       {contentBody}
     </Box>
   );
