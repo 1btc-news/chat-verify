@@ -39,7 +39,7 @@ export type AccountData = {
   owner: string;
   receiveAddress: string;
   origin: string | null;
-  status: "pending" | "valid" | "insufficient";
+  status: "pending" | "valid" | "insufficient" | "duplicate";
 };
 
 /////////////////////////
@@ -86,16 +86,28 @@ export const registrationResponseAtom = atomWithStorage<AccountData | null>(
 /////////////////////////
 
 // verification status based on existing data
-export const isValid = atom((get) => {
+export const isValidAtom = atom((get) => {
   const accountData = get(accountDataAtom);
   //console.log("isValid: accountData status:", accountData?.status);
   return accountData?.status === "valid";
 });
 
 // registration status based on existing data
-export const isRegistered = atom((get) => {
+export const isRegisteredAtom = atom((get) => {
   const accountData = get(accountDataAtom);
   return accountData ? true : false;
+});
+
+// true only if status is insufficient
+export const isInsufficientAtom = atom((get) => {
+  const accountData = get(accountDataAtom);
+  return accountData?.status === "insufficient";
+});
+
+// true only if status is duplicate
+export const isDuplicateAtom = atom((get) => {
+  const accountData = get(accountDataAtom);
+  return accountData?.status === "duplicate";
 });
 
 // active step based on existing data
@@ -103,23 +115,40 @@ export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
+  console.log("activeStepAtom: stxAddress:", stxAddress);
+  console.log("activeStepAtom: accountData:", accountData);
+  console.log("activeStepAtom: signatureData:", signatureData);
   // no STX address
   if (!stxAddress) {
-    return 0;
-  }
-  // found account data
-  if (accountData) {
-    if (accountData.status === "insufficient") {
-      return 4;
-    }
-    if (accountData.status === "valid") {
-      return 3;
-    }
-    if (accountData.status === "pending" && signatureData) {
-      return 2;
-    }
+    console.log("activeStepAtom: no stxAddress, returning undefined");
+    return undefined;
   }
   // no account data
+  if (!accountData) {
+    console.log("activeStepAtom: no accountData, returning 1");
+    return signatureData ? 2 : 1;
+  }
+  // check error states
+  if (
+    accountData.status === "insufficient" ||
+    accountData.status === "duplicate"
+  ) {
+    console.log(
+      "activeStepAtom: insufficient or duplicate, returning undefined"
+    );
+    return undefined;
+  }
+  // check if valid
+  if (accountData.status === "valid") {
+    console.log("activeStepAtom: valid, returning 3");
+    return 3;
+  }
+  // check if pending or signature data
+  if (accountData.status === "pending") {
+    console.log("activeStepAtom: pending, returning 2");
+    return 2;
+  }
+  // start at signature message
   return 1;
 });
 
