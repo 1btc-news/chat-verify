@@ -10,6 +10,12 @@ export const useSignatureMsg = () => {
   const hasError = signatureMsg.state === "hasError" && "error" in signatureMsg;
   const hasData = signatureMsg.state === "hasData";
 
+  // console.log("use-signature-msg: state", signatureMsg.state);
+  // console.log(
+  //   "use-signature-msg: data",
+  //   hasData ? signatureMsg.data : "no hasData"
+  // );
+
   const error = hasError ? signatureMsg.error : undefined;
   const data = hasData ? signatureMsg.data : undefined;
 

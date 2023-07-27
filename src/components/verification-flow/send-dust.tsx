@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import { useEffect } from "react";
+import { atom, useAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import {
   Alert,
   AlertIcon,
+  Box,
+  Button,
   IconButton,
   Image,
   ListItem,
@@ -25,6 +27,7 @@ import {
   accountDataAtom,
   getAccountData,
   getBtcTxs,
+  sentDustToggleAtom,
   stxAddressAtom,
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
@@ -33,16 +36,19 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // queries registration response from API
 // monitors for pending transaction to dust account
 
+const queriedStxAddressAtom = atom<string | null>(null);
+const queriedBtcAddressAtom = atom<string | null>(null);
+
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
   const [accountData, setAccountData] = useAtom(accountDataAtom);
-  // TODO: better way to handle this? use an atom?
-  const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
-    null
+  const [queriedStxAddress, setQueriedStxAddress] = useAtom(
+    queriedStxAddressAtom
   );
-  const [queriedBtcAddress, setQueriedBtcAddress] = useState<string | null>(
-    null
+  const [queriedBtcAddress, setQueriedBtcAddress] = useAtom(
+    queriedBtcAddressAtom
   );
+  const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
   const { isLoading, data } = useRegistrationResponse();
   // const { data: btcTxStatus } = useBtcTxStatus();
 
@@ -146,6 +152,65 @@ function SendDust() {
     );
   }
 
+  // info: don't send from an exchange
+  // - tie into sovereignty, not your keys not your coins
+  // - don't know their balance, that's in the Exchange software
+  // info: don't spend the verified BTC
+  // - if the address that sends dust gets spent, you'll lose access
+  // - access can be restored by topping up the origin address
+  // info: do take pride...
+
+  if (sentDustToggle) {
+    return (
+      <>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={8}
+        >
+          <Stack direction="row" mt={4}>
+            <Spinner color="orange.500" emptyColor="orange.200" />
+            <Text>Verifying dust transaction...</Text>
+          </Stack>
+        </Stack>
+        <Alert mb={8} variant="1btc-orange" status="info">
+          <AlertIcon boxSize="6" />
+          Before you gain access
+          <UnorderedList>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do not spend the Bitcoin used to verify.
+              </Text>
+              If the balance drops below 1 BTC, you will lose access to the
+              chat. Access can be restored by topping up the origin address.
+            </ListItem>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do not send dust from an exchange.
+              </Text>
+              Your balance is in their software, not on the blockchain, so we
+              can't verify it.
+            </ListItem>
+            <ListItem>
+              <Text as="b" color="orange.500">
+                Do be sovereign and inspire others.
+              </Text>
+              This is a special group of high-signal Bitcoiners.
+            </ListItem>
+          </UnorderedList>
+        </Alert>
+        <Button
+          variant="1btc-orange"
+          title="Take me back!"
+          onClick={() => setSentDustToggle(false)}
+        >
+          Take me back
+        </Button>
+      </>
+    );
+  }
+
   return (
     <>
       <Stack
@@ -212,25 +277,36 @@ function SendDust() {
             alignItems="center"
             mb={8}
           >
-            <Text my={4} as="b">
+            <Box my={4} fontWeight="bold">
               Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
               <Text color="orange.500" overflowWrap="anywhere">
-                {data.receiveAddress}
+                {data.receiveAddress}{" "}
+                <IconButton
+                  variant="1btc-orange"
+                  size="sm"
+                  ml={4}
+                  aria-label="Copy Bitcoin address"
+                  title="Copy Bitcoin address"
+                  icon={<FiCopy />}
+                  onClick={() => copyText(data.receiveAddress)}
+                />
               </Text>
-            </Text>
-            <IconButton
-              variant="1btc-orange"
-              aria-label="Copy Bitcoin address"
-              title="Copy Bitcoin address"
-              icon={<FiCopy />}
-              onClick={() => copyText(data.receiveAddress)}
+            </Box>
+
+            <Image
+              m="auto"
+              boxSize="250px"
+              src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
             />
           </Stack>
-          <Image
-            m="auto"
-            boxSize="250px"
-            src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
-          />
+
+          <Button
+            variant="1btc-orange"
+            title="I've sent it!"
+            onClick={() => setSentDustToggle(true)}
+          >
+            I've sent it!
+          </Button>
         </>
       )}
     </>

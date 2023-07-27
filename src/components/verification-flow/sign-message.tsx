@@ -30,6 +30,8 @@ function SignMessage() {
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
   const { isLoading, data } = useSignatureMsg();
 
+  // console.log("sign-message: isLoading", isLoading);
+
   // verify STX address is known
   if (!stxAddress) {
     return null;
@@ -89,21 +91,25 @@ function SignMessage() {
           </PopoverContent>
         </Popover>
       </Stack>
-      <Button
-        variant="1btc-orange"
-        disabled={!data}
-        isLoading={isRequestPending}
-        title="Sign Message"
-        onClick={() => {
-          openSignMessage({ message: data! }).then((signatureData) => {
-            if (signatureData) {
-              setSignatureData(signatureData);
+      {data && (
+        <Button
+          variant="1btc-orange"
+          disabled={isLoading || !data}
+          isLoading={isRequestPending}
+          title="Sign Message"
+          onClick={() => {
+            if (data) {
+              openSignMessage({ message: data! }).then((signatureData) => {
+                if (signatureData) {
+                  setSignatureData(signatureData);
+                }
+              });
             }
-          });
-        }}
-      >
-        Sign Message
-      </Button>
+          }}
+        >
+          Sign Message
+        </Button>
+      )}
     </>
   );
 }
