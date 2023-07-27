@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useAtom } from "jotai";
+import { atom, useAtom } from "jotai";
 import copy from "copy-to-clipboard";
 import {
   Alert,
   AlertIcon,
+  Box,
+  Button,
   IconButton,
   Image,
   ListItem,
@@ -33,16 +35,20 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 // queries registration response from API
 // monitors for pending transaction to dust account
 
+const queriedStxAddressAtom = atom<string | null>(null);
+const queriedBtcAddressAtom = atom<string | null>(null);
+const sentDustAtom = atom(false);
+
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
   const [accountData, setAccountData] = useAtom(accountDataAtom);
-  // TODO: better way to handle this? use an atom?
-  const [queriedStxAddress, setQueriedStxAddress] = useState<string | null>(
-    null
+  const [queriedStxAddress, setQueriedStxAddress] = useAtom(
+    queriedStxAddressAtom
   );
-  const [queriedBtcAddress, setQueriedBtcAddress] = useState<string | null>(
-    null
+  const [queriedBtcAddress, setQueriedBtcAddress] = useAtom(
+    queriedBtcAddressAtom
   );
+  const [sentDust, setSentDust] = useAtom(sentDustAtom);
   const { isLoading, data } = useRegistrationResponse();
   // const { data: btcTxStatus } = useBtcTxStatus();
 
@@ -146,6 +152,28 @@ function SendDust() {
     );
   }
 
+  if (sentDust) {
+    return (
+      <>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={8}
+        >
+          <Text>Learn More</Text>
+        </Stack>
+        <Button
+          variant="1btc-orange"
+          title="Take me back!"
+          onClick={() => setSentDust(false)}
+        >
+          Take me back!
+        </Button>
+      </>
+    );
+  }
+
   return (
     <>
       <Stack
@@ -212,25 +240,36 @@ function SendDust() {
             alignItems="center"
             mb={8}
           >
-            <Text my={4} as="b">
+            <Box my={4} fontWeight="bold">
               Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
               <Text color="orange.500" overflowWrap="anywhere">
-                {data.receiveAddress}
+                {data.receiveAddress}{" "}
+                <IconButton
+                  variant="1btc-orange"
+                  size="sm"
+                  ml={4}
+                  aria-label="Copy Bitcoin address"
+                  title="Copy Bitcoin address"
+                  icon={<FiCopy />}
+                  onClick={() => copyText(data.receiveAddress)}
+                />
               </Text>
-            </Text>
-            <IconButton
-              variant="1btc-orange"
-              aria-label="Copy Bitcoin address"
-              title="Copy Bitcoin address"
-              icon={<FiCopy />}
-              onClick={() => copyText(data.receiveAddress)}
+            </Box>
+
+            <Image
+              m="auto"
+              boxSize="250px"
+              src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
             />
           </Stack>
-          <Image
-            m="auto"
-            boxSize="250px"
-            src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
-          />
+
+          <Button
+            variant="1btc-orange"
+            title="I've sent it!"
+            onClick={() => setSentDust(true)}
+          >
+            I've sent it!
+          </Button>
         </>
       )}
     </>
