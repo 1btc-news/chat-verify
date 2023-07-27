@@ -13,7 +13,6 @@ import {
   activeStepAtom,
   isDuplicateAtom,
   isInsufficientAtom,
-  isValidAtom,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -34,7 +33,6 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 function Content() {
   const [activeStep] = useAtom(activeStepAtom);
   const stxAddress = useAtomValue(stxAddressAtom);
-  const isValid = useAtomValue(isValidAtom);
   const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
   const setAccountData = useSetAtom(accountDataAtom);
@@ -83,11 +81,11 @@ function Content() {
       );
     } else if (isInsufficient) {
       console.log("page-content: isInsufficient: true");
-      contentHeading = "You need to top up your balance for verification!";
+      contentHeading = "The origin address did not have enough funds.";
       contentBody = <InsufficientBalance />;
     } else if (isDuplicate) {
       console.log("page-content: isDuplicate: true");
-      contentHeading = "This address was already used to verify an account.";
+      contentHeading = "This origin address has already been used.";
       contentBody = <DuplicateOrigin />;
     } else {
       console.log("page-content: activeStep", activeStep);

@@ -27,6 +27,7 @@ import {
   accountDataAtom,
   getAccountData,
   getBtcTxs,
+  sentDustToggleAtom,
   stxAddressAtom,
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
@@ -37,7 +38,6 @@ import { useRegistrationResponse } from "../../hooks/use-registration-response";
 
 const queriedStxAddressAtom = atom<string | null>(null);
 const queriedBtcAddressAtom = atom<string | null>(null);
-const sentDustAtom = atom(false);
 
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
@@ -48,7 +48,7 @@ function SendDust() {
   const [queriedBtcAddress, setQueriedBtcAddress] = useAtom(
     queriedBtcAddressAtom
   );
-  const [sentDust, setSentDust] = useAtom(sentDustAtom);
+  const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
   const { isLoading, data } = useRegistrationResponse();
   // const { data: btcTxStatus } = useBtcTxStatus();
 
@@ -152,7 +152,7 @@ function SendDust() {
     );
   }
 
-  if (sentDust) {
+  if (sentDustToggle) {
     return (
       <>
         <Stack
@@ -166,7 +166,7 @@ function SendDust() {
         <Button
           variant="1btc-orange"
           title="Take me back!"
-          onClick={() => setSentDust(false)}
+          onClick={() => setSentDustToggle(false)}
         >
           Take me back!
         </Button>
@@ -266,7 +266,7 @@ function SendDust() {
           <Button
             variant="1btc-orange"
             title="I've sent it!"
-            onClick={() => setSentDust(true)}
+            onClick={() => setSentDustToggle(true)}
           >
             I've sent it!
           </Button>
@@ -277,3 +277,11 @@ function SendDust() {
 }
 
 export default SendDust;
+
+// info: don't send from an exchange
+// - tie into sovereignty, not your keys not your coins
+// - don't know their balance, that's in the Exchange software
+// info: don't spend the verified BTC
+// - if the address that sends dust gets spent, you'll lose access
+// - access can be restored by topping up the origin address
+// info: do take pride...
