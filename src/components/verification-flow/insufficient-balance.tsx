@@ -16,21 +16,61 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { useAtom, useAtomValue } from "jotai";
+import { useEffect } from "react";
+import { atom, useAtom } from "jotai";
 import { FaQuestion } from "react-icons/fa";
 import { FiCopy, FiSearch } from "react-icons/fi";
 import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 import {
   accountDataAtom,
+  getAccountData,
   insufficientBalanceToggleAtom,
+  stxAddressAtom,
 } from "../../constants";
 
+const queriedStxAddressAtom = atom<string | null>(null);
+
 function InsufficientBalance() {
+  const [stxAddress] = useAtom(stxAddressAtom);
+  const [queriedStxAddress, setQueriedStxAddress] = useAtom(
+    queriedStxAddressAtom
+  );
   const [insufficientBalanceToggle, setInsufficientBalanceToggle] = useAtom(
     insufficientBalanceToggleAtom
   );
-  const accountData = useAtomValue(accountDataAtom);
+  const [accountData, setAccountData] = useAtom(accountDataAtom);
   const copyText = useClipboardToast();
+
+  // TODO: set timers or limits here to prevent a lone tab fetching forever?
+
+  useEffect(() => {
+    if (!stxAddress) {
+      return;
+    }
+    // rather: check if query is in progress
+    if (stxAddress === queriedStxAddress) {
+      return;
+    }
+    setQueriedStxAddress(stxAddress);
+
+    const fetchStxAccountStatus = () => {
+      console.log("send-dust: fetching STX account", stxAddress);
+      getAccountData(stxAddress).then((accountData) => {
+        console.log("accountData: ", accountData);
+        if (!accountData) return undefined;
+        setQueriedStxAddress(null);
+        if (accountData.status !== "insufficient") {
+          setAccountData(accountData);
+        }
+        return accountData;
+      });
+    };
+
+    const intervalId = setInterval(fetchStxAccountStatus, 5000);
+
+    return () => clearInterval(intervalId);
+    // TODO: correct this dependency issue
+  }, [stxAddress]);
 
   if (insufficientBalanceToggle) {
     return (
@@ -41,7 +81,7 @@ function InsufficientBalance() {
           alignItems="center"
           mb={8}
         >
-          <Stack direction="row">
+          <Stack direction="row" mt={4}>
             <Spinner color="orange.500" emptyColor="orange.200" />
             <Text>Verifying origin balance...</Text>
           </Stack>
@@ -82,17 +122,6 @@ function InsufficientBalance() {
       </>
     );
   }
-
-  /*
-    <Link
-      isExternal
-      color="orange.500"
-      fontSize="xs"
-      href={`https://mempool.space/address/${accountData.origin}`}
-    >
-      view on explorer
-    </Link>
-  */
 
   return (
     <>

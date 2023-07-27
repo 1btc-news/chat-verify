@@ -169,7 +169,7 @@ function SendDust() {
           alignItems="center"
           mb={8}
         >
-          <Stack direction="row">
+          <Stack direction="row" mt={4}>
             <Spinner color="orange.500" emptyColor="orange.200" />
             <Text>Verifying dust transaction...</Text>
           </Stack>
