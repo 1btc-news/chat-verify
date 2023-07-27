@@ -22,7 +22,7 @@ function InsufficientBalance() {
       mb={8}
     >
       <Text>
-        Ensure your wallet holds over 1 BTC to enter 1btc's Fullcoiner chat.
+        Ensure your wallet holds over 1 BTC to access 1btc's Fullcoiner chat.
       </Text>
       <Popover placement="bottom-end" variant="1btc-orange">
         <PopoverTrigger>
