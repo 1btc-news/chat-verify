@@ -48,19 +48,19 @@ export type AccountData = {
 // used to persist on close/open
 /////////////////////////
 
-// stacks addres from wallet
+// stacks address from wallet
 export const stxAddressAtom = atomWithStorage<string | null>(
   "1btc-stxAddress",
   null
 );
 
-// account data from API
+// account data from 1btc API
 export const accountDataAtom = atomWithStorage<AccountData | null>(
   "1btc-accountData",
   null
 );
 
-// signature message from API
+// signature message from 1btc API
 export const signatureMsgAtom = atomWithStorage<string | null>(
   "1btc-signatureMsg",
   null
@@ -72,11 +72,20 @@ export const signatureDataAtom = atomWithStorage<SignatureData | null>(
   null
 );
 
-// registration response from API
+// registration response from 1btc API
 // matches account object
 export const registrationResponseAtom = atomWithStorage<AccountData | null>(
   "1btc-registrationResponse",
   null
+);
+
+// toggle for send-dust component
+export const sentDustToggleAtom = atomWithStorage("1btc-sentDustToggle", false);
+
+// toggle for insufficient-balance component
+export const insufficientBalanceToggleAtom = atomWithStorage(
+  "1btc-insufficientBalanceToggleAtom",
+  false
 );
 
 /////////////////////////
