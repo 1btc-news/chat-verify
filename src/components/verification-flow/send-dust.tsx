@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
-import copy from "copy-to-clipboard";
 import {
   Alert,
   AlertIcon,
@@ -19,7 +18,6 @@ import {
   Stack,
   Text,
   UnorderedList,
-  useToast,
 } from "@chakra-ui/react";
 import { FaQuestion } from "react-icons/fa";
 import { FiCopy } from "react-icons/fi";
@@ -31,6 +29,7 @@ import {
   stxAddressAtom,
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
+import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 
 // active step = 2
 // queries registration response from API
@@ -51,33 +50,7 @@ function SendDust() {
   const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
   const { isLoading, data } = useRegistrationResponse();
   // const { data: btcTxStatus } = useBtcTxStatus();
-
-  const toast = useToast();
-
-  const copyText = (text: string) => {
-    const copyStatus = copy(text);
-    if (copyStatus) {
-      toast({
-        title: `Copied text to clipboard`,
-        description: text,
-        position: "top",
-        status: "success",
-        variant: "1btc-orange",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: `Unable to copy text to clipboard`,
-        description: "Please refresh and try again, or copy manually",
-        position: "top",
-        status: "warning",
-        variant: "1btc-orange",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
+  const copyText = useClipboardToast();
 
   // TODO: set timers or limits here to prevent a lone tab fetching forever?
 
