@@ -22,11 +22,11 @@ function AccessInfoAlert() {
         alignItems="center"
       >
         <AlertIcon boxSize="6" />
-        <Text as="b">Before you gain access</Text>
+        <Text fontWeight="bold">Before you gain access</Text>
       </Stack>
       <UnorderedList>
         <ListItem>
-          <Text as="b" color="orange.500">
+          <Text fontWeight="bold" color="orange.500">
             Do not spend the Bitcoin used to verify.
           </Text>
           <Text>
@@ -35,7 +35,7 @@ function AccessInfoAlert() {
           </Text>
         </ListItem>
         <ListItem>
-          <Text as="b" color="orange.500">
+          <Text fontWeight="bold" color="orange.500">
             Do not send dust from an exchange.
           </Text>
           <Text>
@@ -44,7 +44,7 @@ function AccessInfoAlert() {
           </Text>
         </ListItem>
         <ListItem>
-          <Text as="b" color="orange.500">
+          <Text fontWeight="bold" color="orange.500">
             Do be sovereign and inspire others.
           </Text>
           <Text>This is a special group of high-signal Bitcoiners.</Text>

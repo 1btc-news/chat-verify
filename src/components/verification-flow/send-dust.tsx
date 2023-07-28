@@ -201,7 +201,7 @@ function SendDust() {
                   contains more than 1 BTC.
                 </ListItem>
                 <ListItem>
-                  <Text as="b" color="orange.500">
+                  <Text fontWeight="bold" color="orange.500">
                     Please note: nobody has access to the generated address, and
                     the dust transaction is non-refundable.
                   </Text>
