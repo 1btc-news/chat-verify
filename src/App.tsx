@@ -11,7 +11,7 @@ export const App = () => (
   <ChakraProvider theme={theme}>
     <ClientProvider
       appName="1btc"
-      enableNetworkSwitching
+      network="mainnet"
       appIconUrl={`${window.origin}/logo512.png`}
       onNoWalletFound={useNoWalletFound()}
     >
