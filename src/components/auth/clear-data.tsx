@@ -2,6 +2,8 @@ import { useAuth } from "@micro-stacks/react";
 import { useSetAtom } from "jotai";
 import {
   accountDataAtom,
+  insufficientBalanceToggleAtom,
+  sentDustToggleAtom,
   signatureDataAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -15,6 +17,10 @@ function ClearData(props: { variant?: string }) {
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
+  const setSentDustToggle = useSetAtom(sentDustToggleAtom);
+  const setInsufficientBalanceToggle = useSetAtom(
+    insufficientBalanceToggleAtom
+  );
 
   return (
     <Button
@@ -26,6 +32,8 @@ function ClearData(props: { variant?: string }) {
         setAccountData(RESET);
         setSignatureMsg(RESET);
         setSignatureData(RESET);
+        setSentDustToggle(RESET);
+        setInsufficientBalanceToggle(RESET);
         // sign out of the wallet
         try {
           signOut();

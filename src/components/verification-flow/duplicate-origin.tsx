@@ -13,43 +13,16 @@ import {
   Stack,
   Text,
   UnorderedList,
-  useToast,
 } from "@chakra-ui/react";
-import copy from "copy-to-clipboard";
 import { FaQuestion } from "react-icons/fa";
 import { accountDataAtom } from "../../constants";
 import { useAtomValue } from "jotai";
 import { FiCopy, FiSearch } from "react-icons/fi";
+import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 
 function DuplicateOrigin() {
   const accountData = useAtomValue(accountDataAtom);
-
-  const toast = useToast();
-
-  const copyText = (text: string) => {
-    const copyStatus = copy(text);
-    if (copyStatus) {
-      toast({
-        title: `Copied text to clipboard`,
-        description: text,
-        position: "top",
-        status: "success",
-        variant: "1btc-orange",
-        duration: 3000,
-        isClosable: true,
-      });
-    } else {
-      toast({
-        title: `Unable to copy text to clipboard`,
-        description: "Please refresh and try again, or copy manually",
-        position: "top",
-        status: "warning",
-        variant: "1btc-orange",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-  };
+  const copyText = useClipboardToast();
 
   return (
     <>
@@ -72,7 +45,7 @@ function DuplicateOrigin() {
                 aria-label="Copy Bitcoin address"
                 title="Copy Bitcoin address"
                 icon={<FiCopy />}
-                onClick={() => copyText(accountData.origin!)}
+                onClick={() => copyText(accountData.origin)}
               />
               <IconButton
                 variant="1btc-orange"
