@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertIcon,
   Box,
   Button,
   IconButton,
@@ -27,6 +25,7 @@ import {
   insufficientBalanceToggleAtom,
   stxAddressAtom,
 } from "../../constants";
+import AccessInfoAlert from "./access-info-alert";
 
 const queriedStxAddressAtom = atom<string | null>(null);
 
@@ -86,32 +85,7 @@ function InsufficientBalance() {
             <Text>Verifying origin balance...</Text>
           </Stack>
         </Stack>
-        <Alert mb={8} variant="1btc-orange" status="info">
-          <AlertIcon boxSize="6" />
-          Before you gain access
-          <UnorderedList>
-            <ListItem>
-              <Text as="b" color="orange.500">
-                Do not spend the Bitcoin used to verify.
-              </Text>
-              If the balance drops below 1 BTC, you will lose access to the
-              chat. Access can be restored by topping up the origin address.
-            </ListItem>
-            <ListItem>
-              <Text as="b" color="orange.500">
-                Do not send dust from an exchange.
-              </Text>
-              Your balance is in their software, not on the blockchain, so we
-              can't verify it.
-            </ListItem>
-            <ListItem>
-              <Text as="b" color="orange.500">
-                Do be sovereign and inspire others.
-              </Text>
-              This is a special group of high-signal Bitcoiners.
-            </ListItem>
-          </UnorderedList>
-        </Alert>
+        <AccessInfoAlert />
         <Button
           variant="1btc-orange"
           title="Take me back!"
