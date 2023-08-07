@@ -13,7 +13,6 @@ import {
   accountDataAtom,
   activeStepAtom,
   isDuplicateAtom,
-  isInsufficientAtom,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -23,7 +22,6 @@ import ConnectWallet from "../verification-flow/connect-wallet";
 import SignMessage from "../verification-flow/sign-message";
 import SendDust from "../verification-flow/send-dust";
 import SuccessfulVerification from "../verification-flow/successful-verification";
-import InsufficientBalance from "../verification-flow/insufficient-balance";
 import DuplicateOrigin from "../verification-flow/duplicate-origin";
 import FundWallet from "../verification-flow/fund-wallet";
 import { useAccountData } from "../../hooks/use-account-data";
@@ -38,7 +36,6 @@ function Content() {
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
   // API status checks for account
-  const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
   // atom setters for API data in localstorage
   const setLocalAccountData = useSetAtom(accountDataAtom);
@@ -118,9 +115,6 @@ function Content() {
         <ClearData />
       </Stack>
     );
-  } else if (isInsufficient) {
-    contentHeading = "The verified address does not have enough funds.";
-    contentBody = <InsufficientBalance />;
   } else if (isDuplicate) {
     contentHeading = "This verified address has already been used.";
     contentBody = <DuplicateOrigin />;

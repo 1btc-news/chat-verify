@@ -4,7 +4,6 @@ import {
   Alert,
   AlertIcon,
   Box,
-  Button,
   IconButton,
   Image,
   ListItem,
@@ -28,7 +27,6 @@ import {
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import { useClipboardToast } from "../../hooks/use-clipboard-toast";
-import AccessInfoAlert from "./access-info-alert";
 import ClearData from "../auth/clear-data";
 
 // active step = 2
@@ -67,7 +65,6 @@ function SendDust() {
         if (accountData.status !== "pending") {
           setAccountData(accountData);
         }
-        return accountData;
       });
     };
 
