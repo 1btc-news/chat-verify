@@ -30,6 +30,7 @@ import {
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 import AccessInfoAlert from "./access-info-alert";
+import ClearData from "../auth/clear-data";
 
 // active step = 2
 // queries account data from API
@@ -44,7 +45,7 @@ function SendDust() {
     queriedStxAddressAtom
   );
   const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
-  const { isLoading, data } = useRegistrationResponse();
+  const { isLoading, data, hasError, error } = useRegistrationResponse();
   const copyText = useClipboardToast();
 
   // TODO: set timers or limits here to prevent a lone tab fetching forever?
@@ -83,11 +84,26 @@ function SendDust() {
     return null;
   }
 
+  // if registration response is loading
   if (isLoading) {
     return (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
         <Text>Loading registration response for {stxAddress}...</Text>
+      </Stack>
+    );
+  }
+
+  // if registration response POST error
+  if (hasError) {
+    return (
+      <Stack>
+        <Text>
+          Unable to load registration response for {stxAddress} from the API.
+        </Text>
+        <Text>Error: {String(error)}</Text>
+        <Text>Please clear your data, log in, and try again.</Text>
+        <ClearData />
       </Stack>
     );
   }

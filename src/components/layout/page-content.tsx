@@ -29,6 +29,7 @@ import FundWallet from "../verification-flow/fund-wallet";
 import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
+import ClearData from "../auth/clear-data";
 
 // determines current step in the process and renders content
 
@@ -110,12 +111,11 @@ function Content() {
     );
   } else if (hasAccountError) {
     contentBody = (
-      <Stack direction="row">
-        <Text>
-          There was an error loading account data. Please clear data and log in
-          again.
-        </Text>
+      <Stack>
+        <Text>Unable to load account data for {stxAddress} from the API.</Text>
         <Text>Error: {String(accountError)}</Text>
+        <Text>Please clear your data, log in, and try again.</Text>
+        <ClearData />
       </Stack>
     );
   } else if (isInsufficient) {

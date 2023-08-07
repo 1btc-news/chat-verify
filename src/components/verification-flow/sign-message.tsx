@@ -49,7 +49,7 @@ function SignMessage() {
   // if signature message POST error
   if (hasError) {
     return (
-      <Stack direction="row">
+      <Stack>
         <Text>
           Unable to load signature message for {stxAddress} from the API.
         </Text>
