@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import {
   Alert,
   AlertIcon,
@@ -24,7 +24,6 @@ import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
-  getBtcTxs,
   sentDustToggleAtom,
   stxAddressAtom,
 } from "../../constants";
@@ -33,24 +32,19 @@ import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 import AccessInfoAlert from "./access-info-alert";
 
 // active step = 2
-// queries registration response from API
-// monitors for pending transaction to dust account
+// queries account data from API
+// once status changes from pending, progresses to next step
 
 const queriedStxAddressAtom = atom<string | null>(null);
-const queriedBtcAddressAtom = atom<string | null>(null);
 
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
-  const [accountData, setAccountData] = useAtom(accountDataAtom);
+  const setAccountData = useSetAtom(accountDataAtom);
   const [queriedStxAddress, setQueriedStxAddress] = useAtom(
     queriedStxAddressAtom
   );
-  const [queriedBtcAddress, setQueriedBtcAddress] = useAtom(
-    queriedBtcAddressAtom
-  );
   const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
   const { isLoading, data } = useRegistrationResponse();
-  // const { data: btcTxStatus } = useBtcTxStatus();
   const copyText = useClipboardToast();
 
   // TODO: set timers or limits here to prevent a lone tab fetching forever?
@@ -84,34 +78,6 @@ function SendDust() {
     // TODO: correct this dependency issue
   }, [stxAddress]);
 
-  useEffect(() => {
-    if (!accountData || !accountData.receiveAddress) {
-      return;
-    }
-    // rather: check if query is in progress
-    if (accountData.receiveAddress === queriedBtcAddress) {
-      return;
-    }
-
-    setQueriedBtcAddress(accountData.receiveAddress);
-
-    const fetchBtcAccountStatus = () => {
-      //console.log("send-dust: fetching BTC account", queriedBtcAddress);
-      getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
-        //console.log("btcTxs: ", btcTxs);
-        if (!btcTxs) return undefined;
-        setQueriedBtcAddress(null);
-        return btcTxs;
-      });
-    };
-
-    // every 5 min
-    const intervalId = setInterval(fetchBtcAccountStatus, 300000);
-
-    return () => clearInterval(intervalId);
-    // TODO: correct this dependency issue
-  }, [accountData, accountData?.receiveAddress]);
-
   // verify STX address is known
   if (!stxAddress) {
     return null;
@@ -121,18 +87,10 @@ function SendDust() {
     return (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
-        <Text>Loading registration response...</Text>
+        <Text>Loading registration response for {stxAddress}...</Text>
       </Stack>
     );
   }
-
-  // info: don't send from an exchange
-  // - tie into sovereignty, not your keys not your coins
-  // - don't know their balance, that's in the Exchange software
-  // info: don't spend the verified BTC
-  // - if the address that sends dust gets spent, you'll lose access
-  // - access can be restored by topping up the origin address
-  // info: do take pride...
 
   if (sentDustToggle) {
     return (

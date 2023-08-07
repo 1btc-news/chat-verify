@@ -1,39 +1,18 @@
-import { useAuth } from "@micro-stacks/react";
-import { useSetAtom } from "jotai";
-import {
-  accountDataAtom,
-  insufficientBalanceToggleAtom,
-  sentDustToggleAtom,
-  signatureDataAtom,
-  signatureMsgAtom,
-  stxAddressAtom,
-} from "../../constants";
 import { Button } from "@chakra-ui/react";
-import { RESET } from "jotai/utils";
+import { useAuth } from "@micro-stacks/react";
+import { useClearUserData } from "../../hooks/use-clear-user-data";
 
 function ClearData(props: { variant?: string }) {
   const { signOut } = useAuth();
-  const setStxAddress = useSetAtom(stxAddressAtom);
-  const setAccountData = useSetAtom(accountDataAtom);
-  const setSignatureMsg = useSetAtom(signatureMsgAtom);
-  const setSignatureData = useSetAtom(signatureDataAtom);
-  const setSentDustToggle = useSetAtom(sentDustToggleAtom);
-  const setInsufficientBalanceToggle = useSetAtom(
-    insufficientBalanceToggleAtom
-  );
+  const clearUserData = useClearUserData();
 
   return (
     <Button
       variant={props.variant || "1btc-orange"}
       title="Clear Data"
       onClick={() => {
-        // clear all locally stored data
-        setStxAddress(RESET);
-        setAccountData(RESET);
-        setSignatureMsg(RESET);
-        setSignatureData(RESET);
-        setSentDustToggle(RESET);
-        setInsufficientBalanceToggle(RESET);
+        // clear locally stored data
+        clearUserData();
         // sign out of the wallet
         try {
           signOut();
