@@ -18,6 +18,7 @@ import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import { signatureDataAtom, stxAddressAtom } from "../../constants";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
+import ClearData from "../auth/clear-data";
 
 // active step = 1
 // queries signature message from API
@@ -28,20 +29,33 @@ function SignMessage() {
   const [stxAddress] = useAtom(stxAddressAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
   const { openSignMessage, isRequestPending } = useOpenSignMessage();
-  const { isLoading, data } = useSignatureMsg();
-
-  // console.log("sign-message: isLoading", isLoading);
+  const { isLoading, data, hasError, error } = useSignatureMsg();
 
   // verify STX address is known
   if (!stxAddress) {
     return null;
   }
 
+  // if signature message is loading
   if (isLoading) {
     return (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
-        <Text>Loading signature data...</Text>
+        <Text>Loading signature message for {stxAddress}...</Text>
+      </Stack>
+    );
+  }
+
+  // if signature message POST error
+  if (hasError) {
+    return (
+      <Stack direction="row">
+        <Text>
+          Unable to load signature message for {stxAddress} from the API.
+        </Text>
+        <Text>Error: {String(error)}</Text>
+        <Text>Please clear your data, log in, and try again.</Text>
+        <ClearData />
       </Stack>
     );
   }
@@ -99,7 +113,7 @@ function SignMessage() {
           title="Sign Message"
           onClick={() => {
             if (data) {
-              openSignMessage({ message: data! }).then((signatureData) => {
+              openSignMessage({ message: data }).then((signatureData) => {
                 if (signatureData) {
                   setSignatureData(signatureData);
                 }
