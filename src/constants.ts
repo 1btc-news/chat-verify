@@ -120,7 +120,7 @@ export const isDuplicateAtom = atom((get) => {
   return accountData?.status === "duplicate";
 });
 
-enum STEPS {
+export enum STEPS {
   CONNECT_WALLET,
   SIGN_MESSAGE,
   SEND_DUST,
@@ -161,36 +161,42 @@ export const activeStepAtom = atom((get) => {
 // updated by API calls
 /////////////////////////
 
+/////////////////////////
+
 // fetch account data from API
 export const fetchAccountDataAtom = atom(async (get) => {
   const stxAddress = get(stxAddressAtom);
+  // no STX address, no account data
   if (!stxAddress) {
     return undefined;
   }
   try {
-    const accountData = await getAccountData(stxAddress);
-    return accountData;
+    // if found, return account data
+    return await getAccountData(stxAddress);
   } catch (error) {
-    console.error(`Failed to fetch account data for ${stxAddress}:`, error);
-    return undefined;
+    // if 404, return undefined
+    if (error instanceof Error && error.message.includes("Status: 404")) {
+      return undefined;
+    }
+    // pass error to loadable util
+    throw error;
   }
 });
 
 // fetch signature message from API
 export const fetchSignatureMsgAtom = atom(async (get) => {
   const stxAddress = get(stxAddressAtom);
+  // no STX address, no signature message
   if (!stxAddress) {
     return undefined;
   }
   try {
+    // if successful, return signature message contents
     const signatureMsg = await postSignatureMsg(stxAddress);
-    return signatureMsg?.msg;
+    return signatureMsg.msg;
   } catch (error) {
-    console.error(
-      `Failed to fetch signature message for ${stxAddress}:`,
-      error
-    );
-    return undefined;
+    // pass error to loadable util
+    throw error;
   }
 });
 
@@ -198,40 +204,38 @@ export const fetchSignatureMsgAtom = atom(async (get) => {
 export const fetchRegistrationResponseAtom = atom(async (get) => {
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
+  // if account data exists, return it
   if (accountData) {
     return accountData;
   }
+  // if no signature data, return undefined
   if (!signatureData) {
     return undefined;
   }
   try {
-    //console.log("registrationResponseAtom: fetching registrationResponse");
+    // if successful, return registration response
     const registrationResponse = await postRegistrationResponse(signatureData);
     return registrationResponse;
   } catch (error) {
-    console.error(
-      `Failed to fetch registration response for ${signatureData}:`,
-      error
-    );
-    return undefined;
+    // pass error to loadable util
+    throw error;
   }
 });
 
 // fetch transaction details for BTC address
 export const fetchBtcTxsAtom = atom(async (get) => {
   const accountData = get(accountDataAtom);
+  // no account data, no BTC transactions
   if (!accountData) {
     return undefined;
   }
   try {
+    // if successful, return BTC transactions
     const btcTxsResponse = await getBtcTxs(accountData.receiveAddress);
     return btcTxsResponse;
   } catch (error) {
-    console.error(
-      `Failed to fetch BTC transactions for ${accountData.receiveAddress}:`,
-      error
-    );
-    return undefined;
+    // pass error to loadable util
+    throw error;
   }
 });
 
@@ -239,47 +243,56 @@ export const fetchBtcTxsAtom = atom(async (get) => {
 // HELPER FUNCTIONS
 /////////////////////////
 
-export async function getAccountData(
-  stxAddress: string
-): Promise<AccountData | undefined> {
-  const accountQuery = await fetch(`${apiUrl}/account/${stxAddress}`);
-  return accountQuery.status === 200 ? await accountQuery.json() : undefined;
+export async function getAccountData(stxAddress: string): Promise<AccountData> {
+  const response = await fetch(`${apiUrl}/account/${stxAddress}`);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch account data for ${stxAddress}.\nStatus: ${response.status}`
+    );
+  }
+  return await response.json();
 }
 
-export async function getBtcTxs(btcAddress: string) {
+// TODO: type this based on BTC API used
+// maybe Quicknode?
+export async function getBtcTxs(btcAddress: string): Promise<any> {
   const btcTxQuery = await fetch(
     `https://blockchain.info/rawaddr/${btcAddress}`
   );
-  return btcTxQuery.status === 200 ? await btcTxQuery.json() : undefined;
+  if (!btcTxQuery.ok) {
+    throw new Error(
+      `Failed to fetch BTC transactions for ${btcAddress}.\nStatus: ${btcTxQuery.status}`
+    );
+  }
+  return await btcTxQuery.json();
 }
 
-async function postSignatureMsg(
-  stxAddress: string
-): Promise<SignatureMessage | undefined> {
+async function postSignatureMsg(stxAddress: string): Promise<SignatureMessage> {
   const signatureMsgQuery = await fetch(`${apiUrl}/get-hiro-signature-msg`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ wallet: stxAddress }),
   });
-  return signatureMsgQuery.status === 200
-    ? await signatureMsgQuery.json()
-    : undefined;
+  if (!signatureMsgQuery.ok) {
+    throw new Error(
+      `Failed to POST signature message for ${stxAddress}.\nStatus: ${signatureMsgQuery.status}`
+    );
+  }
+  return await signatureMsgQuery.json();
 }
 
 async function postRegistrationResponse(
   signatureData: SignatureData
-): Promise<AccountData | undefined> {
-  //console.log(`fetchRegistrationResponse`);
+): Promise<AccountData> {
   const registrationResponseQuery = await fetch(`${apiUrl}/register-hiro`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(signatureData),
   });
-  //console.log(
-  //  `registrationResponseQuery`,
-  //  JSON.stringify(registrationResponseQuery, null, 2)
-  //);
-  return registrationResponseQuery.status === 200
-    ? await registrationResponseQuery.json()
-    : undefined;
+  if (!registrationResponseQuery.ok) {
+    throw new Error(
+      `Failed to POST registration response.\nStatus: ${registrationResponseQuery.status}`
+    );
+  }
+  return await registrationResponseQuery.json();
 }
