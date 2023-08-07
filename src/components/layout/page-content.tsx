@@ -24,6 +24,7 @@ import SendDust from "../verification-flow/send-dust";
 import SuccessfulVerification from "../verification-flow/successful-verification";
 import InsufficientBalance from "../verification-flow/insufficient-balance";
 import DuplicateOrigin from "../verification-flow/duplicate-origin";
+import FundWallet from "../verification-flow/fund-wallet";
 import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
@@ -105,48 +106,17 @@ function Content() {
           contentHeading = "Congratulations, you are verified Fullcoiner!";
           contentBody = <SuccessfulVerification />;
           break;
+        case 4:
+          // console.log("page-content: activeStep: 4");
+          contentHeading = "The origin address does not have enough funds.";
+          contentBody = <FundWallet />;
+          break;
         default:
           // console.log("page-content: activeStep: default", activeStep);
           contentBody = <ConnectWallet />;
       }
     }
   }
-
-  // are they logged in?
-  // no: connect wallet
-  // yes: continue
-
-  // is account data loaded?
-  // no: display loading
-  // yes: display next step
-
-  // insufficient balance?
-  // no: continue
-  // yes: display insufficient balance
-  //   - insufficient balance prompt
-  //   - insufficient balance check
-  //     sentFundsAtom toggle
-
-  // duplicate origin?
-  // no: continue
-  // yes: display duplicate origin
-  //   - duplicate origin prompt
-  //   please use a diff account?
-
-  // more detailed steps (reverse order?)
-  // 4: successful verification (valid)
-  // 3: send dust check (pending)
-  // 2: send dust prompt (signedData && !registrationResponse)
-  //    sentDustAtom toggle
-  // 1: sign message (!signedData)
-
-  //
-  // <>
-  // {activeStep === 1 && <SignMessage />}
-  // {activeStep === 2 && <SendDust />}
-  // {activeStep === 3 && <SuccessfulVerification />}
-  // {activeStep === 4 && <InsufficientBalance />}
-  // </>
 
   return (
     <Box width="100%" maxW="1200px">

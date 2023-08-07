@@ -10,6 +10,7 @@ export const registrationSteps = [
   { title: "Connect Wallet", description: "Step 1" },
   { title: "Sign Message", description: "Step 2" },
   { title: "Send Dust", description: "Step 3" },
+  { title: "Fund Wallet", description: "Step 4" },
 ];
 
 // https://docs.1btc.chat/1btc-chat-api
@@ -119,48 +120,40 @@ export const isDuplicateAtom = atom((get) => {
   return accountData?.status === "duplicate";
 });
 
+enum STEPS {
+  CONNECT_WALLET,
+  SIGN_MESSAGE,
+  SEND_DUST,
+  FUND_WALLET,
+  SUCCESS,
+}
+
 // active step based on existing data
 export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
-  // console.log("activeStepAtom: stxAddress:", stxAddress);
-  // console.log("activeStepAtom: accountData:", accountData);
-  // console.log("activeStepAtom: signatureData:", signatureData);
   // no STX address
   if (!stxAddress) {
-    // console.log("activeStepAtom: no stxAddress, returning 0");
-    return 0;
+    return STEPS.CONNECT_WALLET;
   }
   // no account data
   if (!accountData) {
-    // console.log(
-    //   `activeStepAtom: no accountData, returning ${signatureData ? 2 : 1}`
-    // );
-    return signatureData ? 2 : 1;
+    return signatureData ? STEPS.SEND_DUST : STEPS.SIGN_MESSAGE;
   }
-  // check error states
-  if (
-    accountData.status === "insufficient" ||
-    accountData.status === "duplicate"
-  ) {
-    // console.log(
-    //   "activeStepAtom: insufficient or duplicate, returning undefined"
-    // );
-    return undefined;
+  // use account data status
+  switch (accountData.status) {
+    case "pending":
+      return STEPS.SEND_DUST;
+    case "insufficient":
+      return STEPS.FUND_WALLET;
+    case "duplicate":
+      return undefined;
+    case "valid":
+      return STEPS.SUCCESS;
+    default:
+      return STEPS.SIGN_MESSAGE;
   }
-  // check if valid
-  if (accountData.status === "valid") {
-    // console.log("activeStepAtom: valid, returning 3");
-    return 3;
-  }
-  // check if pending or signature data
-  if (accountData.status === "pending") {
-    // console.log("activeStepAtom: pending, returning 2");
-    return 2;
-  }
-  // start at signature message
-  return 1;
 });
 
 /////////////////////////
