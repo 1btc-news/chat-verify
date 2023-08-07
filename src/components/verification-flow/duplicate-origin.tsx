@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertIcon,
-  Box,
   IconButton,
   ListItem,
   Popover,
@@ -32,36 +31,10 @@ function DuplicateOrigin() {
         alignItems="center"
         mb={8}
       >
-        <Box my={4} fontWeight="bold">
-          The address below that sent the dust transaction to verify has already
-          been used.
-          {accountData && (
-            <Text mt={4} color="orange.500" overflowWrap="anywhere">
-              {accountData.origin}{" "}
-              <IconButton
-                variant="1btc-orange"
-                size="sm"
-                ml={4}
-                aria-label="Copy Bitcoin address"
-                title="Copy Bitcoin address"
-                icon={<FiCopy />}
-                onClick={() => copyText(accountData.origin)}
-              />
-              <IconButton
-                variant="1btc-orange"
-                ml={4}
-                aria-label="View on mempool.space"
-                title="View on mempool.space"
-                icon={<FiSearch />}
-                size="sm"
-                as="a"
-                href={`https://mempool.space/address/${accountData.origin}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            </Text>
-          )}
-        </Box>
+        <Text>
+          The linked address that sent the dust transaction to verify has
+          already been used.
+        </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
             <IconButton
@@ -98,12 +71,37 @@ function DuplicateOrigin() {
           </PopoverContent>
         </Popover>
       </Stack>
-
       <Alert mb={8} variant="1btc-orange" status="warning">
         <AlertIcon boxSize="6" />
         Please sign out and create a new account in your wallet to use with 1btc
         Chat.
       </Alert>
+      {accountData && (
+        <Text color="orange.500" overflowWrap="anywhere" fontWeight="bold">
+          {accountData.origin}{" "}
+          <IconButton
+            variant="1btc-orange"
+            size="sm"
+            ml={4}
+            aria-label="Copy Bitcoin address"
+            title="Copy Bitcoin address"
+            icon={<FiCopy />}
+            onClick={() => copyText(accountData.origin)}
+          />
+          <IconButton
+            variant="1btc-orange"
+            ml={4}
+            aria-label="View on mempool.space"
+            title="View on mempool.space"
+            icon={<FiSearch />}
+            size="sm"
+            as="a"
+            href={`https://mempool.space/address/${accountData.origin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        </Text>
+      )}
     </>
   );
 }
