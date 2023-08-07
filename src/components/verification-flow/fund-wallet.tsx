@@ -86,8 +86,8 @@ function FundWallet() {
         mb={8}
       >
         <Text>
-          Ensure your linked wallet holds over 1 BTC to access 1btc's Fullcoiner
-          chat.
+          Ensure your linked wallet address holds over 1 BTC to access 1btc's
+          Fullcoiner chat.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -134,7 +134,8 @@ function FundWallet() {
             wallet.
           </ListItem>
           <ListItem>
-            Once sent, do not spend the Bitcoin used to verify to retain access.
+            Once sent, do not spend the Bitcoin used to verify in order to
+            retain access.
           </ListItem>
         </UnorderedList>
       </Alert>
