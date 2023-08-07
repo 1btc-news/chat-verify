@@ -24,7 +24,6 @@ import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
-  sentDustToggleAtom,
   stxAddressAtom,
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
@@ -44,7 +43,6 @@ function SendDust() {
   const [queriedStxAddress, setQueriedStxAddress] = useAtom(
     queriedStxAddressAtom
   );
-  const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
   const { isLoading, data, hasError, error } = useRegistrationResponse();
   const copyText = useClipboardToast();
 
@@ -108,32 +106,6 @@ function SendDust() {
     );
   }
 
-  if (sentDustToggle) {
-    return (
-      <>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={8}
-        >
-          <Stack direction="row" mt={4}>
-            <Spinner color="orange.500" emptyColor="orange.200" />
-            <Text>Verifying dust transaction...</Text>
-          </Stack>
-        </Stack>
-        <AccessInfoAlert />
-        <Button
-          variant="1btc-orange"
-          title="Take me back!"
-          onClick={() => setSentDustToggle(false)}
-        >
-          Take me back
-        </Button>
-      </>
-    );
-  }
-
   return (
     <>
       <Stack
@@ -143,9 +115,8 @@ function SendDust() {
         mb={8}
       >
         <Text>
-          To demonstrate ownership of more than 1 BTC, send a tiny fraction of
-          your Bitcoin (known as "dust") to your unique address. This verifies
-          that the source address holds more than 1 BTC.
+          Send a tiny fraction of your Bitcoin (known as "dust") from the wallet
+          with more than 1 BTC to your unique address.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -187,10 +158,20 @@ function SendDust() {
       </Stack>
       <Alert mb={8} variant="1btc-orange" status="warning">
         <AlertIcon boxSize="6" />
-        Send only the tiniest amount. You maintain full control over your
-        Bitcoin. Nobody has access to this unique address, and the dust
-        transaction is non-refundable. It is only used to verify ownership of
-        more than 1 BTC.
+        <UnorderedList>
+          <ListItem>
+            Send only the tiniest amount, you maintain full control over your
+            Bitcoin
+          </ListItem>
+          <ListItem>
+            Nobody has access to this unique address, and the dust transaction
+            is non-refundable
+          </ListItem>
+          <ListItem>
+            This transaction links your wallet of choice with your logged in
+            account.
+          </ListItem>
+        </UnorderedList>
       </Alert>
       {data && (
         <>
@@ -215,21 +196,16 @@ function SendDust() {
                 />
               </Text>
             </Box>
-
             <Image
               m="auto"
-              boxSize="250px"
+              boxSize="200px"
               src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
             />
           </Stack>
-
-          <Button
-            variant="1btc-orange"
-            title="I've sent it!"
-            onClick={() => setSentDustToggle(true)}
-          >
-            I've sent it!
-          </Button>
+          <Stack direction="row" mt={4}>
+            <Spinner color="orange.500" emptyColor="orange.200" />
+            <Text>Awaiting dust transaction...</Text>
+          </Stack>
         </>
       )}
     </>
