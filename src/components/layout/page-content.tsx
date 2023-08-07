@@ -50,8 +50,16 @@ function Content() {
     data: accountData,
     error: accountError,
   } = useAccountData();
-  const { data: signatureMsgData } = useSignatureMsg();
-  const { data: registrationData } = useRegistrationResponse();
+  const {
+    isLoading: isSignatureMsgLoading,
+    hasError: hasSignatureMsgError,
+    data: signatureMsgData,
+  } = useSignatureMsg();
+  const {
+    isLoading: isRegistrationLoading,
+    hasError: hasRegistrationError,
+    data: registrationData,
+  } = useRegistrationResponse();
   // stepper orientation
   const stepperOrientation = useBreakpointValue({
     base: "vertical",
@@ -67,17 +75,27 @@ function Content() {
 
   useEffect(() => {
     // console.log("page-content: checking signatureMsgData", signatureMsgData);
-    if (signatureMsgData) {
+    if (!isSignatureMsgLoading && !hasSignatureMsgError && signatureMsgData) {
       setLocalSignatureMsg(signatureMsgData);
     }
-  }, [signatureMsgData, setLocalSignatureMsg]);
+  }, [
+    signatureMsgData,
+    setLocalSignatureMsg,
+    isSignatureMsgLoading,
+    hasSignatureMsgError,
+  ]);
 
   useEffect(() => {
     // console.log("page-content: checking registrationData", registrationData);
-    if (registrationData) {
+    if (!isRegistrationLoading && !hasRegistrationError && registrationData) {
       setLocalRegistrationResponse(registrationData);
     }
-  }, [registrationData, setLocalRegistrationResponse]);
+  }, [
+    hasRegistrationError,
+    isRegistrationLoading,
+    registrationData,
+    setLocalRegistrationResponse,
+  ]);
 
   // set defaults
   let contentHeading = "Verify you are a Fullcoiner to join the 1btc community";

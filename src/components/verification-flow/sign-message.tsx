@@ -55,8 +55,8 @@ function SignMessage() {
         mb={8}
       >
         <Text>
-          Sign a message to verify ownership of your wallet and generate a
-          unique BTC address.
+          Sign a message to create a unique Bitcoin address used to verify your
+          account.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
