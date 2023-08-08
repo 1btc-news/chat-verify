@@ -1,7 +1,11 @@
+import { atom, useAtom } from "jotai";
+import { useEffect } from "react";
 import {
+  Alert,
+  AlertIcon,
   Box,
-  Button,
   IconButton,
+  Image,
   ListItem,
   Popover,
   PopoverBody,
@@ -14,28 +18,26 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
-import { FaQuestion } from "react-icons/fa";
-import { FiCopy, FiSearch } from "react-icons/fi";
-import { useClipboardToast } from "../../hooks/use-clipboard-toast";
+import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
-  insufficientBalanceToggleAtom,
   stxAddressAtom,
 } from "../../constants";
-import AccessInfoAlert from "./access-info-alert";
+import { useClipboardToast } from "../../hooks/use-clipboard-toast";
+import { FaQuestion } from "react-icons/fa";
+
+// active step = 3
+// account is registered but funds are insufficient
+// queries account data from API
+// once status changes from insufficient, progresses to next step
 
 const queriedStxAddressAtom = atom<string | null>(null);
 
-function InsufficientBalance() {
+function FundWallet() {
   const [stxAddress] = useAtom(stxAddressAtom);
   const [queriedStxAddress, setQueriedStxAddress] = useAtom(
     queriedStxAddressAtom
-  );
-  const [insufficientBalanceToggle, setInsufficientBalanceToggle] = useAtom(
-    insufficientBalanceToggleAtom
   );
   const [accountData, setAccountData] = useAtom(accountDataAtom);
   const copyText = useClipboardToast();
@@ -61,7 +63,6 @@ function InsufficientBalance() {
         if (accountData.status !== "insufficient") {
           setAccountData(accountData);
         }
-        return accountData;
       });
     };
 
@@ -71,30 +72,9 @@ function InsufficientBalance() {
     // TODO: correct this dependency issue
   }, [stxAddress]);
 
-  if (insufficientBalanceToggle) {
-    return (
-      <>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={8}
-        >
-          <Stack direction="row" mt={4}>
-            <Spinner color="orange.500" emptyColor="orange.200" />
-            <Text>Verifying origin balance...</Text>
-          </Stack>
-        </Stack>
-        <AccessInfoAlert />
-        <Button
-          variant="1btc-orange"
-          title="Take me back!"
-          onClick={() => setInsufficientBalanceToggle(false)}
-        >
-          Take me back
-        </Button>
-      </>
-    );
+  // verify STX address is known
+  if (!stxAddress) {
+    return null;
   }
 
   return (
@@ -105,37 +85,10 @@ function InsufficientBalance() {
         alignItems="center"
         mb={8}
       >
-        <Box my={4} fontWeight="bold">
-          Ensure your wallet holds over 1 BTC to access 1btc's Fullcoiner chat.
-          {accountData && (
-            <>
-              <Text mt={4} color="orange.500" overflowWrap="anywhere">
-                {accountData.origin}{" "}
-                <IconButton
-                  variant="1btc-orange"
-                  size="sm"
-                  ml={4}
-                  aria-label="Copy Bitcoin address"
-                  title="Copy Bitcoin address"
-                  icon={<FiCopy />}
-                  onClick={() => copyText(accountData.origin)}
-                />
-                <IconButton
-                  variant="1btc-orange"
-                  ml={4}
-                  aria-label="View on mempool.space"
-                  title="View on mempool.space"
-                  icon={<FiSearch />}
-                  size="sm"
-                  as="a"
-                  href={`https://mempool.space/address/${accountData.origin}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              </Text>
-            </>
-          )}
-        </Box>
+        <Text>
+          Ensure your linked wallet address holds over 1 BTC to access 1btc's
+          Fullcoiner chat.
+        </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
             <IconButton
@@ -170,15 +123,59 @@ function InsufficientBalance() {
           </PopoverContent>
         </Popover>
       </Stack>
-      <Button
-        variant="1btc-orange"
-        title="I've sent it!"
-        onClick={() => setInsufficientBalanceToggle(true)}
-      >
-        I've refilled it!
-      </Button>
+      <Alert mb={8} variant="1btc-orange" status="warning">
+        <AlertIcon boxSize="6" />
+        <UnorderedList>
+          <ListItem>
+            The address below is detected from the dust transaction.
+          </ListItem>
+          <ListItem>
+            Verify this address is yours using the transaction details in your
+            wallet.
+          </ListItem>
+          <ListItem>
+            Once sent, do not spend the Bitcoin used to verify in order to
+            retain access.
+          </ListItem>
+        </UnorderedList>
+      </Alert>
+      {accountData && (
+        <>
+          <Stack
+            direction={["column", "row"]}
+            justifyContent="space-between"
+            alignItems="center"
+            mb={8}
+          >
+            <Box my={4} fontWeight="bold">
+              Send Bitcoin to your address below so the balance is over 1 BTC.
+              <Text mt={4} color="orange.500" overflowWrap="anywhere">
+                {accountData.origin}{" "}
+                <IconButton
+                  variant="1btc-orange"
+                  size="sm"
+                  ml={4}
+                  aria-label="Copy Bitcoin address"
+                  title="Copy Bitcoin address"
+                  icon={<FiCopy />}
+                  onClick={() => copyText(accountData.origin)}
+                />
+              </Text>
+            </Box>
+            <Image
+              m="auto"
+              boxSize="200px"
+              src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${accountData.origin}`}
+            />
+          </Stack>
+          <Stack direction="row" mt={4}>
+            <Spinner color="orange.500" emptyColor="orange.200" />
+            <Text>Awaiting funds in verified account...</Text>
+          </Stack>
+        </>
+      )}
     </>
   );
 }
 
-export default InsufficientBalance;
+export default FundWallet;

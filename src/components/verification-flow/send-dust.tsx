@@ -1,10 +1,9 @@
 import { useEffect } from "react";
-import { atom, useAtom } from "jotai";
+import { atom, useAtom, useSetAtom } from "jotai";
 import {
   Alert,
   AlertIcon,
   Box,
-  Button,
   IconButton,
   Image,
   ListItem,
@@ -24,33 +23,25 @@ import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
   getAccountData,
-  getBtcTxs,
-  sentDustToggleAtom,
   stxAddressAtom,
 } from "../../constants";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import { useClipboardToast } from "../../hooks/use-clipboard-toast";
-import AccessInfoAlert from "./access-info-alert";
+import ClearData from "../auth/clear-data";
 
 // active step = 2
-// queries registration response from API
-// monitors for pending transaction to dust account
+// queries account data from API
+// once status changes from pending, progresses to next step
 
 const queriedStxAddressAtom = atom<string | null>(null);
-const queriedBtcAddressAtom = atom<string | null>(null);
 
 function SendDust() {
   const [stxAddress] = useAtom(stxAddressAtom);
-  const [accountData, setAccountData] = useAtom(accountDataAtom);
+  const setAccountData = useSetAtom(accountDataAtom);
   const [queriedStxAddress, setQueriedStxAddress] = useAtom(
     queriedStxAddressAtom
   );
-  const [queriedBtcAddress, setQueriedBtcAddress] = useAtom(
-    queriedBtcAddressAtom
-  );
-  const [sentDustToggle, setSentDustToggle] = useAtom(sentDustToggleAtom);
-  const { isLoading, data } = useRegistrationResponse();
-  // const { data: btcTxStatus } = useBtcTxStatus();
+  const { isLoading, data, hasError, error } = useRegistrationResponse();
   const copyText = useClipboardToast();
 
   // TODO: set timers or limits here to prevent a lone tab fetching forever?
@@ -74,7 +65,6 @@ function SendDust() {
         if (accountData.status !== "pending") {
           setAccountData(accountData);
         }
-        return accountData;
       });
     };
 
@@ -84,79 +74,32 @@ function SendDust() {
     // TODO: correct this dependency issue
   }, [stxAddress]);
 
-  useEffect(() => {
-    if (!accountData || !accountData.receiveAddress) {
-      return;
-    }
-    // rather: check if query is in progress
-    if (accountData.receiveAddress === queriedBtcAddress) {
-      return;
-    }
-
-    setQueriedBtcAddress(accountData.receiveAddress);
-
-    const fetchBtcAccountStatus = () => {
-      //console.log("send-dust: fetching BTC account", queriedBtcAddress);
-      getBtcTxs(queriedBtcAddress!).then((btcTxs) => {
-        //console.log("btcTxs: ", btcTxs);
-        if (!btcTxs) return undefined;
-        setQueriedBtcAddress(null);
-        return btcTxs;
-      });
-    };
-
-    // every 5 min
-    const intervalId = setInterval(fetchBtcAccountStatus, 300000);
-
-    return () => clearInterval(intervalId);
-    // TODO: correct this dependency issue
-  }, [accountData, accountData?.receiveAddress]);
-
   // verify STX address is known
   if (!stxAddress) {
     return null;
   }
 
+  // if registration response is loading
   if (isLoading) {
     return (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
-        <Text>Loading registration response...</Text>
+        <Text>Loading registration response for {stxAddress}...</Text>
       </Stack>
     );
   }
 
-  // info: don't send from an exchange
-  // - tie into sovereignty, not your keys not your coins
-  // - don't know their balance, that's in the Exchange software
-  // info: don't spend the verified BTC
-  // - if the address that sends dust gets spent, you'll lose access
-  // - access can be restored by topping up the origin address
-  // info: do take pride...
-
-  if (sentDustToggle) {
+  // if registration response POST error
+  if (hasError) {
     return (
-      <>
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={8}
-        >
-          <Stack direction="row" mt={4}>
-            <Spinner color="orange.500" emptyColor="orange.200" />
-            <Text>Verifying dust transaction...</Text>
-          </Stack>
-        </Stack>
-        <AccessInfoAlert />
-        <Button
-          variant="1btc-orange"
-          title="Take me back!"
-          onClick={() => setSentDustToggle(false)}
-        >
-          Take me back
-        </Button>
-      </>
+      <Stack>
+        <Text>
+          Unable to load registration response for {stxAddress} from the API.
+        </Text>
+        <Text>Error: {String(error)}</Text>
+        <Text>Please clear your data, log in, and try again.</Text>
+        <ClearData />
+      </Stack>
     );
   }
 
@@ -169,9 +112,8 @@ function SendDust() {
         mb={8}
       >
         <Text>
-          To demonstrate ownership of more than 1 BTC, send a tiny fraction of
-          your Bitcoin (known as "dust") to your unique address. This verifies
-          that the source address holds more than 1 BTC.
+          Send a tiny fraction of your Bitcoin (known as "dust") from the wallet
+          with more than 1 BTC to your unique address.
         </Text>
         <Popover placement="bottom-end" variant="1btc-orange">
           <PopoverTrigger>
@@ -213,10 +155,20 @@ function SendDust() {
       </Stack>
       <Alert mb={8} variant="1btc-orange" status="warning">
         <AlertIcon boxSize="6" />
-        Send only the tiniest amount. You maintain full control over your
-        Bitcoin. Nobody has access to this unique address, and the dust
-        transaction is non-refundable. It is only used to verify ownership of
-        more than 1 BTC.
+        <UnorderedList>
+          <ListItem>
+            Send only the tiniest amount, you maintain full control over your
+            Bitcoin
+          </ListItem>
+          <ListItem>
+            Nobody has access to this unique address, and the dust transaction
+            is non-refundable
+          </ListItem>
+          <ListItem>
+            This transaction links your wallet of choice with your logged in
+            account.
+          </ListItem>
+        </UnorderedList>
       </Alert>
       {data && (
         <>
@@ -241,21 +193,16 @@ function SendDust() {
                 />
               </Text>
             </Box>
-
             <Image
               m="auto"
-              boxSize="250px"
+              boxSize="200px"
               src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
             />
           </Stack>
-
-          <Button
-            variant="1btc-orange"
-            title="I've sent it!"
-            onClick={() => setSentDustToggle(true)}
-          >
-            I've sent it!
-          </Button>
+          <Stack direction="row" mt={4}>
+            <Spinner color="orange.500" emptyColor="orange.200" />
+            <Text>Awaiting dust transaction...</Text>
+          </Stack>
         </>
       )}
     </>

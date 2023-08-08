@@ -9,10 +9,10 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import {
+  STEPS,
   accountDataAtom,
   activeStepAtom,
   isDuplicateAtom,
-  isInsufficientAtom,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -22,25 +22,43 @@ import ConnectWallet from "../verification-flow/connect-wallet";
 import SignMessage from "../verification-flow/sign-message";
 import SendDust from "../verification-flow/send-dust";
 import SuccessfulVerification from "../verification-flow/successful-verification";
-import InsufficientBalance from "../verification-flow/insufficient-balance";
 import DuplicateOrigin from "../verification-flow/duplicate-origin";
+import FundWallet from "../verification-flow/fund-wallet";
 import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
+import ClearData from "../auth/clear-data";
 
 // determines current step in the process and renders content
 
 function Content() {
-  const activeStep = useAtomValue(activeStepAtom);
+  // STX address and active step
   const stxAddress = useAtomValue(stxAddressAtom);
-  const isInsufficient = useAtomValue(isInsufficientAtom);
+  const activeStep = useAtomValue(activeStepAtom);
+  // API status checks for account
   const isDuplicate = useAtomValue(isDuplicateAtom);
-  const setAccountData = useSetAtom(accountDataAtom);
-  const setSignatureMsg = useSetAtom(signatureMsgAtom);
-  const setRegistrationResponse = useSetAtom(registrationResponseAtom);
-  const { isLoading: isAccountLoading, data: accountData } = useAccountData();
-  const { data: signatureMsgData } = useSignatureMsg();
-  const { data: registrationData } = useRegistrationResponse();
+  // atom setters for API data in localstorage
+  const setLocalAccountData = useSetAtom(accountDataAtom);
+  const setLocalSignatureMsg = useSetAtom(signatureMsgAtom);
+  const setLocalRegistrationResponse = useSetAtom(registrationResponseAtom);
+  // hooks for loading API data
+  const {
+    isLoading: isAccountLoading,
+    hasError: hasAccountError,
+    data: accountData,
+    error: accountError,
+  } = useAccountData();
+  const {
+    isLoading: isSignatureMsgLoading,
+    hasError: hasSignatureMsgError,
+    data: signatureMsgData,
+  } = useSignatureMsg();
+  const {
+    isLoading: isRegistrationLoading,
+    hasError: hasRegistrationError,
+    data: registrationData,
+  } = useRegistrationResponse();
+  // stepper orientation
   const stepperOrientation = useBreakpointValue({
     base: "vertical",
     sm: "horizontal",
@@ -48,105 +66,84 @@ function Content() {
 
   useEffect(() => {
     // console.log("page-content: checking accountData", accountData);
-    if (accountData) {
-      setAccountData(accountData);
+    if (!isAccountLoading && !hasAccountError && accountData !== undefined) {
+      setLocalAccountData(accountData);
     }
-  }, [accountData, setAccountData]);
+  }, [accountData, hasAccountError, isAccountLoading, setLocalAccountData]);
 
   useEffect(() => {
     // console.log("page-content: checking signatureMsgData", signatureMsgData);
-    if (signatureMsgData) {
-      setSignatureMsg(signatureMsgData);
+    if (!isSignatureMsgLoading && !hasSignatureMsgError && signatureMsgData) {
+      setLocalSignatureMsg(signatureMsgData);
     }
-  }, [signatureMsgData, setSignatureMsg]);
+  }, [
+    signatureMsgData,
+    setLocalSignatureMsg,
+    isSignatureMsgLoading,
+    hasSignatureMsgError,
+  ]);
 
   useEffect(() => {
     // console.log("page-content: checking registrationData", registrationData);
-    if (registrationData) {
-      setRegistrationResponse(registrationData);
+    if (!isRegistrationLoading && !hasRegistrationError && registrationData) {
+      setLocalRegistrationResponse(registrationData);
     }
-  }, [registrationData, setRegistrationResponse]);
+  }, [
+    hasRegistrationError,
+    isRegistrationLoading,
+    registrationData,
+    setLocalRegistrationResponse,
+  ]);
 
   // set defaults
   let contentHeading = "Verify you are a Fullcoiner to join the 1btc community";
   let contentBody = <ConnectWallet />;
 
-  // work through state logic
-  if (stxAddress) {
-    //console.log("page-content: stxAddress: true");
-    if (isAccountLoading) {
-      //console.log("page-content: isAccountLoading: true");
-      contentBody = (
-        <Stack direction="row">
-          <Spinner color="orange.500" emptyColor="orange.200" />
-          <Text>Loading account data...</Text>
-        </Stack>
-      );
-    } else if (isInsufficient) {
-      // console.log("page-content: isInsufficient: true");
-      contentHeading = "The origin address does not have enough funds.";
-      contentBody = <InsufficientBalance />;
-    } else if (isDuplicate) {
-      // console.log("page-content: isDuplicate: true");
-      contentHeading = "This origin address has already been used.";
-      contentBody = <DuplicateOrigin />;
-    } else {
-      switch (activeStep) {
-        case 1:
-          // console.log("page-content: activeStep: 1");
-          contentBody = <SignMessage />;
-          break;
-        case 2:
-          // console.log("page-content: activeStep: 2");
-          contentBody = <SendDust />;
-          break;
-        case 3:
-          // console.log("page-content: activeStep: 3");
-          contentHeading = "Congratulations, you are verified Fullcoiner!";
-          contentBody = <SuccessfulVerification />;
-          break;
-        default:
-          // console.log("page-content: activeStep: default", activeStep);
-          contentBody = <ConnectWallet />;
-      }
+  if (isAccountLoading) {
+    contentBody = (
+      <Stack direction="row">
+        <Spinner color="orange.500" emptyColor="orange.200" />
+        <Text>Loading account data for {stxAddress}...</Text>
+      </Stack>
+    );
+  } else if (hasAccountError) {
+    contentBody = (
+      <Stack>
+        <Text>Unable to load account data for {stxAddress} from the API.</Text>
+        <Text>Error: {String(accountError)}</Text>
+        <Text>Please clear your data, log in, and try again.</Text>
+        <ClearData />
+      </Stack>
+    );
+  } else if (isDuplicate) {
+    contentHeading = "This verified address has already been used.";
+    contentBody = <DuplicateOrigin />;
+  } else {
+    switch (activeStep) {
+      case STEPS.CONNECT_WALLET:
+        contentBody = <ConnectWallet />;
+        break;
+      case STEPS.SIGN_MESSAGE:
+        contentBody = <SignMessage />;
+        break;
+      case STEPS.SEND_DUST:
+        contentBody = <SendDust />;
+        break;
+      case STEPS.FUND_WALLET:
+        contentHeading = "The verified address does not have enough funds.";
+        contentBody = <FundWallet />;
+        break;
+      case STEPS.SUCCESS:
+        contentHeading = "Congratulations, you are verified Fullcoiner!";
+        contentBody = <SuccessfulVerification />;
+        break;
+      default:
+        // reset to default state
+        contentHeading =
+          "Verify you are a Fullcoiner to join the 1btc community";
+        contentBody = <ConnectWallet />;
     }
   }
-
-  // are they logged in?
-  // no: connect wallet
-  // yes: continue
-
-  // is account data loaded?
-  // no: display loading
-  // yes: display next step
-
-  // insufficient balance?
-  // no: continue
-  // yes: display insufficient balance
-  //   - insufficient balance prompt
-  //   - insufficient balance check
-  //     sentFundsAtom toggle
-
-  // duplicate origin?
-  // no: continue
-  // yes: display duplicate origin
-  //   - duplicate origin prompt
-  //   please use a diff account?
-
-  // more detailed steps (reverse order?)
-  // 4: successful verification (valid)
-  // 3: send dust check (pending)
-  // 2: send dust prompt (signedData && !registrationResponse)
-  //    sentDustAtom toggle
-  // 1: sign message (!signedData)
-
-  //
-  // <>
-  // {activeStep === 1 && <SignMessage />}
-  // {activeStep === 2 && <SendDust />}
-  // {activeStep === 3 && <SuccessfulVerification />}
-  // {activeStep === 4 && <InsufficientBalance />}
-  // </>
 
   return (
     <Box width="100%" maxW="1200px">

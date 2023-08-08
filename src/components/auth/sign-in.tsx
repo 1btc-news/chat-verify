@@ -1,19 +1,13 @@
 import { Button } from "@chakra-ui/react";
 import { useAuth } from "@micro-stacks/react";
-import { useAtom, useSetAtom } from "jotai";
-import {
-  accountDataAtom,
-  signatureDataAtom,
-  signatureMsgAtom,
-  stxAddressAtom,
-} from "../../constants";
+import { useAtom } from "jotai";
+import { stxAddressAtom } from "../../constants";
+import { useClearUserData } from "../../hooks/use-clear-user-data";
 
 function SignIn(props: { variant?: string }) {
   const { openAuthRequest, isRequestPending } = useAuth();
+  const clearUserData = useClearUserData();
   const [stxAddress, setStxAddress] = useAtom(stxAddressAtom);
-  const setAccountData = useSetAtom(accountDataAtom);
-  const setSignatureMsg = useSetAtom(signatureMsgAtom);
-  const setSignatureData = useSetAtom(signatureDataAtom);
 
   return (
     <Button
@@ -24,14 +18,14 @@ function SignIn(props: { variant?: string }) {
         void openAuthRequest({
           onFinish: (session) => {
             if (session.addresses.mainnet !== stxAddress) {
+              // clear locally stored data
+              clearUserData();
+              // set STX address
               setStxAddress(session.addresses.mainnet);
-              setAccountData(null);
-              setSignatureMsg(null);
-              setSignatureData(null);
             }
           },
           onCancel: () => {
-            // console.log("sign-in: ser cancelled auth request");
+            // console.log("sign-in: user cancelled auth request");
           },
         })
       }
