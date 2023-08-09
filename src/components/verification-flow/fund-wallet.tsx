@@ -21,7 +21,7 @@ import LearnMore from "./learn-more";
 // active step = 4
 // account is registered but funds are insufficient
 // uses queried account data from API
-// user progresses by funding the wallet address
+// user progresses when status changes from insufficient
 
 const queriedStxAddressAtom = atom<string | null>(null);
 
