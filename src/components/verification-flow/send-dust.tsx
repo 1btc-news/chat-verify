@@ -116,7 +116,6 @@ function SendDust() {
             </ListItem>
           </UnorderedList>
           <Alert my={8} variant="1btc-orange" status="warning">
-            <AlertIcon boxSize="6" />
             <Stack>
               <Text>
                 Send only the tiniest amount, you maintain full control over

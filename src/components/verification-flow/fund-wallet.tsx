@@ -86,7 +86,6 @@ function FundWallet() {
             </ListItem>
           </UnorderedList>
           <Alert my={8} variant="1btc-orange" status="warning">
-            <AlertIcon boxSize="6" />
             <Stack>
               <Text>
                 The address below is detected from the dust transaction used to
