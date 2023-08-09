@@ -44,6 +44,7 @@ function Content() {
   const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
   // atom setters for API data in localstorage
+  const setIsBtcDesignated = useSetAtom(isBtcDesignatedAtom);
   const setLocalAccountData = useSetAtom(accountDataAtom);
   const setLocalSignatureMsg = useSetAtom(signatureMsgAtom);
   const setLocalRegistrationResponse = useSetAtom(registrationResponseAtom);
@@ -74,6 +75,7 @@ function Content() {
     // console.log("page-content: checking accountData", accountData);
     if (!isAccountLoading && !hasAccountError && accountData !== undefined) {
       setLocalAccountData(accountData);
+      setIsBtcDesignated(true);
     }
   }, [accountData, hasAccountError, isAccountLoading, setLocalAccountData]);
 
@@ -156,12 +158,10 @@ function Content() {
   return (
     <Box width="100%" maxW="1200px">
       <Heading>{contentHeading}</Heading>
-      {activeStep !== undefined && (
-        <VerificationStepper
-          activeStep={activeStep}
-          orientation={stepperOrientation}
-        />
-      )}
+      <VerificationStepper
+        activeStep={activeStep}
+        orientation={stepperOrientation}
+      />
       {contentBody}
     </Box>
   );

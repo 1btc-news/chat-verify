@@ -3,22 +3,13 @@ import { atom, useAtom, useSetAtom } from "jotai";
 import {
   Alert,
   AlertIcon,
-  Box,
   IconButton,
-  Image,
   ListItem,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Spinner,
   Stack,
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { FaQuestion } from "react-icons/fa";
 import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
