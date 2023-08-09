@@ -8,9 +8,9 @@ import { SignatureData } from "micro-stacks/connect";
 
 export const registrationSteps = [
   { title: "Connect Wallet", description: "Step 1" },
-  { title: "Sign Message", description: "Step 2" },
-  { title: "Send Dust", description: "Step 3" },
-  { title: "Fund Wallet", description: "Step 4" },
+  { title: "Designate BTC", description: "Step 2" },
+  { title: "Sign Message", description: "Step 3" },
+  { title: "Send Dust", description: "Step 4" },
 ];
 
 // https://docs.1btc.chat/1btc-chat-api
@@ -49,6 +49,12 @@ export type AccountData = {
 // used to persist on close/open
 /////////////////////////
 
+// toggle for first step
+export const isBtcDesignatedAtom = atomWithStorage<boolean>(
+  "1btc-designatedBtc",
+  false
+);
+
 // stacks address from wallet
 export const stxAddressAtom = atomWithStorage<string | null>(
   "1btc-stxAddress",
@@ -78,15 +84,6 @@ export const signatureDataAtom = atomWithStorage<SignatureData | null>(
 export const registrationResponseAtom = atomWithStorage<AccountData | null>(
   "1btc-registrationResponse",
   null
-);
-
-// toggle for send-dust component
-export const sentDustToggleAtom = atomWithStorage("1btc-sentDustToggle", false);
-
-// toggle for insufficient-balance component
-export const insufficientBalanceToggleAtom = atomWithStorage(
-  "1btc-insufficientBalanceToggleAtom",
-  false
 );
 
 /////////////////////////
@@ -122,6 +119,7 @@ export const isDuplicateAtom = atom((get) => {
 
 export enum STEPS {
   CONNECT_WALLET,
+  DESIGNATE_BTC,
   SIGN_MESSAGE,
   SEND_DUST,
   FUND_WALLET,
@@ -131,11 +129,16 @@ export enum STEPS {
 // active step based on existing data
 export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
+  const isBtcDesignated = get(isBtcDesignatedAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
   // no STX address
   if (!stxAddress) {
     return STEPS.CONNECT_WALLET;
+  }
+  // did not designate BTC
+  if (!isBtcDesignated) {
+    return STEPS.DESIGNATE_BTC;
   }
   // no account data
   if (!accountData) {

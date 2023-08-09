@@ -12,6 +12,7 @@ import {
   STEPS,
   accountDataAtom,
   activeStepAtom,
+  isBtcDesignatedAtom,
   isDuplicateAtom,
   registrationResponseAtom,
   signatureMsgAtom,
@@ -32,6 +33,8 @@ import ClearData from "../auth/clear-data";
 // determines current step in the process and renders content
 
 function Content() {
+  // Toggle for designating BTC address
+  const isBtcDesignated = useAtomValue(isBtcDesignatedAtom);
   // STX address and active step
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
@@ -95,11 +98,11 @@ function Content() {
     setLocalRegistrationResponse,
   ]);
 
-  // set defaults
+  // default state
   let contentHeading = "Verify you are a Fullcoiner to join the 1btc community";
   let contentBody = <ConnectWallet />;
 
-  if (isAccountLoading) {
+  if (isAccountLoading && isBtcDesignated) {
     contentBody = (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
@@ -123,6 +126,9 @@ function Content() {
       case STEPS.CONNECT_WALLET:
         contentBody = <ConnectWallet />;
         break;
+      case STEPS.DESIGNATE_BTC:
+        contentBody = <Text>Test</Text>;
+        break;
       case STEPS.SIGN_MESSAGE:
         contentBody = <SignMessage />;
         break;
@@ -134,7 +140,7 @@ function Content() {
         contentBody = <FundWallet />;
         break;
       case STEPS.SUCCESS:
-        contentHeading = "Congratulations, you are verified Fullcoiner!";
+        contentHeading = "Congratulations, you are a verified Fullcoiner!";
         contentBody = <SuccessfulVerification />;
         break;
       default:

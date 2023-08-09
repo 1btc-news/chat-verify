@@ -2,8 +2,6 @@ import { useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import {
   accountDataAtom,
-  insufficientBalanceToggleAtom,
-  sentDustToggleAtom,
   signatureDataAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -14,10 +12,6 @@ export const useClearUserData = () => {
   const setAccountData = useSetAtom(accountDataAtom);
   const setSignatureMsg = useSetAtom(signatureMsgAtom);
   const setSignatureData = useSetAtom(signatureDataAtom);
-  const setSentDustToggle = useSetAtom(sentDustToggleAtom);
-  const setInsufficientBalanceToggle = useSetAtom(
-    insufficientBalanceToggleAtom
-  );
 
   const clearData = () => {
     // clear all locally stored data
@@ -25,8 +19,6 @@ export const useClearUserData = () => {
     setAccountData(RESET);
     setSignatureMsg(RESET);
     setSignatureData(RESET);
-    setSentDustToggle(RESET);
-    setInsufficientBalanceToggle(RESET);
   };
 
   return clearData;
