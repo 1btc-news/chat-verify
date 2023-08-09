@@ -1,4 +1,4 @@
-import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Heading, Stack, Text } from "@chakra-ui/react";
 import { useAccount } from "@micro-stacks/react";
 import OneBtcLogo from "./1btc-logo";
 import SignIn from "../auth/sign-in";
@@ -12,13 +12,13 @@ function Header() {
   const [storedStxAddress] = useAtom(stxAddressAtom);
 
   return (
-    <Flex align="center" direction={["column", "row"]}>
-      <Flex flexGrow="1" align="center">
+    <Stack align="center" direction={["column", "row"]}>
+      <Stack flexGrow="1" align="center">
         <OneBtcLogo width="45px" height="45px" />
         <Heading size="md" ml={2}>
           1btc
         </Heading>
-      </Flex>
+      </Stack>
       <Stack direction={["column", "row"]} alignItems="center">
         <Text fontWeight="semibold" fontSize="md">
           {stxAddress === undefined && storedStxAddress
@@ -34,7 +34,7 @@ function Header() {
           <SignOut variant="1btc-orange-outline" />
         )}
       </Stack>
-    </Flex>
+    </Stack>
   );
 }
 

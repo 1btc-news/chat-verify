@@ -44,7 +44,8 @@ const components = {
   Button: {
     variants: {
       "1btc-orange": {
-        maxWidth: ["auto", "fit-content"],
+        w: "100%",
+        maxWidth: ["100%", "fit-content"],
         bg: "orange.500",
         color: "white",
         _hover: {
@@ -55,7 +56,8 @@ const components = {
         },
       },
       "1btc-orange-outline": {
-        maxWidth: ["auto", "fit-content"],
+        w: "100%",
+        maxWidth: ["100%", "fit-content"],
         bg: "transparent",
         color: "white",
         border: "1px solid",
