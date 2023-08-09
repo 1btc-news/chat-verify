@@ -14,6 +14,7 @@ import {
   activeStepAtom,
   isBtcDesignatedAtom,
   isDuplicateAtom,
+  isInsufficientAtom,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -40,6 +41,7 @@ function Content() {
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
   // API status checks for account
+  const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
   // atom setters for API data in localstorage
   const setLocalAccountData = useSetAtom(accountDataAtom);
@@ -111,10 +113,10 @@ function Content() {
       </Stack>
     );
   } else if (hasAccountError) {
+    console.error("Error loading account data", accountError);
     contentBody = (
       <Stack>
-        <Text>Unable to load account data for {stxAddress} from the API.</Text>
-        <Text>Error: {String(accountError)}</Text>
+        <Text>Unable to load account data from the API for {stxAddress}.</Text>
         <Text>Please clear your data, log in, and try again.</Text>
         <ClearData />
       </Stack>
@@ -122,6 +124,9 @@ function Content() {
   } else if (isDuplicate) {
     contentHeading = "This verified address has already been used.";
     contentBody = <DuplicateOrigin />;
+  } else if (isInsufficient) {
+    contentHeading = "The verified address does not have enough funds.";
+    contentBody = <FundWallet />;
   } else {
     switch (activeStep) {
       case STEPS.CONNECT_WALLET:
@@ -135,10 +140,6 @@ function Content() {
         break;
       case STEPS.SEND_DUST:
         contentBody = <SendDust />;
-        break;
-      case STEPS.FUND_WALLET:
-        contentHeading = "The verified address does not have enough funds.";
-        contentBody = <FundWallet />;
         break;
       case STEPS.SUCCESS:
         contentHeading = "Congratulations, you are a verified Fullcoiner!";

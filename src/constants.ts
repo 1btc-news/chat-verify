@@ -122,7 +122,6 @@ export enum STEPS {
   DESIGNATE_BTC,
   SIGN_MESSAGE,
   SEND_DUST,
-  FUND_WALLET,
   SUCCESS,
 }
 
@@ -148,12 +147,12 @@ export const activeStepAtom = atom((get) => {
   switch (accountData.status) {
     case "pending":
       return STEPS.SEND_DUST;
-    case "insufficient":
-      return STEPS.FUND_WALLET;
-    case "duplicate":
-      return undefined;
     case "valid":
       return STEPS.SUCCESS;
+    case "insufficient":
+      return undefined;
+    case "duplicate":
+      return undefined;
     default:
       return STEPS.SIGN_MESSAGE;
   }
