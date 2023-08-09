@@ -11,6 +11,9 @@ import { useAtomValue } from "jotai";
 import LearnMore from "./learn-more";
 import ClearData from "../auth/clear-data";
 
+// active step = undefined
+// user progresses by clearing data and starting over
+
 function DuplicateOrigin() {
   const accountData = useAtomValue(accountDataAtom);
 
@@ -19,8 +22,8 @@ function DuplicateOrigin() {
       <Stack direction="row" justifyContent="space-between">
         <Stack>
           <Text fontWeight="bold">
-            The linked address that sent the dust transaction to verify has
-            already been used.
+            The linked wallet address that sent the dust to verify has already
+            been used.
           </Text>
           <UnorderedList>
             <ListItem>
