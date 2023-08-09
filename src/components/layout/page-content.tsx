@@ -77,7 +77,13 @@ function Content() {
       setLocalAccountData(accountData);
       setIsBtcDesignated(true);
     }
-  }, [accountData, hasAccountError, isAccountLoading, setLocalAccountData]);
+  }, [
+    accountData,
+    hasAccountError,
+    isAccountLoading,
+    setIsBtcDesignated,
+    setLocalAccountData,
+  ]);
 
   useEffect(() => {
     // console.log("page-content: checking signatureMsgData", signatureMsgData);

@@ -1,29 +1,18 @@
 import {
   Alert,
   AlertIcon,
-  IconButton,
   ListItem,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Stack,
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { FaQuestion } from "react-icons/fa";
 import { accountDataAtom } from "../../constants";
 import { useAtomValue } from "jotai";
-import { FiCopy, FiSearch } from "react-icons/fi";
-import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 import LearnMore from "./learn-more";
 import ClearData from "../auth/clear-data";
 
 function DuplicateOrigin() {
   const accountData = useAtomValue(accountDataAtom);
-  const copyText = useClipboardToast();
 
   return (
     <Stack gap={8}>
