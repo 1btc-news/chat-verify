@@ -1,4 +1,4 @@
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { useAccount } from "@micro-stacks/react";
 import OneBtcLogo from "./1btc-logo";
 import SignIn from "../auth/sign-in";
@@ -13,12 +13,12 @@ function Header() {
 
   return (
     <Stack align="center" direction={["column", "row"]}>
-      <Stack flexGrow="1" align="center">
+      <Flex flexGrow="1" align="center">
         <OneBtcLogo width="45px" height="45px" />
         <Heading size="md" ml={2}>
           1btc
         </Heading>
-      </Stack>
+      </Flex>
       <Stack direction={["column", "row"]} alignItems="center">
         <Text fontWeight="semibold" fontSize="md">
           {stxAddress === undefined && storedStxAddress

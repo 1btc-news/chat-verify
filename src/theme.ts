@@ -44,7 +44,6 @@ const components = {
   Button: {
     variants: {
       "1btc-orange": {
-        w: "100%",
         maxWidth: ["100%", "fit-content"],
         bg: "orange.500",
         color: "white",
@@ -56,7 +55,6 @@ const components = {
         },
       },
       "1btc-orange-outline": {
-        w: "100%",
         maxWidth: ["100%", "fit-content"],
         bg: "transparent",
         color: "white",

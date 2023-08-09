@@ -4,7 +4,7 @@ import { FaQuestion } from "react-icons/fa";
 function LearnMore(props: { href: string }) {
   return (
     <IconButton
-      ml={4}
+      ml={[0, 4]}
       aria-label="View related docs"
       title="View related docs"
       icon={<FaQuestion />}
