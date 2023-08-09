@@ -150,7 +150,7 @@ export const activeStepAtom = atom((get) => {
     case "valid":
       return STEPS.SUCCESS;
     case "insufficient":
-      return undefined;
+      return STEPS.SUCCESS;
     case "duplicate":
       return undefined;
     default:
