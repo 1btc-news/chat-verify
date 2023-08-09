@@ -68,7 +68,7 @@ function Content() {
   // stepper orientation
   const stepperOrientation = useBreakpointValue({
     base: "vertical",
-    sm: "horizontal",
+    md: "horizontal",
   }) as "vertical" | "horizontal";
 
   useEffect(() => {
