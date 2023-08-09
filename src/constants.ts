@@ -20,15 +20,6 @@ export const apiUrl = "https://1btc-api.console.xyz";
 // TYPES
 /////////////////////////
 
-// define locally stored data keyed by STX address
-export type UserData = {
-  [key: string]: {
-    accountData?: AccountData;
-    signatureMsg?: string; // https://1btc-api.console.xyz/get-hiro-signature-message
-    signatureData?: SignatureData;
-  };
-};
-
 // signature message returned from the API
 export type SignatureMessage = {
   msg: string;
@@ -92,19 +83,6 @@ export const registrationResponseAtom = atomWithStorage<AccountData | null>(
 // used to trigger API calls
 /////////////////////////
 
-// verification status based on existing data
-export const isValidAtom = atom((get) => {
-  const accountData = get(accountDataAtom);
-  //console.log("isValid: accountData status:", accountData?.status);
-  return accountData?.status === "valid";
-});
-
-// registration status based on existing data
-export const isRegisteredAtom = atom((get) => {
-  const accountData = get(accountDataAtom);
-  return accountData ? true : false;
-});
-
 // true only if status is insufficient
 export const isInsufficientAtom = atom((get) => {
   const accountData = get(accountDataAtom);
@@ -161,8 +139,6 @@ export const activeStepAtom = atom((get) => {
 /////////////////////////
 // LOADABLE ASYNC ATOMS
 // updated by API calls
-/////////////////////////
-
 /////////////////////////
 
 // fetch account data from API

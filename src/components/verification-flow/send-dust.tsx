@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { atom, useAtom, useSetAtom } from "jotai";
 import {
   Alert,
-  AlertIcon,
   IconButton,
   ListItem,
   Spinner,
