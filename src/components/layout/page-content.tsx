@@ -29,6 +29,7 @@ import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import ClearData from "../auth/clear-data";
+import DesignateBtc from "../verification-flow/designate-btc";
 
 // determines current step in the process and renders content
 
@@ -127,7 +128,7 @@ function Content() {
         contentBody = <ConnectWallet />;
         break;
       case STEPS.DESIGNATE_BTC:
-        contentBody = <Text>Test</Text>;
+        contentBody = <DesignateBtc />;
         break;
       case STEPS.SIGN_MESSAGE:
         contentBody = <SignMessage />;

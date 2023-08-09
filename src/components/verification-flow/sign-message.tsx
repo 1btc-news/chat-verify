@@ -1,29 +1,21 @@
 import {
   Button,
-  IconButton,
   ListItem,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Spinner,
   Stack,
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { FaQuestion } from "react-icons/fa";
 import { useOpenSignMessage } from "@micro-stacks/react";
 import { useAtom, useSetAtom } from "jotai";
 import { signatureDataAtom, stxAddressAtom } from "../../constants";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import ClearData from "../auth/clear-data";
+import LearnMore from "./learn-more";
 
-// active step = 1
-// queries signature message from API
-//   once loaded, user can sign the message
-// once user signs progresses to next step
+// active step = 2
+// uses queried signature message from API
+// user progresses by signing the message
 
 function SignMessage() {
   const [stxAddress] = useAtom(stxAddressAtom);
@@ -48,12 +40,12 @@ function SignMessage() {
 
   // if signature message POST error
   if (hasError) {
+    console.error("Error requesting signature message", error);
     return (
       <Stack>
         <Text>
-          Unable to load signature message for {stxAddress} from the API.
+          Unable to load signature message from the API for {stxAddress}.
         </Text>
-        <Text>Error: {String(error)}</Text>
         <Text>Please clear your data, log in, and try again.</Text>
         <ClearData />
       </Stack>
@@ -61,49 +53,19 @@ function SignMessage() {
   }
 
   return (
-    <>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={8}
-      >
-        <Text>
-          Sign a message to create a unique Bitcoin address used to verify your
-          account.
-        </Text>
-        <Popover placement="bottom-end" variant="1btc-orange">
-          <PopoverTrigger>
-            <IconButton
-              aria-label="Learn More"
-              title="Learn More"
-              icon={<FaQuestion />}
-            />
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader pl={4} pt={4}>
-              Sign a Message
-            </PopoverHeader>
-            <PopoverCloseButton />
-            <PopoverBody p={4}>
-              <UnorderedList>
-                <ListItem>
-                  Verify ownership of your Bitcoin wallet by signing a unique
-                  message provided by the software.
-                </ListItem>
-                <ListItem>
-                  The signature is made by the wallet in a pop-up window,
-                  ensuring that your private key never leaves your device.
-                </ListItem>
-                <ListItem>
-                  The data from your signature is used by our system to create a
-                  unique, deterministic Bitcoin address associated with your
-                  account.
-                </ListItem>
-              </UnorderedList>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+    <Stack gap={8}>
+      <Stack direction="row" justifyContent="space-between">
+        <Stack>
+          <Text fontWeight="bold">
+            Sign a message from your wallet to verify your account.
+          </Text>
+          <UnorderedList>
+            <ListItem>This signature creates a unique Bitcoin address</ListItem>
+            <ListItem>The address is generated based on the signature</ListItem>
+            <ListItem>Nobody has access to the generated address</ListItem>
+          </UnorderedList>
+        </Stack>
+        <LearnMore href="https://docs.1btc.chat" />
       </Stack>
       {data && (
         <Button
@@ -124,7 +86,7 @@ function SignMessage() {
           Sign Message
         </Button>
       )}
-    </>
+    </Stack>
   );
 }
 
