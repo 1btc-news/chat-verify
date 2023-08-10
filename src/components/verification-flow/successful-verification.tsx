@@ -7,9 +7,12 @@ import LearnMore from "./learn-more";
 
 function SuccessfulVerification() {
   return (
-    <Stack gap={8}>
+    <Stack direction={["column-reverse", "column"]} gap={8}>
       <Fireworks />
-      <Stack direction="row" justifyContent="space-between">
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             Welcome to 1btc, you're one click away from joining our verified

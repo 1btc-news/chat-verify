@@ -68,8 +68,11 @@ function FundWallet() {
   }
 
   return (
-    <Stack gap={8}>
-      <Stack direction="row" justifyContent="space-between">
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             The linked wallet address must hold more than 1 BTC to access 1btc

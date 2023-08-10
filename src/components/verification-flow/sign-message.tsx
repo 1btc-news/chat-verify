@@ -53,8 +53,11 @@ function SignMessage() {
   }
 
   return (
-    <Stack gap={8}>
-      <Stack direction="row" justifyContent="space-between">
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             Sign a message from your wallet to verify your account.

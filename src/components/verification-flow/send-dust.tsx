@@ -95,8 +95,11 @@ function SendDust() {
   }
 
   return (
-    <Stack gap={8}>
-      <Stack direction="row" justifyContent="space-between">
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             Send a tiny fraction of your Bitcoin to link the accounts

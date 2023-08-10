@@ -10,8 +10,11 @@ function DesignateBtc() {
   const setIsBtcDesignated = useSetAtom(isBtcDesignatedAtom);
 
   return (
-    <Stack gap={8}>
-      <Stack direction="row" justifyContent="space-between">
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             In your wallet with more than 1 BTC, designate an account for

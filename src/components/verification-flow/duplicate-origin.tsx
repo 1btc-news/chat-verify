@@ -18,8 +18,11 @@ function DuplicateOrigin() {
   const accountData = useAtomValue(accountDataAtom);
 
   return (
-    <Stack gap={8}>
-      <Stack direction="row" justifyContent="space-between">
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             The linked wallet address that sent the dust to verify has already
