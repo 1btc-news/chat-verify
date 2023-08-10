@@ -12,7 +12,7 @@ function Header() {
   const [storedStxAddress] = useAtom(stxAddressAtom);
 
   return (
-    <Flex align="center" direction={["column", "row"]}>
+    <Stack align="center" direction={["column", "row"]}>
       <Flex flexGrow="1" align="center">
         <OneBtcLogo width="45px" height="45px" />
         <Heading size="md" ml={2}>
@@ -34,7 +34,7 @@ function Header() {
           <SignOut variant="1btc-orange-outline" />
         )}
       </Stack>
-    </Flex>
+    </Stack>
   );
 }
 

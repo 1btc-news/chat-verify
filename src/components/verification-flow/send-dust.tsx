@@ -2,23 +2,13 @@ import { useEffect } from "react";
 import { atom, useAtom, useSetAtom } from "jotai";
 import {
   Alert,
-  AlertIcon,
-  Box,
   IconButton,
-  Image,
   ListItem,
-  Popover,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Spinner,
   Stack,
   Text,
   UnorderedList,
 } from "@chakra-ui/react";
-import { FaQuestion } from "react-icons/fa";
 import { FiCopy } from "react-icons/fi";
 import {
   accountDataAtom,
@@ -28,10 +18,11 @@ import {
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import { useClipboardToast } from "../../hooks/use-clipboard-toast";
 import ClearData from "../auth/clear-data";
+import LearnMore from "./learn-more";
 
-// active step = 2
-// queries account data from API
-// once status changes from pending, progresses to next step
+// active step = 3
+// uses queried account data from API
+// user progresses when status changes from pending
 
 const queriedStxAddressAtom = atom<string | null>(null);
 
@@ -91,12 +82,12 @@ function SendDust() {
 
   // if registration response POST error
   if (hasError) {
+    console.error("Error requesting registration response", error);
     return (
       <Stack>
         <Text>
-          Unable to load registration response for {stxAddress} from the API.
+          Unable to load registration response from the API for {stxAddress}.
         </Text>
-        <Text>Error: {String(error)}</Text>
         <Text>Please clear your data, log in, and try again.</Text>
         <ClearData />
       </Stack>
@@ -104,108 +95,63 @@ function SendDust() {
   }
 
   return (
-    <>
+    <Stack direction={["column-reverse", "column"]} gap={8}>
       <Stack
-        direction="row"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={8}
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
       >
-        <Text>
-          Send a tiny fraction of your Bitcoin (known as "dust") from the wallet
-          with more than 1 BTC to your unique address.
-        </Text>
-        <Popover placement="bottom-end" variant="1btc-orange">
-          <PopoverTrigger>
-            <IconButton
-              aria-label="Learn More"
-              title="Learn More"
-              icon={<FaQuestion />}
-            />
-          </PopoverTrigger>
-          <PopoverContent>
-            <PopoverHeader pl={4} pt={4}>
-              Send Dust Transaction
-            </PopoverHeader>
-            <PopoverCloseButton />
-            <PopoverBody p={4}>
-              <UnorderedList>
-                <ListItem>
-                  To prove that you own a wallet that holds more than 1 BTC, you
-                  are required to send a small amount of BTC from that wallet.
-                </ListItem>
-                <ListItem>
-                  This small amount is known as "dust", commonly 0.00006 BTC or
-                  6,000 satoshis.
-                </ListItem>
-                <ListItem>
-                  The 1btc API will read the transaction and verify the input
-                  contains more than 1 BTC.
-                </ListItem>
-                <ListItem>
-                  <Text fontWeight="bold" color="orange.500">
-                    Please note: nobody has access to the generated address, and
-                    the dust transaction is non-refundable.
-                  </Text>
-                </ListItem>
-              </UnorderedList>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-      </Stack>
-      <Alert mb={8} variant="1btc-orange" status="warning">
-        <AlertIcon boxSize="6" />
-        <UnorderedList>
-          <ListItem>
-            Send only the tiniest amount, you maintain full control over your
-            Bitcoin
-          </ListItem>
-          <ListItem>
-            Nobody has access to this unique address, and the dust transaction
-            is non-refundable
-          </ListItem>
-          <ListItem>
-            This transaction links your wallet of choice with your logged in
-            account.
-          </ListItem>
-        </UnorderedList>
-      </Alert>
-      {data && (
-        <>
-          <Stack
-            direction={["column", "row"]}
-            justifyContent="space-between"
-            alignItems="center"
-            mb={8}
-          >
-            <Box my={4} fontWeight="bold">
-              Send a dust amount of BTC (0.00006 BTC or 6,000 satoshis) to:{" "}
-              <Text color="orange.500" overflowWrap="anywhere">
-                {data.receiveAddress}{" "}
-                <IconButton
-                  variant="1btc-orange"
-                  size="sm"
-                  ml={4}
-                  aria-label="Copy Bitcoin address"
-                  title="Copy Bitcoin address"
-                  icon={<FiCopy />}
-                  onClick={() => copyText(data.receiveAddress)}
-                />
+        <Stack>
+          <Text fontWeight="bold">
+            Send a tiny fraction of your Bitcoin to link the accounts
+          </Text>
+          <UnorderedList>
+            <ListItem>
+              This small amount is known as "dust", commonly 0.00006 BTC or
+              6,000 satoshis
+            </ListItem>
+            <ListItem>
+              This transfer comes from the wallet designated in Step 2
+            </ListItem>
+            <ListItem>
+              This transaction is non-refundable, nobody has access to the
+              unique address
+            </ListItem>
+          </UnorderedList>
+          <Alert my={8} variant="1btc-orange" status="warning">
+            <Stack>
+              <Text>
+                Send only the tiniest amount, you maintain full control over
+                your Bitcoin
               </Text>
-            </Box>
-            <Image
-              m="auto"
-              boxSize="200px"
-              src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${data.receiveAddress}`}
-            />
-          </Stack>
-          <Stack direction="row" mt={4}>
-            <Spinner color="orange.500" emptyColor="orange.200" />
-            <Text>Awaiting dust transaction...</Text>
-          </Stack>
-        </>
-      )}
-    </>
+              {data && (
+                <Text
+                  fontWeight="bold"
+                  color="orange.500"
+                  overflowWrap="anywhere"
+                  flexGrow="1"
+                >
+                  {data.receiveAddress}
+                  <IconButton
+                    variant="1btc-orange"
+                    size="sm"
+                    ml={4}
+                    aria-label="Copy Bitcoin address"
+                    title="Copy Bitcoin address"
+                    icon={<FiCopy />}
+                    onClick={() => copyText(data.receiveAddress)}
+                  />
+                </Text>
+              )}
+            </Stack>
+          </Alert>
+          <Text>
+            Once detected, this page will automatically progress to the next
+            step.
+          </Text>
+        </Stack>
+        <LearnMore href="https://docs.1btc.chat" />
+      </Stack>
+    </Stack>
   );
 }
 

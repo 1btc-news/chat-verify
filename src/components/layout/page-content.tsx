@@ -12,7 +12,9 @@ import {
   STEPS,
   accountDataAtom,
   activeStepAtom,
+  isBtcDesignatedAtom,
   isDuplicateAtom,
+  isInsufficientAtom,
   registrationResponseAtom,
   signatureMsgAtom,
   stxAddressAtom,
@@ -28,16 +30,21 @@ import { useAccountData } from "../../hooks/use-account-data";
 import { useSignatureMsg } from "../../hooks/use-signature-msg";
 import { useRegistrationResponse } from "../../hooks/use-registration-response";
 import ClearData from "../auth/clear-data";
+import DesignateBtc from "../verification-flow/designate-btc";
 
 // determines current step in the process and renders content
 
 function Content() {
+  // Toggle for designating BTC address
+  const isBtcDesignated = useAtomValue(isBtcDesignatedAtom);
   // STX address and active step
   const stxAddress = useAtomValue(stxAddressAtom);
   const activeStep = useAtomValue(activeStepAtom);
   // API status checks for account
+  const isInsufficient = useAtomValue(isInsufficientAtom);
   const isDuplicate = useAtomValue(isDuplicateAtom);
   // atom setters for API data in localstorage
+  const setIsBtcDesignated = useSetAtom(isBtcDesignatedAtom);
   const setLocalAccountData = useSetAtom(accountDataAtom);
   const setLocalSignatureMsg = useSetAtom(signatureMsgAtom);
   const setLocalRegistrationResponse = useSetAtom(registrationResponseAtom);
@@ -61,15 +68,22 @@ function Content() {
   // stepper orientation
   const stepperOrientation = useBreakpointValue({
     base: "vertical",
-    sm: "horizontal",
+    md: "horizontal",
   }) as "vertical" | "horizontal";
 
   useEffect(() => {
     // console.log("page-content: checking accountData", accountData);
     if (!isAccountLoading && !hasAccountError && accountData !== undefined) {
       setLocalAccountData(accountData);
+      setIsBtcDesignated(true);
     }
-  }, [accountData, hasAccountError, isAccountLoading, setLocalAccountData]);
+  }, [
+    accountData,
+    hasAccountError,
+    isAccountLoading,
+    setIsBtcDesignated,
+    setLocalAccountData,
+  ]);
 
   useEffect(() => {
     // console.log("page-content: checking signatureMsgData", signatureMsgData);
@@ -95,11 +109,11 @@ function Content() {
     setLocalRegistrationResponse,
   ]);
 
-  // set defaults
+  // default state
   let contentHeading = "Verify you are a Fullcoiner to join the 1btc community";
   let contentBody = <ConnectWallet />;
 
-  if (isAccountLoading) {
+  if (isAccountLoading && isBtcDesignated) {
     contentBody = (
       <Stack direction="row">
         <Spinner color="orange.500" emptyColor="orange.200" />
@@ -107,10 +121,10 @@ function Content() {
       </Stack>
     );
   } else if (hasAccountError) {
+    console.error("Error loading account data", accountError);
     contentBody = (
       <Stack>
-        <Text>Unable to load account data for {stxAddress} from the API.</Text>
-        <Text>Error: {String(accountError)}</Text>
+        <Text>Unable to load account data from the API for {stxAddress}.</Text>
         <Text>Please clear your data, log in, and try again.</Text>
         <ClearData />
       </Stack>
@@ -118,10 +132,16 @@ function Content() {
   } else if (isDuplicate) {
     contentHeading = "This verified address has already been used.";
     contentBody = <DuplicateOrigin />;
+  } else if (isInsufficient) {
+    contentHeading = "The verified address does not have enough funds.";
+    contentBody = <FundWallet />;
   } else {
     switch (activeStep) {
       case STEPS.CONNECT_WALLET:
         contentBody = <ConnectWallet />;
+        break;
+      case STEPS.DESIGNATE_BTC:
+        contentBody = <DesignateBtc />;
         break;
       case STEPS.SIGN_MESSAGE:
         contentBody = <SignMessage />;
@@ -129,12 +149,8 @@ function Content() {
       case STEPS.SEND_DUST:
         contentBody = <SendDust />;
         break;
-      case STEPS.FUND_WALLET:
-        contentHeading = "The verified address does not have enough funds.";
-        contentBody = <FundWallet />;
-        break;
       case STEPS.SUCCESS:
-        contentHeading = "Congratulations, you are verified Fullcoiner!";
+        contentHeading = "Congratulations, you are a verified Fullcoiner!";
         contentBody = <SuccessfulVerification />;
         break;
       default:
@@ -148,12 +164,10 @@ function Content() {
   return (
     <Box width="100%" maxW="1200px">
       <Heading>{contentHeading}</Heading>
-      {activeStep !== undefined && (
-        <VerificationStepper
-          activeStep={activeStep}
-          orientation={stepperOrientation}
-        />
-      )}
+      <VerificationStepper
+        activeStep={activeStep}
+        orientation={stepperOrientation}
+      />
       {contentBody}
     </Box>
   );

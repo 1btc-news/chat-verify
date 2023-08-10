@@ -8,9 +8,9 @@ import { SignatureData } from "micro-stacks/connect";
 
 export const registrationSteps = [
   { title: "Connect Wallet", description: "Step 1" },
-  { title: "Sign Message", description: "Step 2" },
-  { title: "Send Dust", description: "Step 3" },
-  { title: "Fund Wallet", description: "Step 4" },
+  { title: "Designate BTC", description: "Step 2" },
+  { title: "Sign Message", description: "Step 3" },
+  { title: "Send Dust", description: "Step 4" },
 ];
 
 // https://docs.1btc.chat/1btc-chat-api
@@ -19,15 +19,6 @@ export const apiUrl = "https://1btc-api.console.xyz";
 /////////////////////////
 // TYPES
 /////////////////////////
-
-// define locally stored data keyed by STX address
-export type UserData = {
-  [key: string]: {
-    accountData?: AccountData;
-    signatureMsg?: string; // https://1btc-api.console.xyz/get-hiro-signature-message
-    signatureData?: SignatureData;
-  };
-};
 
 // signature message returned from the API
 export type SignatureMessage = {
@@ -48,6 +39,12 @@ export type AccountData = {
 // updated by components
 // used to persist on close/open
 /////////////////////////
+
+// toggle for first step
+export const isBtcDesignatedAtom = atomWithStorage<boolean>(
+  "1btc-designatedBtc",
+  false
+);
 
 // stacks address from wallet
 export const stxAddressAtom = atomWithStorage<string | null>(
@@ -80,33 +77,11 @@ export const registrationResponseAtom = atomWithStorage<AccountData | null>(
   null
 );
 
-// toggle for send-dust component
-export const sentDustToggleAtom = atomWithStorage("1btc-sentDustToggle", false);
-
-// toggle for insufficient-balance component
-export const insufficientBalanceToggleAtom = atomWithStorage(
-  "1btc-insufficientBalanceToggleAtom",
-  false
-);
-
 /////////////////////////
 // ATOMS
 // updated by components
 // used to trigger API calls
 /////////////////////////
-
-// verification status based on existing data
-export const isValidAtom = atom((get) => {
-  const accountData = get(accountDataAtom);
-  //console.log("isValid: accountData status:", accountData?.status);
-  return accountData?.status === "valid";
-});
-
-// registration status based on existing data
-export const isRegisteredAtom = atom((get) => {
-  const accountData = get(accountDataAtom);
-  return accountData ? true : false;
-});
 
 // true only if status is insufficient
 export const isInsufficientAtom = atom((get) => {
@@ -122,20 +97,25 @@ export const isDuplicateAtom = atom((get) => {
 
 export enum STEPS {
   CONNECT_WALLET,
+  DESIGNATE_BTC,
   SIGN_MESSAGE,
   SEND_DUST,
-  FUND_WALLET,
   SUCCESS,
 }
 
 // active step based on existing data
 export const activeStepAtom = atom((get) => {
   const stxAddress = get(stxAddressAtom);
+  const isBtcDesignated = get(isBtcDesignatedAtom);
   const accountData = get(accountDataAtom);
   const signatureData = get(signatureDataAtom);
   // no STX address
   if (!stxAddress) {
     return STEPS.CONNECT_WALLET;
+  }
+  // did not designate BTC
+  if (!isBtcDesignated) {
+    return STEPS.DESIGNATE_BTC;
   }
   // no account data
   if (!accountData) {
@@ -145,12 +125,12 @@ export const activeStepAtom = atom((get) => {
   switch (accountData.status) {
     case "pending":
       return STEPS.SEND_DUST;
-    case "insufficient":
-      return STEPS.FUND_WALLET;
-    case "duplicate":
-      return undefined;
     case "valid":
       return STEPS.SUCCESS;
+    case "insufficient":
+      return STEPS.SUCCESS;
+    case "duplicate":
+      return undefined;
     default:
       return STEPS.SIGN_MESSAGE;
   }
@@ -159,8 +139,6 @@ export const activeStepAtom = atom((get) => {
 /////////////////////////
 // LOADABLE ASYNC ATOMS
 // updated by API calls
-/////////////////////////
-
 /////////////////////////
 
 // fetch account data from API

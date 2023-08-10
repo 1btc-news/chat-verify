@@ -12,15 +12,21 @@ import {
 } from "@chakra-ui/react";
 import { registrationSteps } from "../../constants";
 
+// gap and minH set below are based on the stepper being
+// in vertical orientation for sm/md screens, defined
+// in page-content.tsx
+
 function VerificationStepper(props: {
-  activeStep: number;
+  activeStep: number | undefined;
   orientation: "horizontal" | "vertical";
 }) {
   return (
     <Stepper
-      index={props.activeStep}
+      index={props.activeStep || 0}
       orientation={props.orientation || "horizontal"}
       my={8}
+      gap={[0, null, 4]}
+      minH={["400px", null, "auto"]}
       variant="1btc-orange"
       colorScheme="1btc-orange"
     >
