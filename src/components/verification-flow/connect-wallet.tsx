@@ -7,12 +7,11 @@ import LearnMore from "./learn-more";
 
 function ConnectWallet() {
   return (
-    <Stack
-      direction={["column-reverse", "column"]}
-      justifyContent={["center", "space-between"]}
-      gap={8}
-    >
-      <Stack direction={["column", "row"]}>
+    <Stack direction={["column-reverse", "column"]} gap={8}>
+      <Stack
+        direction={["column", "row"]}
+        justifyContent={["center", "space-between"]}
+      >
         <Stack>
           <Text fontWeight="bold">
             Connect your Hiro or Xverse wallet to authenticate into 1btc's
