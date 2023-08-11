@@ -116,7 +116,7 @@ function FundWallet() {
           </Alert>
           <Text>Once refilled, this page will automatically update.</Text>
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/insufficient-origin" />
       </Stack>
     </Stack>
   );

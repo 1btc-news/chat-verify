@@ -55,7 +55,7 @@ function DuplicateOrigin() {
             </Alert>
           )}
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/duplicate-origin" />
       </Stack>
       <ClearData />
     </Stack>

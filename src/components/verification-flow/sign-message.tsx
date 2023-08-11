@@ -68,7 +68,7 @@ function SignMessage() {
             <ListItem>Nobody has access to the generated address</ListItem>
           </UnorderedList>
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/sign-message" />
       </Stack>
       {data && (
         <Button

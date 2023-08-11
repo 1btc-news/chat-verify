@@ -149,7 +149,7 @@ function SendDust() {
             step.
           </Text>
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/send-dust" />
       </Stack>
     </Stack>
   );

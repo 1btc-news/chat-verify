@@ -36,7 +36,7 @@ function DesignateBtc() {
             cover transaction fees.
           </Text>
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/designate-btc" />
       </Stack>
       <Button variant="1btc-orange" onClick={() => setIsBtcDesignated(true)}>
         Ready to Go

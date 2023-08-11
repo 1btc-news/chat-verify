@@ -45,7 +45,7 @@ function ConnectWallet() {
             </ListItem>
           </UnorderedList>
         </Stack>
-        <LearnMore href="https://docs.1btc.chat" />
+        <LearnMore href="https://docs.1btc.chat/verification/connect-wallet" />
       </Stack>
       <SignIn />
     </Stack>
