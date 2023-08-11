@@ -32,7 +32,7 @@ function DesignateBtc() {
             </ListItem>
           </UnorderedList>
           <Text>
-            Create the new account and transfer a little more than 1 BTC to to
+            Create the new account and transfer a little more than 1 BTC to
             cover transaction fees.
           </Text>
         </Stack>
